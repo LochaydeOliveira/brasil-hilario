@@ -1,5 +1,6 @@
 <?php
 require_once 'config/config.php';
+require_once 'config/database.php';
 require_once 'config/search.php';
 require_once 'includes/header.php';
 
@@ -16,6 +17,16 @@ function search_posts($term) {
     global $conn;
     
     try {
+        // Verifica se a conexão está ativa
+        if (!$conn) {
+            throw new Exception("Erro: Conexão com o banco de dados não está disponível");
+        }
+
+        // Verifica se a conexão está funcionando
+        if (!$conn->ping()) {
+            throw new Exception("Erro: Conexão com o banco de dados perdida");
+        }
+
         $term = '%' . $term . '%';
         $sql = "SELECT p.*, c.nome as categoria_nome, u.nome as autor_nome 
                 FROM posts p 
@@ -24,6 +35,10 @@ function search_posts($term) {
                 WHERE p.publicado = 1 
                 AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)
                 ORDER BY p.data_publicacao DESC";
+        
+        // Log da consulta SQL
+        error_log("SQL Query: " . $sql);
+        error_log("Search term: " . $term);
                 
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -36,9 +51,18 @@ function search_posts($term) {
         }
         
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $posts = $result->fetch_all(MYSQLI_ASSOC);
+        
+        // Log do número de resultados
+        error_log("Número de resultados encontrados: " . count($posts));
+        
+        return $posts;
     } catch (Exception $e) {
         error_log("Erro na busca: " . $e->getMessage());
+        // Exibe o erro para debug (remover em produção)
+        echo "<div class='alert alert-danger'>";
+        echo "Erro na busca: " . htmlspecialchars($e->getMessage());
+        echo "</div>";
         return [];
     }
 }
