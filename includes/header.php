@@ -64,7 +64,7 @@ require_once 'config/config.php';
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo BLOG_URL; ?>">Home</a>
                         </li>
@@ -74,6 +74,14 @@ require_once 'config/config.php';
                         </li>
                         <?php endforeach; ?>
                     </ul>
+                    <form class="d-flex" action="<?php echo BLOG_URL; ?>/busca" method="GET">
+                        <div class="input-group">
+                            <input type="search" name="q" class="form-control" placeholder="Buscar no blog..." aria-label="Buscar" required>
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </nav>
