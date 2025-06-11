@@ -29,7 +29,7 @@ try {
     $total_posts = $stmt->fetch()['total'];
 
     // Posts publicados
-    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts WHERE status = 'publicado'");
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts WHERE publicado = 1");
     $posts_publicados = $stmt->fetch()['total'];
 
     // Total de usuários
@@ -40,7 +40,7 @@ try {
     $stmt = $pdo->query("SELECT p.*, u.nome as autor 
                         FROM posts p 
                         LEFT JOIN usuarios u ON p.autor_id = u.id 
-                        ORDER BY p.data_criacao DESC 
+                        ORDER BY p.data_publicacao DESC 
                         LIMIT 5");
     $posts_recentes = $stmt->fetchAll();
 
