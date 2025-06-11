@@ -28,7 +28,7 @@ INSERT INTO usuarios (
 ) VALUES (
     'Administrador',
     'lochaydeguerreiro@hotmail.com',
-    '$2y$10$YourNewHashHere',
+    '$2y$10$FrScbsOokbqdOfcUbFyqneDItRq64xG5jQHknquVBBzP91zFIZkc6',
     'admin',
     'ativo',
     'Administrador do site Brasil Hilário',

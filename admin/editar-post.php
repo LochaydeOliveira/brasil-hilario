@@ -10,7 +10,7 @@ require_once 'includes/auth.php';
 require_once 'includes/editors.php';
 
 // Verificar se o usuário está logado
-check_auth();
+check_login();
 
 // Verificar se o ID foi fornecido
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);

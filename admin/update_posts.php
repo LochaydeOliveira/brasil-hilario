@@ -4,7 +4,7 @@ require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
 // Verificar se o usuário está logado
-check_auth();
+check_login();
 
 try {
     // Atualizar posts sem data de criação

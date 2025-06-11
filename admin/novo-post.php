@@ -10,7 +10,7 @@ require_once 'includes/auth.php';
 require_once 'includes/editors.php';
 
 // Verificar se o usuário está logado
-check_auth();
+check_login();
 
 // Processar o formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
