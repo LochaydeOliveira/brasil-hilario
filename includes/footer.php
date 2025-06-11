@@ -39,13 +39,13 @@
                     </ul>
                 </div>
 
-                <!-- <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">FAQ</h5>
+                <div class="col-md-3 mb-4">
+                    <h5 class="footer-title">USUÁRIOS</h5>
                     <ul class="list-unstyled footer-links">
-                        <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Crie uma Conta</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/assinatura">Assine a Revista</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conte</a></li>
                     </ul>
-                </div> -->
+                </div> 
 
             </div>
             <hr class="my-4">
