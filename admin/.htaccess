@@ -1,0 +1,24 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /admin/
+
+# Permitir acesso a todos os arquivos PHP
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Permitir acesso a todos os arquivos
+<Files *>
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Desabilitar listagem de diretórios
+Options -Indexes
+
+# Permitir acesso ao diretório
+<Directory "/admin">
+    Order Allow,Deny
+    Allow from all
+</Directory> 

@@ -19,30 +19,10 @@ RewriteRule ^post/([a-zA-Z0-9-]+)/?$ post.php?slug=$1 [L,QSA]
 RewriteRule ^categoria/([a-zA-Z0-9-]+)/?$ categoria.php?slug=$1 [L,QSA]
 RewriteRule ^tag/([a-zA-Z0-9-]+)/?$ tag.php?slug=$1 [L,QSA]
 RewriteRule ^busca/?$ busca.php [L,QSA]
-RewriteRule ^admin/?$ admin/index.php [L,QSA]
-RewriteRule ^admin/([a-zA-Z0-9-]+)/?$ admin/$1.php [L,QSA]
 RewriteRule ^sobre/?$ sobre.php [L,QSA]
 RewriteRule ^contato/?$ contato.php [L,QSA]
 RewriteRule ^privacidade/?$ privacidade.php [L,QSA]
 RewriteRule ^termos/?$ termos.php [L,QSA]
-
-# Proteger arquivos sensíveis
-<FilesMatch "\.(php|inc|sql)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-# Permitir acesso aos arquivos necessários
-<FilesMatch "^(index\.php|post\.php|categoria\.php|tag\.php|busca\.php|sobre\.php|contato\.php|privacidade\.php|termos\.php)$">
-    Order Allow,Deny
-    Allow from all
-</FilesMatch>
-
-# Permitir acesso aos arquivos do admin
-<FilesMatch "^(admin/.*\.php)$">
-    Order Allow,Deny
-    Allow from all
-</FilesMatch>
 
 # Proteger diretórios sensíveis
 Options -Indexes
