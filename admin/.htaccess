@@ -2,6 +2,10 @@ Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /admin/
 
+# Configurações de erro
+php_flag display_errors on
+php_value error_reporting E_ALL
+
 # Permitir acesso a todos os arquivos PHP
 <FilesMatch "\.php$">
     Order Allow,Deny
