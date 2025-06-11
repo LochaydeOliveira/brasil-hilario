@@ -121,14 +121,14 @@ try {
                                     <tbody>
                                         <?php foreach ($posts_recentes as $post): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($post['titulo']); ?></td>
-                                            <td><?php echo htmlspecialchars($post['autor']); ?></td>
+                                            <td><?php echo htmlspecialchars($post['titulo'] ?? ''); ?></td>
+                                            <td><?php echo htmlspecialchars($post['autor'] ?? 'Sem autor'); ?></td>
                                             <td>
-                                                <span class="badge bg-<?php echo $post['status'] === 'publicado' ? 'success' : 'warning'; ?>">
-                                                    <?php echo ucfirst($post['status']); ?>
+                                                <span class="badge bg-<?php echo ($post['publicado'] ?? 0) ? 'success' : 'warning'; ?>">
+                                                    <?php echo ($post['publicado'] ?? 0) ? 'Publicado' : 'Rascunho'; ?>
                                                 </span>
                                             </td>
-                                            <td><?php echo date('d/m/Y H:i', strtotime($post['data_criacao'])); ?></td>
+                                            <td><?php echo date('d/m/Y H:i', strtotime($post['data_publicacao'] ?? 'now')); ?></td>
                                             <td>
                                                 <a href="editar-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i>
