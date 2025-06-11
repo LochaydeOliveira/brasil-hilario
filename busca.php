@@ -33,19 +33,6 @@ function search_posts($term) {
 $posts = search_posts($search_term);
 ?>
 
-<style>
-
-    .btn {
-        border-color: #0b8103!important;
-        color: #0b8103!important;
-    }
-
-    .btn:hover {
-        color: #ffc107;
-        background-color: #0b8103;
-        border: none!important;
-    }
-</style>
 
 <div class="container py-4">
     <h1 class="mb-4">Resultados da busca para: "<?php echo htmlspecialchars($search_term); ?>"</h1>

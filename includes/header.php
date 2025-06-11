@@ -48,6 +48,20 @@ require_once 'config/config.php';
         "url": "<?php echo BLOG_URL; ?>"
     }
     </script>
+
+    <style>
+
+    .btn {
+        border-color: #0b8103!important;
+        color: #0b8103!important;
+    }
+
+    .btn:hover {
+        color: #ffc107;
+        background-color: #0b8103;
+        border: none!important;
+    }
+</style>
     
     <!-- Facebook Comments Plugin -->
     <div id="fb-root"></div>
