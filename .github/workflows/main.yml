@@ -16,4 +16,6 @@ jobs:
           with:
             server: ${{ secrets.FTP_SERVER }}
             username: ${{ secrets.FTP_USER }}
-            password: ${{ secrets.FTP_PASSWORD }}        
+            password: ${{ secrets.FTP_PASSWORD }}
+            local-dir: ./
+            server-dir: /home1/paymen58/brasilhilario.com.br/        
