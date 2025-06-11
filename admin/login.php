@@ -55,6 +55,8 @@ try {
         $email = clean_input($_POST['email']);
         $senha = $_POST['senha'];
         
+        log_error("Tentativa de login para email: " . $email);
+        
         if (empty($email) || empty($senha)) {
             $erro = 'Por favor, preencha todos os campos.';
             log_error("Campos vazios detectados");
@@ -63,29 +65,38 @@ try {
                 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
                 $stmt->execute([$email]);
                 $usuario = $stmt->fetch();
+                
+                log_error("Usuário encontrado: " . ($usuario ? "Sim" : "Não"));
+                
+                if ($usuario) {
+                    log_error("Verificando senha...");
+                    $senha_verificada = password_verify($senha, $usuario['senha']);
+                    log_error("Senha verificada: " . ($senha_verificada ? "Correta" : "Incorreta"));
+                    
+                    if ($senha_verificada) {
+                        // Login bem sucedido
+                        $_SESSION['usuario_id'] = $usuario['id'];
+                        $_SESSION['usuario_nome'] = $usuario['nome'];
+                        $_SESSION['usuario_email'] = $usuario['email'];
+                        $_SESSION['usuario_tipo'] = $usuario['tipo'];
+                        $_SESSION['ultimo_acesso'] = time();
 
-                if ($usuario && password_verify($senha, $usuario['senha'])) {
-                    // Login bem sucedido
-                    $_SESSION['usuario_id'] = $usuario['id'];
-                    $_SESSION['usuario_nome'] = $usuario['nome'];
-                    $_SESSION['usuario_email'] = $usuario['email'];
-                    $_SESSION['usuario_tipo'] = $usuario['tipo'];
-                    $_SESSION['ultimo_acesso'] = time();
+                        // Atualizar último login
+                        $stmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
+                        $stmt->execute([$usuario['id']]);
 
-                    // Atualizar último login
-                    $stmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
-                    $stmt->execute([$usuario['id']]);
-
-                    log_error("Login bem sucedido para: $email");
-                    header('Location: index.php');
-                    exit;
-                } else {
-                    $erro = 'Email ou senha inválidos.';
-                    log_error("Tentativa de login falhou para: $email");
+                        log_error("Login bem sucedido para: $email");
+                        header('Location: index.php');
+                        exit;
+                    }
                 }
+                
+                $erro = 'Email ou senha inválidos.';
+                log_error("Tentativa de login falhou para: $email");
+                
             } catch (PDOException $e) {
                 $erro = 'Erro ao tentar fazer login. Por favor, tente novamente.';
-                error_log("Erro de login: " . $e->getMessage());
+                log_error("Erro de login: " . $e->getMessage());
             }
         }
     }
