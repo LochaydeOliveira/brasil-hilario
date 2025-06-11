@@ -82,14 +82,6 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
-                    <div class="btn-group mb-2">
-                        <button type="button" class="btn btn-outline-primary active" id="tinymceBtn">
-                            <i class="fas fa-edit"></i> Editor Visual
-                        </button>
-                        <button type="button" class="btn btn-outline-primary" id="markdownBtn">
-                            <i class="fas fa-code"></i> Markdown
-                        </button>
-                    </div>
                     <textarea id="editor" name="content"><?php echo $post ? htmlspecialchars($post['content']) : ''; ?></textarea>
                 </div>
 
@@ -128,79 +120,41 @@ include 'includes/header.php';
 
 <!-- TinyMCE -->
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<!-- Markdown Editor -->
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script>
-    let editor;
-    let markdownEditor;
-    let currentMode = 'tinymce';
-
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializa o TinyMCE
-        editor = tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
-            console.log('Editor inicializado com sucesso');
-        }).catch(function(error) {
-            console.error('Erro ao inicializar o editor:', error);
-        });
-
-        // Inicializa o Markdown Editor
-        markdownEditor = new EasyMDE({
-            element: document.getElementById('editor'),
-            spellChecker: false,
-            status: false,
-            toolbar: [
-                'bold', 'italic', 'heading', '|',
-                'quote', 'unordered-list', 'ordered-list', '|',
-                'link', 'image', '|',
-                'preview', 'side-by-side', 'fullscreen', '|',
-                'guide'
+        tinymce.init({
+            selector: '#editor',
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
             ],
-            initialValue: document.getElementById('editor').value
-        });
-        markdownEditor.togglePreview();
-
-        // Botões de alternância
-        document.getElementById('tinymceBtn').addEventListener('click', function() {
-            if (currentMode !== 'tinymce') {
-                const content = markdownEditor.value();
-                markdownEditor.toTextArea();
-                markdownEditor = null;
-                
-                editor = tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
-                    editors[0].setContent(content);
-                });
-                
-                currentMode = 'tinymce';
-                this.classList.add('active');
-                document.getElementById('markdownBtn').classList.remove('active');
-            }
-        });
-
-        document.getElementById('markdownBtn').addEventListener('click', function() {
-            if (currentMode !== 'markdown') {
-                const content = tinymce.get('editor').getContent();
-                tinymce.get('editor').remove();
-                
-                markdownEditor = new EasyMDE({
-                    element: document.getElementById('editor'),
-                    spellChecker: false,
-                    status: false,
-                    toolbar: [
-                        'bold', 'italic', 'heading', '|',
-                        'quote', 'unordered-list', 'ordered-list', '|',
-                        'link', 'image', '|',
-                        'preview', 'side-by-side', 'fullscreen', '|',
-                        'guide'
-                    ],
-                    initialValue: content
-                });
-                markdownEditor.togglePreview();
-                
-                currentMode = 'markdown';
-                this.classList.add('active');
-                document.getElementById('tinymceBtn').classList.remove('active');
-            }
+            toolbar: 'undo redo | blocks | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | image media link | help',
+            height: 500,
+            menubar: 'file edit view insert format tools table help',
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; }',
+            language: 'pt_BR',
+            language_url: '../assets/js/tinymce/langs/pt_BR.js',
+            images_upload_url: 'upload.php',
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            images_reuse_filename: true,
+            relative_urls: false,
+            remove_script_host: false,
+            convert_urls: true,
+            image_title: true,
+            image_caption: true,
+            image_advtab: true,
+            image_class_list: [
+                {title: 'Nenhuma', value: ''},
+                {title: 'Responsiva', value: 'img-fluid'},
+                {title: 'Arredondada', value: 'rounded'},
+                {title: 'Circular', value: 'rounded-circle'},
+                {title: 'Com Sombra', value: 'shadow'}
+            ]
         });
     });
 
