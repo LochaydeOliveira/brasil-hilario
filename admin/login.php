@@ -183,6 +183,7 @@ try {
                         <input type="password" class="form-control" id="senha" name="senha" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Entrar</button>
+                    <a style="font-size: 14px" href="https://www.brasilhilario.com.br/">Voltar ao Blog</a>
                 </form>
             </div>
         </div>
