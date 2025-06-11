@@ -43,7 +43,7 @@
                     <h5 class="footer-title">USUÁRIOS</h5>
                     <ul class="list-unstyled footer-links">
                         <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conte</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conta</a></li>
                     </ul>
                 </div> 
 
