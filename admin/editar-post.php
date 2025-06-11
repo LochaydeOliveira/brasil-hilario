@@ -205,7 +205,7 @@ include 'includes/header.php';
                                 
                                 <div class="mb-3">
                                     <label for="featured_image" class="form-label">Imagem Destacada</label>
-                                    <?php if ($post && $post['featured_image']): ?>
+                                    <?php if ($post && isset($post['featured_image']) && !empty($post['featured_image'])): ?>
                                         <div class="mb-2">
                                             <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
                                                  alt="Imagem destacada" class="img-thumbnail" style="max-height: 200px;">
