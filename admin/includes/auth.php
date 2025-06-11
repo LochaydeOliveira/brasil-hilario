@@ -35,7 +35,7 @@ function check_session_timeout() {
 }
 
 // Obter dados do usuário atual
-function get_current_user() {
+function get_logged_user() {
     global $pdo;
     if (!isset($_SESSION['usuario_id'])) {
         return null;

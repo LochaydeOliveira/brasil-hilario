@@ -11,7 +11,7 @@ check_login();
 check_session_timeout();
 
 // Obter dados do usuário atual
-$usuario = get_current_user();
+$usuario = get_logged_user();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
