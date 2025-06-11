@@ -37,7 +37,7 @@ try {
     $total_usuarios = $stmt->fetch()['total'];
 
     // Posts recentes
-    $stmt = $pdo->query("SELECT p.*, u.nome as autor 
+    $stmt = $pdo->query("SELECT p.id, p.titulo, p.data_publicacao, p.publicado, p.visualizacoes, u.nome as autor 
                         FROM posts p 
                         LEFT JOIN usuarios u ON p.autor_id = u.id 
                         ORDER BY p.data_publicacao DESC 

@@ -1,14 +1,3 @@
--- Adicionar campo editor_type na tabela posts
-ALTER TABLE posts ADD COLUMN editor_type ENUM('tinymce', 'markdown') NOT NULL DEFAULT 'tinymce' AFTER conteudo;
-
--- Atualizar estrutura da tabela posts
-ALTER TABLE posts
-ADD COLUMN IF NOT EXISTS criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN IF NOT EXISTS atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-ADD COLUMN IF NOT EXISTS autor_id INT,
-ADD COLUMN IF NOT EXISTS visualizacoes INT DEFAULT 0,
-ADD COLUMN IF NOT EXISTS editor_type VARCHAR(20) DEFAULT 'tinymce';
-
 -- Verificar e adicionar colunas se não existirem
 SET @dbname = DATABASE();
 SET @tablename = "posts";
@@ -26,10 +15,6 @@ SET @preparedStatement = (SELECT IF(
 PREPARE alterIfNotExists FROM @preparedStatement;
 EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
-
--- Atualizar posts existentes
-UPDATE posts SET publicado = 1 WHERE status = 'publicado';
-UPDATE posts SET publicado = 0 WHERE status = 'rascunho';
 
 -- Remover coluna status antiga se existir
 SET @columnname = "status";
