@@ -4,6 +4,9 @@ require_once 'config/database.php';
 require_once 'config/search.php';
 require_once 'includes/header.php';
 
+// Inicia a sessão para o histórico de busca
+session_start();
+
 // Verifica se existe um termo de busca
 $search_term = isset($_GET['q']) ? clean_search_term($_GET['q']) : '';
 
@@ -12,8 +15,15 @@ if (empty($search_term)) {
     exit;
 }
 
+// Salva o termo no histórico
+save_search_history($search_term);
+
+// Página atual
+$current_page = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$current_page = max(1, $current_page);
+
 // Função para buscar posts
-function search_posts($term) {
+function search_posts($term, $page = 1) {
     global $conn;
     
     try {
@@ -28,53 +38,88 @@ function search_posts($term) {
         }
 
         $term = '%' . $term . '%';
+        $offset = ($page - 1) * SEARCH_RESULTS_PER_PAGE;
+        
+        // Primeiro, conta o total de resultados
+        $count_sql = "SELECT COUNT(*) as total 
+                     FROM posts p 
+                     WHERE p.publicado = 1 
+                     AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)";
+                     
+        $count_stmt = $conn->prepare($count_sql);
+        $count_stmt->bind_param('sss', $term, $term, $term);
+        $count_stmt->execute();
+        $total_results = $count_stmt->get_result()->fetch_assoc()['total'];
+        
+        // Depois, busca os resultados da página atual
         $sql = "SELECT p.*, c.nome as categoria_nome, u.nome as autor_nome 
                 FROM posts p 
                 LEFT JOIN categorias c ON p.categoria_id = c.id 
                 LEFT JOIN usuarios u ON p.autor_id = u.id 
                 WHERE p.publicado = 1 
                 AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)
-                ORDER BY p.data_publicacao DESC";
+                ORDER BY p.data_publicacao DESC
+                LIMIT ? OFFSET ?";
         
-        // Log da consulta SQL
-        error_log("SQL Query: " . $sql);
-        error_log("Search term: " . $term);
-                
         $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Erro na preparação da consulta: " . $conn->error);
-        }
-        
-        $stmt->bind_param('sss', $term, $term, $term);
-        if (!$stmt->execute()) {
-            throw new Exception("Erro na execução da consulta: " . $stmt->error);
-        }
-        
+        $stmt->bind_param('sssii', $term, $term, $term, SEARCH_RESULTS_PER_PAGE, $offset);
+        $stmt->execute();
         $result = $stmt->get_result();
         $posts = $result->fetch_all(MYSQLI_ASSOC);
         
-        // Log do número de resultados
-        error_log("Número de resultados encontrados: " . count($posts));
-        
-        return $posts;
+        return [
+            'posts' => $posts,
+            'total' => $total_results
+        ];
     } catch (Exception $e) {
         error_log("Erro na busca: " . $e->getMessage());
-        // Exibe o erro para debug (remover em produção)
         echo "<div class='alert alert-danger'>";
         echo "Erro na busca: " . htmlspecialchars($e->getMessage());
         echo "</div>";
-        return [];
+        return ['posts' => [], 'total' => 0];
     }
 }
 
-$posts = search_posts($search_term);
+$search_results = search_posts($search_term, $current_page);
+$posts = $search_results['posts'];
+$total_results = $search_results['total'];
+
+// Busca sugestões
+$suggestions = get_search_suggestions($search_term);
 ?>
 
 <div class="container py-4">
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="mb-3">Resultados da busca para: "<?php echo htmlspecialchars($search_term); ?>"</h1>
-            <p class="text-muted"><?php echo count($posts); ?> resultado(s) encontrado(s)</p>
+            <p class="text-muted"><?php echo $total_results; ?> resultado(s) encontrado(s)</p>
+            
+            <?php if (!empty($suggestions)): ?>
+                <div class="search-suggestions mb-3">
+                    <h5>Sugestões relacionadas:</h5>
+                    <div class="list-group">
+                        <?php foreach ($suggestions as $suggestion): ?>
+                            <a href="?q=<?php echo urlencode($suggestion); ?>" class="list-group-item list-group-item-action">
+                                <?php echo htmlspecialchars($suggestion); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['search_history']) && !empty($_SESSION['search_history'])): ?>
+                <div class="search-history mb-3">
+                    <h5>Buscas recentes:</h5>
+                    <div class="list-group">
+                        <?php foreach ($_SESSION['search_history'] as $history_term): ?>
+                            <a href="?q=<?php echo urlencode($history_term); ?>" class="list-group-item list-group-item-action">
+                                <i class="fas fa-history me-2"></i>
+                                <?php echo htmlspecialchars($history_term); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     
@@ -127,6 +172,12 @@ $posts = search_posts($search_term);
                 </div>
             <?php endforeach; ?>
         </div>
+        
+        <?php if ($total_results > SEARCH_RESULTS_PER_PAGE): ?>
+            <div class="mt-4">
+                <?php echo generate_pagination($total_results, $current_page, SEARCH_RESULTS_PER_PAGE); ?>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
