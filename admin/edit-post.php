@@ -82,6 +82,14 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
+                    <div class="btn-group mb-2">
+                        <button type="button" class="btn btn-outline-primary active" id="tinymceBtn">
+                            <i class="fas fa-edit"></i> Editor Visual
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="markdownBtn">
+                            <i class="fas fa-code"></i> Markdown
+                        </button>
+                    </div>
                     <textarea id="editor" name="content"><?php echo $post ? htmlspecialchars($post['content']) : ''; ?></textarea>
                 </div>
 
@@ -120,12 +128,79 @@ include 'includes/header.php';
 
 <!-- TinyMCE -->
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- Markdown Editor -->
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script>
+    let editor;
+    let markdownEditor;
+    let currentMode = 'tinymce';
+
     document.addEventListener('DOMContentLoaded', function() {
-        tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
+        // Inicializa o TinyMCE
+        editor = tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
             console.log('Editor inicializado com sucesso');
         }).catch(function(error) {
             console.error('Erro ao inicializar o editor:', error);
+        });
+
+        // Inicializa o Markdown Editor
+        markdownEditor = new EasyMDE({
+            element: document.getElementById('editor'),
+            spellChecker: false,
+            status: false,
+            toolbar: [
+                'bold', 'italic', 'heading', '|',
+                'quote', 'unordered-list', 'ordered-list', '|',
+                'link', 'image', '|',
+                'preview', 'side-by-side', 'fullscreen', '|',
+                'guide'
+            ],
+            initialValue: document.getElementById('editor').value
+        });
+        markdownEditor.togglePreview();
+
+        // Botões de alternância
+        document.getElementById('tinymceBtn').addEventListener('click', function() {
+            if (currentMode !== 'tinymce') {
+                const content = markdownEditor.value();
+                markdownEditor.toTextArea();
+                markdownEditor = null;
+                
+                editor = tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
+                    editors[0].setContent(content);
+                });
+                
+                currentMode = 'tinymce';
+                this.classList.add('active');
+                document.getElementById('markdownBtn').classList.remove('active');
+            }
+        });
+
+        document.getElementById('markdownBtn').addEventListener('click', function() {
+            if (currentMode !== 'markdown') {
+                const content = tinymce.get('editor').getContent();
+                tinymce.get('editor').remove();
+                
+                markdownEditor = new EasyMDE({
+                    element: document.getElementById('editor'),
+                    spellChecker: false,
+                    status: false,
+                    toolbar: [
+                        'bold', 'italic', 'heading', '|',
+                        'quote', 'unordered-list', 'ordered-list', '|',
+                        'link', 'image', '|',
+                        'preview', 'side-by-side', 'fullscreen', '|',
+                        'guide'
+                    ],
+                    initialValue: content
+                });
+                markdownEditor.togglePreview();
+                
+                currentMode = 'markdown';
+                this.classList.add('active');
+                document.getElementById('tinymceBtn').classList.remove('active');
+            }
         });
     });
 

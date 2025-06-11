@@ -3,10 +3,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
     <div class="position-sticky pt-3">
-        <div class="text-center mb-4">
-            <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="img-fluid" style="max-width: 150px;">
-        </div>
-        
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link text-white <?php echo $current_page === 'index.php' ? 'active bg-primary' : ''; ?>" href="index.php">

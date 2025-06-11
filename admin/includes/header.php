@@ -59,6 +59,9 @@ $usuario = get_logged_user();
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg navbar-light mb-4">
                 <div class="container-fluid">
+                    <a class="navbar-brand" href="index.php">
+                        <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="img-fluid" style="max-width: 150px;">
+                    </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
                     </button>
