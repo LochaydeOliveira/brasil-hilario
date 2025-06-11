@@ -3,7 +3,7 @@
 define('BLOG_TITLE', 'Brasil Hilário');
 define('BLOG_DESCRIPTION', 'Conteúdo diário sobre política, futebol, tecnologia, culinária, mundo animal e muito mais.');
 define('BLOG_URL', 'https://www.brasilhilario.com.br');
-define('BLOG_PATH', '');
+define('BLOG_PATH', '/home1/paymen58/brasilhilario.com.br');
 
 // Configurações de SEO
 define('META_KEYWORDS', 'humor, piadas, memes, vídeos engraçados, notícias engraçadas, brasil hilário');
@@ -20,7 +20,7 @@ define('EXCERPT_LENGTH', 200);
 // Configurações de Mídia
 define('UPLOAD_MAX_SIZE', 5242880); // 5MB
 define('ALLOWED_IMAGE_TYPES', ['jpg', 'jpeg', 'png', 'gif']);
-define('UPLOAD_PATH', __DIR__ . '/../uploads');
+define('UPLOAD_PATH', BLOG_PATH . '/uploads');
 define('UPLOAD_URL', BLOG_URL . '/uploads');
 
 // Configurações de Segurança
@@ -37,7 +37,7 @@ define('API_URL', BLOG_URL . '/api');
 define('ASSETS_URL', BLOG_URL . '/assets');
 
 // Configurações de Diretórios
-define('ROOT_PATH', dirname(__DIR__));
+define('ROOT_PATH', BLOG_PATH);
 define('INCLUDES_PATH', ROOT_PATH . '/includes');
 define('ADMIN_PATH', ROOT_PATH . '/admin');
 define('API_PATH', ROOT_PATH . '/api');

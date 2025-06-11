@@ -1,16 +1,23 @@
-Options +FollowSymLinks
+Options +FollowSymLinks +MultiViews
 RewriteEngine On
 RewriteBase /admin/
 
-# Configurações de erro
-php_flag display_errors on
-php_value error_reporting E_ALL
-
-# Permitir acesso
+# Permitir acesso a todos os arquivos
 <Files *>
     Order Allow,Deny
     Allow from all
 </Files>
+
+# Configurações de PHP
+<IfModule mod_php7.c>
+    php_value display_errors On
+    php_value error_reporting E_ALL
+    php_value memory_limit 256M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value post_max_size 8M
+    php_value upload_max_filesize 8M
+</IfModule>
 
 # Desabilitar listagem de diretórios
 Options -Indexes
