@@ -7,7 +7,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once 'includes/editors.php';
 require_once 'includes/editor-config.php';
 
 // Verificar se o usuário está logado
