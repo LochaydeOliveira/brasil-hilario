@@ -121,7 +121,13 @@ include 'includes/header.php';
 <!-- TinyMCE -->
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-    tinymce.init(<?php echo json_encode($editor_config); ?>);
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init(<?php echo json_encode($editor_config); ?>).then(function(editors) {
+            console.log('Editor inicializado com sucesso');
+        }).catch(function(error) {
+            console.error('Erro ao inicializar o editor:', error);
+        });
+    });
 
     // Gera o slug automaticamente a partir do título
     document.getElementById('title').addEventListener('input', function() {
