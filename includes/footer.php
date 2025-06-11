@@ -38,13 +38,15 @@
                         <li><a href="<?php echo BLOG_PATH; ?>/categoria/famosos">Famosos</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 mb-4">
+
+                <!-- <div class="col-md-3 mb-4">
                     <h5 class="footer-title">FAQ</h5>
                     <ul class="list-unstyled footer-links">
                         <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Crie uma Conta</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/assinatura">Assine a Revista</a></li>
                     </ul>
-                </div>
+                </div> -->
+
             </div>
             <hr class="my-4">
             <div class="row align-items-center">
