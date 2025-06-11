@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 $host = "localhost";
 $db = "paymen58_blog_adsense";
-$user = "paymen58_blog_adsense";
+$user = "paymen58";
 $pass = "u4q7+B6ly)obP_gxN9sNe";
 
 try {
