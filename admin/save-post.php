@@ -119,6 +119,6 @@ try {
     exit;
 } catch (Exception $e) {
     $_SESSION['error'] = "Erro ao salvar o post: " . $e->getMessage();
-    header('Location: edit-post.php' . ($post_id ? "?id=$post_id" : ''));
+    header('Location: editar-post.php' . ($post_id ? "?id=$post_id" : ''));
     exit;
 } 
