@@ -15,6 +15,13 @@ include 'includes/header.php';
 // Verificar permissões
 check_permission('editor');
 
+// Inicializar variáveis
+$total_posts = 0;
+$posts_publicados = 0;
+$total_usuarios = 0;
+$posts_recentes = [];
+$error = null;
+
 // Obter estatísticas
 try {
     // Total de posts
@@ -39,7 +46,7 @@ try {
 
 } catch (PDOException $e) {
     error_log("Erro ao obter estatísticas: " . $e->getMessage());
-    $error = "Erro ao carregar estatísticas.";
+    $error = "Erro ao carregar estatísticas. Por favor, tente novamente mais tarde.";
 }
 ?>
 

@@ -1,10 +1,9 @@
 <?php
-session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once '../includes/db.php';
-require_once 'auth.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 // Verificar login e timeout
 check_login();
