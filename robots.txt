@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /blog/
+Allow: /blog/post/
+Allow: /blog/categoria/
+Allow: /blog/tag/
+Allow: /blog/sobre
+Allow: /blog/contato
+
+Disallow: /blog/admin/
+Disallow: /blog/includes/
+Disallow: /blog/config/
+Disallow: /blog/api/
+Disallow: /blog/assets/js/
+Disallow: /blog/assets/css/
+Disallow: /blog/uploads/
+
+# Sitemap
+Sitemap: https://seusite.com/blog/sitemap.xml

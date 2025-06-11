@@ -1,0 +1,82 @@
+MELHORIAS NO BANCO DE DADOS - BLOG OTIMIZADO PARA ADSENSE
+=====================================================
+
+1. ALTERAÇÕES NA TABELA POSTS
+----------------------------
+- Adicionada coluna 'visualizacoes' para rastrear visualizações de posts
+- Útil para identificar conteúdo mais popular e otimizar posicionamento de anúncios
+
+2. NOVAS TABELAS
+---------------
+a) Tags e Posts_Tags
+   - Sistema de tags para melhor organização do conteúdo
+   - Relacionamento muitos-para-muitos entre posts e tags
+   - Melhora SEO e navegação do site
+
+b) Comentários
+   - Sistema de comentários para aumentar engajamento
+   - Campos: nome, email, comentário, aprovação
+   - Importante para SEO e interação com leitores
+
+c) AdSense Metrics
+   - Rastreamento de métricas do AdSense por post
+   - Campos: impressões, cliques, receita, data
+   - Ajuda a otimizar monetização
+
+d) Configurações
+   - Armazenamento flexível de configurações do site
+   - Suporte a diferentes tipos de dados (string, integer, boolean, json)
+   - Facilita manutenção e personalização
+
+e) Newsletter
+   - Sistema de captura de emails
+   - Confirmação por token
+   - Importante para marketing e retenção de leitores
+
+f) Métricas de Performance
+   - Rastreamento de performance por post
+   - Campos: tempo de carregamento, tamanho da página, taxa de rejeição
+   - Crucial para otimização de anúncios
+
+3. MELHORIAS NA TABELA USUÁRIOS
+------------------------------
+- Adicionado campo 'tipo' (admin, editor, autor)
+- Campo para avatar
+- Campo para biografia
+- Rastreamento de último login
+- Status do usuário (ativo, inativo, bloqueado)
+
+BENEFÍCIOS PRINCIPAIS
+====================
+
+1. SEO
+-----
+- Melhor organização do conteúdo com tags
+- Sistema de comentários para engajamento
+- Métricas de performance para otimização
+
+2. Monetização
+-------------
+- Rastreamento detalhado de métricas do AdSense
+- Sistema de newsletter para captura de leads
+- Métricas de performance para otimização de anúncios
+
+3. Gerenciamento
+---------------
+- Configurações flexíveis do site
+- Sistema de usuários mais robusto
+- Melhor controle de conteúdo
+
+4. Análise
+---------
+- Métricas de visualização
+- Métricas de performance
+- Métricas de engajamento
+
+PRÓXIMOS PASSOS
+==============
+1. Implementar sistema de cache
+2. Criar painel administrativo
+3. Desenvolver API para métricas
+4. Implementar sistema de backup
+5. Configurar monitoramento de performance 

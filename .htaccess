@@ -1,0 +1,79 @@
+# Habilitar o mod_rewrite
+RewriteEngine On
+
+# Definir o base do Rewrite
+RewriteBase /
+
+# Redirecionar HTTP para HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remover barra final
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ $1 [L,R=301]
+
+# URLs Amigáveis
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^post/([a-zA-Z0-9-]+)/?$ post.php?slug=$1 [L,QSA]
+RewriteRule ^categoria/([a-zA-Z0-9-]+)/?$ categoria.php?slug=$1 [L,QSA]
+RewriteRule ^tag/([a-zA-Z0-9-]+)/?$ tag.php?slug=$1 [L,QSA]
+RewriteRule ^busca/?$ busca.php [L,QSA]
+RewriteRule ^admin/?$ admin/index.php [L,QSA]
+RewriteRule ^admin/([a-zA-Z0-9-]+)/?$ admin/$1.php [L,QSA]
+RewriteRule ^sobre/?$ sobre.php [L,QSA]
+RewriteRule ^contato/?$ contato.php [L,QSA]
+RewriteRule ^privacidade/?$ privacidade.php [L,QSA]
+RewriteRule ^termos/?$ termos.php [L,QSA]
+
+# Proteger arquivos sensíveis
+<FilesMatch "\.(php|inc|sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+<FilesMatch "^(index\.php|post\.php|categoria\.php|tag\.php|busca\.php|sobre\.php|contato\.php|privacidade\.php|termos\.php|admin/index\.php|admin/login\.php|admin/posts\.php|admin/novo-post\.php|admin/editar-post\.php|admin/excluir-post\.php|admin/categorias\.php|admin/tags\.php|admin/usuarios\.php|admin/includes/auth\.php|admin/includes/editors\.php|api/incrementar-visualizacao\.php|api/upload\.php)">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Proteger diretórios
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteRule ^(config|includes|api|sql)/ - [F,L]
+</IfModule>
+
+# Compressão GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain text/html text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
+</IfModule>
+
+# Cache de navegador
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Headers de segurança
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# PHP settings
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 5M
+    php_value post_max_size 6M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# Definir charset padrão
+AddDefaultCharset UTF-8 
