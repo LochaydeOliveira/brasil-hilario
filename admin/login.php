@@ -11,6 +11,12 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 $erro = '';
+$msg = '';
+
+// Verificar mensagem de timeout
+if (isset($_GET['msg']) && $_GET['msg'] === 'timeout') {
+    $msg = 'Sua sessão expirou. Por favor, faça login novamente.';
+}
 
 // Processar formulário de login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -72,6 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             border-radius: 5px;
         }
+        .logo-img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -79,11 +89,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="login-container">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-0">Login</h4>
+                    <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="logo-img">
+                    <h4 class="mb-0">Painel Administrativo</h4>
                 </div>
                 <div class="card-body">
                     <?php if ($erro): ?>
                         <div class="alert alert-danger"><?php echo $erro; ?></div>
+                    <?php endif; ?>
+                    
+                    <?php if ($msg): ?>
+                        <div class="alert alert-warning"><?php echo $msg; ?></div>
                     <?php endif; ?>
                     
                     <form method="POST" action="">
