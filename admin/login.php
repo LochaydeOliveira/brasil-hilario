@@ -1,38 +1,69 @@
 <?php
-session_start();
-require_once '../config/config.php';
-require_once '../includes/db.php';
-require_once 'includes/auth.php';
+// Habilitar exibição de erros
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error.log');
 
-// Se já estiver logado, redireciona para o painel
-if (isset($_SESSION['usuario_id'])) {
-    header('Location: index.php');
-    exit;
+// Função para log
+function log_error($message) {
+    $timestamp = date('Y-m-d H:i:s');
+    error_log("[$timestamp] $message\n", 3, __DIR__ . '/error.log');
 }
 
-$erro = '';
-$msg = '';
-
-// Verificar mensagem de timeout
-if (isset($_GET['msg']) && $_GET['msg'] === 'timeout') {
-    $msg = 'Sua sessão expirou. Por favor, faça login novamente.';
-}
-
-// Processar formulário de login
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $senha = $_POST['senha'];
+try {
+    session_start();
+    log_error("Iniciando processo de login");
     
-    if (empty($email) || empty($senha)) {
-        $erro = 'Por favor, preencha todos os campos.';
-    } else {
-        if (do_login($email, $senha)) {
-            header('Location: index.php');
-            exit;
+    require_once '../config/config.php';
+    log_error("Config carregada");
+    
+    require_once '../includes/db.php';
+    log_error("DB carregada");
+    
+    require_once 'includes/auth.php';
+    log_error("Auth carregada");
+
+    // Se já estiver logado, redireciona para o painel
+    if (isset($_SESSION['usuario_id'])) {
+        log_error("Usuário já logado, redirecionando");
+        header('Location: index.php');
+        exit;
+    }
+
+    $erro = '';
+    $msg = '';
+
+    // Verificar mensagem de timeout
+    if (isset($_GET['msg']) && $_GET['msg'] === 'timeout') {
+        $msg = 'Sua sessão expirou. Por favor, faça login novamente.';
+        log_error("Mensagem de timeout detectada");
+    }
+
+    // Processar formulário de login
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        log_error("Processando formulário POST");
+        
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $senha = $_POST['senha'];
+        
+        if (empty($email) || empty($senha)) {
+            $erro = 'Por favor, preencha todos os campos.';
+            log_error("Campos vazios detectados");
         } else {
-            $erro = 'Email ou senha inválidos.';
+            if (do_login($email, $senha)) {
+                log_error("Login bem sucedido para: $email");
+                header('Location: index.php');
+                exit;
+            } else {
+                $erro = 'Email ou senha inválidos.';
+                log_error("Tentativa de login falhou para: $email");
+            }
         }
     }
+} catch (Exception $e) {
+    log_error("Erro crítico: " . $e->getMessage());
+    $erro = "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.";
 }
 ?>
 <!DOCTYPE html>
