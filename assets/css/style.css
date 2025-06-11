@@ -126,11 +126,11 @@ body {
     color: #000;
     font-weight: 600;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.1s ease;
 }
 
 .sidebar a:hover {
-    color: #8B7000;
+    color: #fcbd07;
     text-decoration: none;
 }
 
