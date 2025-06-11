@@ -90,7 +90,7 @@ include 'includes/header.php';
                                     <?php echo ucfirst($usuario['status']); ?>
                                 </span>
                             </td>
-                            <td><?php echo date('d/m/Y H:i', strtotime($usuario['data_criacao'])); ?></td>
+                            <td><?php echo date('d/m/Y H:i', strtotime($usuario['criado_em'] ?? 'now')); ?></td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-warning" onclick="editarUsuario(<?php echo $usuario['id']; ?>)">
                                     <i class="fas fa-edit"></i>

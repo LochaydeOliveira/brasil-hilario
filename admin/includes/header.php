@@ -17,7 +17,7 @@ $usuario = get_logged_user();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - Brasil Hilário</title>
+    <title>Painel Adm</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -58,9 +58,9 @@ $usuario = get_logged_user();
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 px-0 sidebar">
-                <div class="p-3 text-center">
+                <div class="p-3 text-center" style="background: #fff;color: #000;padding: 10px 0 3px 15px!important;">
+
                     <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="img-fluid mb-3" style="max-width: 150px;">
-                    <h5>Painel Administrativo</h5>
                 </div>
                 <nav class="nav flex-column">
                     <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="index.php">
