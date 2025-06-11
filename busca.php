@@ -17,12 +17,13 @@ function search_posts($term) {
     
     try {
         $term = '%' . $term . '%';
-        $sql = "SELECT p.*, c.name as category_name 
+        $sql = "SELECT p.*, c.nome as categoria_nome, u.nome as autor_nome 
                 FROM posts p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                WHERE p.status = 'published' 
-                AND (p.title LIKE ? OR p.content LIKE ? OR p.excerpt LIKE ?)
-                ORDER BY p.published_at DESC";
+                LEFT JOIN categorias c ON p.categoria_id = c.id 
+                LEFT JOIN usuarios u ON p.autor_id = u.id 
+                WHERE p.publicado = 1 
+                AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)
+                ORDER BY p.data_publicacao DESC";
                 
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -63,34 +64,40 @@ $posts = search_posts($search_term);
             <?php foreach ($posts as $post): ?>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <?php if (!empty($post['featured_image'])): ?>
-                            <img src="<?php echo BLOG_URL . '/uploads/' . $post['featured_image']; ?>" 
+                        <?php if (!empty($post['imagem_destacada'])): ?>
+                            <img src="<?php echo BLOG_URL . '/uploads/' . $post['imagem_destacada']; ?>" 
                                  class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($post['title']); ?>"
+                                 alt="<?php echo htmlspecialchars($post['titulo']); ?>"
                                  style="height: 200px; object-fit: cover;">
                         <?php endif; ?>
                         <div class="card-body">
                             <h5 class="card-title">
                                 <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" class="text-decoration-none text-dark">
-                                    <?php echo highlight_search_term(htmlspecialchars($post['title']), $search_term); ?>
+                                    <?php echo highlight_search_term(htmlspecialchars($post['titulo']), $search_term); ?>
                                 </a>
                             </h5>
                             <p class="card-text">
                                 <?php 
-                                $excerpt = !empty($post['excerpt']) ? $post['excerpt'] : generate_excerpt($post['content']);
+                                $excerpt = !empty($post['resumo']) ? $post['resumo'] : generate_excerpt($post['conteudo']);
                                 echo highlight_search_term(htmlspecialchars($excerpt), $search_term); 
                                 ?>
                             </p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <small class="text-muted">
                                     <i class="far fa-calendar-alt me-1"></i>
-                                    <?php echo date('d/m/Y', strtotime($post['published_at'])); ?>
+                                    <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
                                 </small>
                                 <span class="badge bg-primary">
                                     <i class="fas fa-folder me-1"></i>
-                                    <?php echo htmlspecialchars($post['category_name']); ?>
+                                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
                                 </span>
                             </div>
+                            <?php if (!empty($post['autor_nome'])): ?>
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-user me-1"></i>
+                                    Por: <?php echo htmlspecialchars($post['autor_nome']); ?>
+                                </small>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
