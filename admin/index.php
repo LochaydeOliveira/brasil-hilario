@@ -11,6 +11,36 @@ require_once 'includes/auth.php';
 check_auth();
 
 include 'includes/header.php';
+
+// Verificar permissões
+check_permission('editor');
+
+// Obter estatísticas
+try {
+    // Total de posts
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts");
+    $total_posts = $stmt->fetch()['total'];
+
+    // Posts publicados
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts WHERE status = 'publicado'");
+    $posts_publicados = $stmt->fetch()['total'];
+
+    // Total de usuários
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM usuarios");
+    $total_usuarios = $stmt->fetch()['total'];
+
+    // Posts recentes
+    $stmt = $pdo->query("SELECT p.*, u.nome as autor 
+                        FROM posts p 
+                        LEFT JOIN usuarios u ON p.autor_id = u.id 
+                        ORDER BY p.data_criacao DESC 
+                        LIMIT 5");
+    $posts_recentes = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    error_log("Erro ao obter estatísticas: " . $e->getMessage());
+    $error = "Erro ao carregar estatísticas.";
+}
 ?>
 
 <div class="container-fluid">
@@ -22,60 +52,47 @@ include 'includes/header.php';
                 <h1 class="h2">Dashboard</h1>
             </div>
             
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger"><?php echo $error; ?></div>
+            <?php endif; ?>
+            
             <div class="row">
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-primary">
+                <div class="col-md-12 mb-4">
+                    <h2>Dashboard</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Cards de Estatísticas -->
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-primary text-white">
                         <div class="card-body">
-                            <h5 class="card-title">Posts</h5>
-                            <?php
-                            $stmt = $pdo->query("SELECT COUNT(*) FROM posts");
-                            $total_posts = $stmt->fetchColumn();
-                            ?>
-                            <p class="card-text display-4"><?php echo $total_posts; ?></p>
+                            <h5 class="card-title">Total de Posts</h5>
+                            <h2 class="card-text"><?php echo $total_posts; ?></h2>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-success">
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-success text-white">
                         <div class="card-body">
-                            <h5 class="card-title">Categorias</h5>
-                            <?php
-                            $stmt = $pdo->query("SELECT COUNT(*) FROM categorias");
-                            $total_categorias = $stmt->fetchColumn();
-                            ?>
-                            <p class="card-text display-4"><?php echo $total_categorias; ?></p>
+                            <h5 class="card-title">Posts Publicados</h5>
+                            <h2 class="card-text"><?php echo $posts_publicados; ?></h2>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-warning">
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-info text-white">
                         <div class="card-body">
-                            <h5 class="card-title">Tags</h5>
-                            <?php
-                            $stmt = $pdo->query("SELECT COUNT(*) FROM tags");
-                            $total_tags = $stmt->fetchColumn();
-                            ?>
-                            <p class="card-text display-4"><?php echo $total_tags; ?></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-info">
-                        <div class="card-body">
-                            <h5 class="card-title">Usuários</h5>
-                            <?php
-                            $stmt = $pdo->query("SELECT COUNT(*) FROM usuarios");
-                            $total_usuarios = $stmt->fetchColumn();
-                            ?>
-                            <p class="card-text display-4"><?php echo $total_usuarios; ?></p>
+                            <h5 class="card-title">Total de Usuários</h5>
+                            <h2 class="card-text"><?php echo $total_usuarios; ?></h2>
                         </div>
                     </div>
                 </div>
             </div>
             
+            <!-- Posts Recentes -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -83,23 +100,37 @@ include 'includes/header.php';
                             <h5 class="card-title mb-0">Posts Recentes</h5>
                         </div>
                         <div class="card-body">
-                            <div class="list-group">
-                                <?php
-                                $stmt = $pdo->query("SELECT p.*, c.nome as categoria_nome 
-                                                   FROM posts p 
-                                                   LEFT JOIN categorias c ON p.categoria_id = c.id 
-                                                   ORDER BY p.id DESC LIMIT 5");
-                                while ($post = $stmt->fetch()) {
-                                    echo '<a href="editar-post.php?id=' . $post['id'] . '" class="list-group-item list-group-item-action">';
-                                    echo '<div class="d-flex w-100 justify-content-between">';
-                                    echo '<h6 class="mb-1">' . htmlspecialchars($post['titulo']) . '</h6>';
-                                    $data = !empty($post['data_criacao']) ? date('d/m/Y', strtotime($post['data_criacao'])) : 'Sem data';
-                                    echo '<small>' . $data . '</small>';
-                                    echo '</div>';
-                                    echo '<small class="text-muted">Categoria: ' . htmlspecialchars($post['categoria_nome'] ?? 'Sem categoria') . '</small>';
-                                    echo '</a>';
-                                }
-                                ?>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Título</th>
+                                            <th>Autor</th>
+                                            <th>Status</th>
+                                            <th>Data</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($posts_recentes as $post): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($post['titulo']); ?></td>
+                                            <td><?php echo htmlspecialchars($post['autor']); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?php echo $post['status'] === 'publicado' ? 'success' : 'warning'; ?>">
+                                                    <?php echo ucfirst($post['status']); ?>
+                                                </span>
+                                            </td>
+                                            <td><?php echo date('d/m/Y H:i', strtotime($post['data_criacao'])); ?></td>
+                                            <td>
+                                                <a href="editar-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -3,23 +3,70 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Função para verificar se o usuário está logado
-function check_auth() {
+// Verificar se o usuário está logado
+function check_login() {
     if (!isset($_SESSION['usuario_id'])) {
-        header("Location: login.php");
+        header('Location: login.php');
         exit;
     }
 }
 
-// Função para verificar se é admin
+// Verificar se o usuário é admin
 function is_admin() {
     return isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin';
 }
 
-// Função para verificar se é editor
+// Verificar se o usuário é editor
 function is_editor() {
-    return isset($_SESSION['usuario_tipo']) && 
-           ($_SESSION['usuario_tipo'] === 'admin' || $_SESSION['usuario_tipo'] === 'editor');
+    return isset($_SESSION['usuario_tipo']) && ($_SESSION['usuario_tipo'] === 'admin' || $_SESSION['usuario_tipo'] === 'editor');
+}
+
+// Verificar timeout da sessão (30 minutos)
+function check_session_timeout() {
+    if (isset($_SESSION['ultimo_acesso'])) {
+        $timeout = 30 * 60; // 30 minutos em segundos
+        if (time() - $_SESSION['ultimo_acesso'] > $timeout) {
+            session_destroy();
+            header('Location: login.php?msg=timeout');
+            exit;
+        }
+    }
+    $_SESSION['ultimo_acesso'] = time();
+}
+
+// Obter dados do usuário atual
+function get_current_user() {
+    global $pdo;
+    if (!isset($_SESSION['usuario_id'])) {
+        return null;
+    }
+    
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ? LIMIT 1");
+        $stmt->execute([$_SESSION['usuario_id']]);
+        return $stmt->fetch();
+    } catch (PDOException $e) {
+        error_log("Erro ao obter dados do usuário: " . $e->getMessage());
+        return null;
+    }
+}
+
+// Verificar permissões
+function check_permission($required_type = 'admin') {
+    if (!isset($_SESSION['usuario_tipo'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    if ($required_type === 'admin' && !is_admin()) {
+        header('Location: index.php?error=permission');
+        exit;
+    }
+
+    if ($required_type === 'editor' && !is_editor()) {
+        header('Location: index.php?error=permission');
+        exit;
+    }
 }
 
 // Função para fazer login
@@ -97,16 +144,6 @@ function verify_csrf_token($token) {
         return false;
     }
     return true;
-}
-
-// Função para verificar timeout da sessão (30 minutos)
-function check_session_timeout() {
-    if (isset($_SESSION['ultimo_acesso']) && (time() - $_SESSION['ultimo_acesso'] > 1800)) {
-        session_destroy();
-        header("Location: login.php?msg=timeout");
-        exit;
-    }
-    $_SESSION['ultimo_acesso'] = time();
 }
 
 // Função para obter dados do usuário

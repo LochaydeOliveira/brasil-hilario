@@ -1,11 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Destruir a sessão
+session_start();
 session_destroy();
-
-// Redirecionar para a página de login
-header("Location: login.php");
-exit; 
+header('Location: login.php');
+exit;
+?> 

@@ -40,24 +40,52 @@ try {
         log_error("Mensagem de timeout detectada");
     }
 
-    // Processar formulário de login
+    // Função para limpar input
+    function clean_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
+
+    // Processar login
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_error("Processando formulário POST");
         
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $email = clean_input($_POST['email']);
         $senha = $_POST['senha'];
         
         if (empty($email) || empty($senha)) {
             $erro = 'Por favor, preencha todos os campos.';
             log_error("Campos vazios detectados");
         } else {
-            if (do_login($email, $senha)) {
-                log_error("Login bem sucedido para: $email");
-                header('Location: index.php');
-                exit;
-            } else {
-                $erro = 'Email ou senha inválidos.';
-                log_error("Tentativa de login falhou para: $email");
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
+                $stmt->execute([$email]);
+                $usuario = $stmt->fetch();
+
+                if ($usuario && password_verify($senha, $usuario['senha'])) {
+                    // Login bem sucedido
+                    $_SESSION['usuario_id'] = $usuario['id'];
+                    $_SESSION['usuario_nome'] = $usuario['nome'];
+                    $_SESSION['usuario_email'] = $usuario['email'];
+                    $_SESSION['usuario_tipo'] = $usuario['tipo'];
+                    $_SESSION['ultimo_acesso'] = time();
+
+                    // Atualizar último login
+                    $stmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
+                    $stmt->execute([$usuario['id']]);
+
+                    log_error("Login bem sucedido para: $email");
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    $erro = 'Email ou senha inválidos.';
+                    log_error("Tentativa de login falhou para: $email");
+                }
+            } catch (PDOException $e) {
+                $erro = 'Erro ao tentar fazer login. Por favor, tente novamente.';
+                error_log("Erro de login: " . $e->getMessage());
             }
         }
     }
@@ -82,10 +110,15 @@ try {
     <style>
         body {
             background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .login-container {
             max-width: 400px;
-            margin: 100px auto;
+            width: 100%;
+            padding: 15px;
         }
         .card {
             border: none;
@@ -93,13 +126,14 @@ try {
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         .card-header {
-            background-color: #fff;
+            background: none;
             border-bottom: none;
             text-align: center;
             padding: 20px;
         }
-        .card-body {
-            padding: 30px;
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
         }
         .form-control {
             border-radius: 5px;
@@ -108,42 +142,37 @@ try {
         .btn-primary {
             padding: 10px;
             border-radius: 5px;
-        }
-        .logo-img {
-            max-width: 150px;
-            margin-bottom: 20px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="login-container">
-            <div class="card">
-                <div class="card-header">
-                    <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="logo-img">
-                    <h4 class="mb-0">Painel Administrativo</h4>
-                </div>
-                <div class="card-body">
-                    <?php if ($erro): ?>
-                        <div class="alert alert-danger"><?php echo $erro; ?></div>
-                    <?php endif; ?>
-                    
-                    <?php if ($msg): ?>
-                        <div class="alert alert-warning"><?php echo $msg; ?></div>
-                    <?php endif; ?>
-                    
-                    <form method="POST" action="">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="senha" class="form-label">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Entrar</button>
-                    </form>
-                </div>
+    <div class="login-container">
+        <div class="card">
+            <div class="card-header">
+                <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="logo">
+                <h4>Painel Administrativo</h4>
+            </div>
+            <div class="card-body">
+                <?php if ($erro): ?>
+                    <div class="alert alert-danger"><?php echo $erro; ?></div>
+                <?php endif; ?>
+                
+                <?php if ($msg): ?>
+                    <div class="alert alert-warning"><?php echo $msg; ?></div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senha" name="senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </form>
             </div>
         </div>
     </div>
