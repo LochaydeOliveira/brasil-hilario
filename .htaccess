@@ -31,15 +31,23 @@ RewriteRule ^termos/?$ termos.php [L,QSA]
     Order Allow,Deny
     Deny from all
 </FilesMatch>
-<FilesMatch "^(index\.php|post\.php|categoria\.php|tag\.php|busca\.php|sobre\.php|contato\.php|privacidade\.php|termos\.php|admin/index\.php|admin/login\.php|admin/posts\.php|admin/novo-post\.php|admin/editar-post\.php|admin/excluir-post\.php|admin/categorias\.php|admin/tags\.php|admin/usuarios\.php|admin/includes/auth\.php|admin/includes/editors\.php|api/incrementar-visualizacao\.php|api/upload\.php)">
+
+# Permitir acesso aos arquivos necessários
+<FilesMatch "^(index\.php|post\.php|categoria\.php|tag\.php|busca\.php|sobre\.php|contato\.php|privacidade\.php|termos\.php)$">
     Order Allow,Deny
     Allow from all
 </FilesMatch>
 
-# Proteger diretórios
+# Permitir acesso aos arquivos do admin
+<FilesMatch "^(admin/.*\.php)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Proteger diretórios sensíveis
 Options -Indexes
 <IfModule mod_rewrite.c>
-    RewriteRule ^(config|includes|api|sql)/ - [F,L]
+    RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 
 # Compressão GZIP
