@@ -51,7 +51,7 @@
             <hr class="my-4">
             <div class="row align-items-center">
                 <div class="col-md-9 text-md-start text-center mb-3 mb-md-0">
-                    <p class="mb-0 footer-copyright-text">&copy; <?php echo date('Y'); ?> <?php echo BLOG_TITLE; ?>. Todos os direitos reservados. CNPJ 19.608.677/0001-35</p>
+                    <p class="mb-0 footer-copyright-text">&copy; <?php echo date('Y'); ?> <?php echo BLOG_TITLE; ?>. Todos os direitos reservados.</p>
                 </div>
                 <div class="col-md-3 text-md-end text-center">
                     <!-- Removido o botão "Ir para o topo" duplicado do HTML -->
