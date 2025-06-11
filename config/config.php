@@ -3,7 +3,7 @@
 define('BLOG_TITLE', 'Brasil Hilário');
 define('BLOG_DESCRIPTION', 'Conteúdo diário sobre política, futebol, tecnologia, culinária, mundo animal e muito mais.');
 define('BLOG_URL', 'https://www.brasilhilario.com.br');
-define('BLOG_PATH', '/home1/paymen58/brasilhilario.com.br');
+define('BLOG_PATH', ''); // Caminho relativo vazio para a raiz
 
 // Configurações de SEO
 define('META_KEYWORDS', 'humor, piadas, memes, vídeos engraçados, notícias engraçadas, brasil hilário');
@@ -20,7 +20,7 @@ define('EXCERPT_LENGTH', 200);
 // Configurações de Mídia
 define('UPLOAD_MAX_SIZE', 5242880); // 5MB
 define('ALLOWED_IMAGE_TYPES', ['jpg', 'jpeg', 'png', 'gif']);
-define('UPLOAD_PATH', BLOG_PATH . '/uploads');
+define('UPLOAD_PATH', 'uploads');
 define('UPLOAD_URL', BLOG_URL . '/uploads');
 
 // Configurações de Segurança
@@ -37,22 +37,22 @@ define('API_URL', BLOG_URL . '/api');
 define('ASSETS_URL', BLOG_URL . '/assets');
 
 // Configurações de Diretórios
-define('ROOT_PATH', BLOG_PATH);
-define('INCLUDES_PATH', ROOT_PATH . '/includes');
-define('ADMIN_PATH', ROOT_PATH . '/admin');
-define('API_PATH', ROOT_PATH . '/api');
-define('ASSETS_PATH', ROOT_PATH . '/assets');
+define('ROOT_PATH', '');
+define('INCLUDES_PATH', 'includes');
+define('ADMIN_PATH', 'admin');
+define('API_PATH', 'api');
+define('ASSETS_PATH', 'assets');
 
 // Configurações de .htaccess
 define('ENABLE_HTACCESS', true);
-define('HTACCESS_BASE', BLOG_PATH);
+define('HTACCESS_BASE', '');
 
 // Configurações de Sitemap
-define('SITEMAP_PATH', ROOT_PATH . '/sitemap.xml');
+define('SITEMAP_PATH', 'sitemap.xml');
 define('SITEMAP_URL', BLOG_URL . '/sitemap.xml');
 
 // Configurações de Robots.txt
-define('ROBOTS_PATH', ROOT_PATH . '/robots.txt');
+define('ROBOTS_PATH', 'robots.txt');
 define('ROBOTS_URL', BLOG_URL . '/robots.txt');
 
 // Configurações de Páginas
@@ -60,12 +60,12 @@ define('PAGES', [
     'sobre' => [
         'title' => 'Sobre Nós',
         'slug' => 'sobre',
-        'url' => BLOG_PATH . '/sobre'
+        'url' => BLOG_URL . '/sobre'
     ],
     'contato' => [
         'title' => 'Contato',
         'slug' => 'contato',
-        'url' => BLOG_PATH . '/contato'
+        'url' => BLOG_URL . '/contato'
     ]
 ]);
 
@@ -74,11 +74,11 @@ define('LEGAL_PAGES', [
     'privacidade' => [
         'title' => 'Política de Privacidade',
         'slug' => 'privacidade',
-        'url' => BLOG_PATH . '/privacidade'
+        'url' => BLOG_URL . '/privacidade'
     ],
     'termos' => [
         'title' => 'Termos de Uso',
         'slug' => 'termos',
-        'url' => BLOG_PATH . '/termos'
+        'url' => BLOG_URL . '/termos'
     ]
 ]); 

@@ -12,9 +12,9 @@ require_once 'config/config.php';
 
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?php echo BLOG_PATH; ?>/assets/img/icone-favi-brasil-hilario.png">
-    <link rel="apple-touch-icon" href="<?php echo BLOG_PATH; ?>/assets/img/icone-favi-brasil-hilario.png">
-    <link rel="shortcut icon" href="<?php echo BLOG_PATH; ?>/assets/img/icone-favi-brasil-hilario.png">
+    <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
+    <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
+    <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +26,7 @@ require_once 'config/config.php';
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="<?php echo BLOG_PATH; ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?php echo BLOG_URL; ?>/assets/css/style.css" rel="stylesheet">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous"></script>
@@ -57,8 +57,8 @@ require_once 'config/config.php';
     <header class="bg-light shadow-sm">
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="<?php echo BLOG_PATH; ?>">
-                    <img src="<?php echo BLOG_PATH; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="logo-img me-2">
+                <a class="navbar-brand d-flex align-items-center" href="<?php echo BLOG_URL; ?>">
+                    <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="logo-img me-2">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -66,7 +66,7 @@ require_once 'config/config.php';
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BLOG_PATH; ?>">Home</a>
+                            <a class="nav-link" href="<?php echo BLOG_URL; ?>">Home</a>
                         </li>
                         <?php foreach (PAGES as $page): ?>
                         <li class="nav-item">

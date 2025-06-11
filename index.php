@@ -29,19 +29,19 @@ include 'includes/header.php';
         ?>
         <article class="blog-post mb-4" data-aos="fade-up">
             <h2 class="display-6 fw-bold mb-3">
-                <a href="<?php echo BLOG_PATH; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
+                <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
                     <?php echo htmlspecialchars($post['titulo']); ?>
                 </a>
             </h2>
             
             <div class="post-meta mb-3">
                 <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['criado_em'])); ?></span>
-                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
+                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
                 <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
             </div>
             
             <?php if ($post['imagem_destacada']): ?>
-            <img src="<?php echo BLOG_PATH; ?>/uploads/<?php echo $post['imagem_destacada']; ?>" 
+            <img src="<?php echo BLOG_URL; ?>/uploads/<?php echo $post['imagem_destacada']; ?>" 
                  class="img-fluid rounded mb-3" 
                  alt="<?php echo htmlspecialchars($post['titulo']); ?>"
                  loading="lazy">
@@ -51,7 +51,7 @@ include 'includes/header.php';
                 <?php echo $post['resumo']; ?>
             </div>
             
-            <a href="<?php echo BLOG_PATH; ?>/post/<?php echo $post['slug']; ?>" class="btn btn-primary">
+            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="btn btn-primary">
                 Ler mais
             </a>
         </article>
