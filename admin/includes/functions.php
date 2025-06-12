@@ -48,27 +48,43 @@ function getSuccess() {
 }
 
 /**
+ * Retorna o HTML de uma mensagem de erro
+ */
+function getErrorHtml($message) {
+    if ($message) {
+        return '<div class="alert alert-danger alert-dismissible fade show" role="alert">' .
+               '<i class="fas fa-exclamation-circle me-2"></i>' . htmlspecialchars($message) .
+               '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
+               '</div>';
+    }
+    return '';
+}
+
+/**
+ * Retorna o HTML de uma mensagem de sucesso
+ */
+function getSuccessHtml($message) {
+    if ($message) {
+        return '<div class="alert alert-success alert-dismissible fade show" role="alert">' .
+               '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($message) .
+               '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
+               '</div>';
+    }
+    return '';
+}
+
+/**
  * Exibe uma mensagem de erro em um alerta Bootstrap
  */
 function showError($message) {
-    if ($message) {
-        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
-        echo '<i class="fas fa-exclamation-circle me-2"></i>' . htmlspecialchars($message);
-        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>';
-        echo '</div>';
-    }
+    echo getErrorHtml($message);
 }
 
 /**
  * Exibe uma mensagem de sucesso em um alerta Bootstrap
  */
 function showSuccess($message) {
-    if ($message) {
-        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
-        echo '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($message);
-        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>';
-        echo '</div>';
-    }
+    echo getSuccessHtml($message);
 }
 
 /**

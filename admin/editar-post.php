@@ -44,6 +44,10 @@ try {
 
 $page_title = "Editar Post";
 include 'includes/header.php';
+
+// Obtém as mensagens da sessão
+$error_message = getError();
+$success_message = getSuccess();
 ?>
 
 <div class="container-fluid">
@@ -57,8 +61,12 @@ include 'includes/header.php';
 
             <?php 
             // Exibe mensagens de erro ou sucesso
-            showError(getError());
-            showSuccess(getSuccess());
+            if ($error_message) {
+                echo getErrorHtml($error_message);
+            }
+            if ($success_message) {
+                echo getSuccessHtml($success_message);
+            }
             ?>
 
             <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
