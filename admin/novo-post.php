@@ -1,193 +1,106 @@
 <?php
-ob_start();
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once '../config/config.php';
+require_once '../includes/auth.php';
 require_once '../includes/db.php';
-require_once 'includes/auth.php';
-require_once 'includes/editors.php';
+require_once '../includes/functions.php';
+require_once '../includes/header.php';
+require_once '../includes/editor.php';
 
-// Verificar se o usuário está logado
-check_login();
+load_editor_scripts('tinymce');
 
-// Processar o formulário
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titulo = filter_input(INPUT_POST, 'titulo', FILTER_UNSAFE_RAW);
-    $resumo = filter_input(INPUT_POST, 'resumo', FILTER_UNSAFE_RAW);
-    $conteudo = $_POST['conteudo'];
-    $categoria_id = filter_input(INPUT_POST, 'categoria_id', FILTER_VALIDATE_INT);
-    $tags = filter_input(INPUT_POST, 'tags', FILTER_UNSAFE_RAW);
-    $status_form = filter_input(INPUT_POST, 'status', FILTER_UNSAFE_RAW);
-    $editor_type = filter_input(INPUT_POST, 'editor_type', FILTER_UNSAFE_RAW);
-    
-    // Converter o status do formulário para o formato do banco de dados (0 ou 1 para 'publicado')
-    $publicado = ($status_form === 'publicado') ? 1 : 0;
-    
-    // Gerar slug do título
-    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo)));
-    
-    // Validação básica
-    if (empty($titulo) || empty($conteudo) || !$categoria_id) {
-        $erro = "Por favor, preencha o título, o conteúdo e selecione uma categoria.";
-    } else {
-        try {
-            // Inserir o post
-            $stmt = $pdo->prepare("INSERT INTO posts (
-                titulo, 
-                slug, 
-                resumo, 
-                conteudo, 
-                categoria_id, 
-                publicado,
-                editor_type,
-                autor_id,
-                criado_em,
-                atualizado_em,
-                visualizacoes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0)");
-            
-            $stmt->execute([
-                $titulo, 
-                $slug, 
-                $resumo, 
-                $conteudo, 
-                $categoria_id, 
-                $publicado,
-                $editor_type,
-                $_SESSION['usuario_id']
-            ]);
-            
-            $post_id = $pdo->lastInsertId();
-            
-            // Processar tags
-            if (!empty($tags)) {
-                $tags_array = array_map('trim', explode(',', $tags));
-                foreach ($tags_array as $tag_nome) {
-                    // Verificar se a tag já existe
-                    $stmt = $pdo->prepare("SELECT id FROM tags WHERE nome = ?");
-                    $stmt->execute([$tag_nome]);
-                    $tag = $stmt->fetch();
-                    
-                    if (!$tag) {
-                        // Criar nova tag
-                        $tag_slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $tag_nome)));
-                        $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
-                        $stmt->execute([$tag_nome, $tag_slug]);
-                        $tag_id = $pdo->lastInsertId();
-                    } else {
-                        $tag_id = $tag['id'];
-                    }
-                    
-                    // Associar tag ao post
-                    $stmt = $pdo->prepare("INSERT INTO posts_tags (post_id, tag_id) VALUES (?, ?)");
-                    $stmt->execute([$post_id, $tag_id]);
-                }
-            }
-            
-            header('Location: posts.php?success=1');
-            exit;
-            
-        } catch (PDOException $e) {
-            $erro = "Erro ao salvar o post: " . $e->getMessage();
-        }
-    }
-}
-
-// Buscar categorias
-$stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
-$categorias = $stmt->fetchAll();
-
-include 'includes/header.php';
+// Obter categorias
+$stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome ASC");
+$categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<div class="container-fluid">
-    <div class="row">
-        <?php include 'includes/sidebar.php'; ?>
-        
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Novo Post</h1>
-            </div>
-            
-            <?php if (isset($erro)): ?>
-                <div class="alert alert-danger"><?php echo $erro; ?></div>
-            <?php endif; ?>
-            
-            <form method="POST" action="" class="needs-validation" novalidate>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label for="titulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="titulo" name="titulo" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="resumo" class="form-label">Resumo</label>
-                            <textarea class="form-control" id="resumo" name="resumo" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="conteudo" class="form-label">Conteúdo</label>
-                            <div class="editor-toolbar mb-2">
-                                <div class="btn-group" role="group">
-                                    <input type="radio" class="btn-check" name="editor_type" id="editor_tinymce" value="tinymce" checked>
-                                    <label class="btn btn-outline-primary" for="editor_tinymce">TinyMCE</label>
-                                    
-                                    <input type="radio" class="btn-check" name="editor_type" id="editor_markdown" value="markdown">
-                                    <label class="btn btn-outline-primary" for="editor_markdown">Markdown</label>
-                                </div>
-                            </div>
-                            <textarea class="form-control" id="conteudo" name="conteudo" rows="15" required></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Publicação</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="rascunho">Rascunho</option>
-                                        <option value="publicado">Publicado</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="categoria_id" class="form-label">Categoria</label>
-                                    <select class="form-select" id="categoria_id" name="categoria_id">
-                                        <option value="">Selecione uma categoria</option>
-                                        <?php foreach ($categorias as $categoria): ?>
-                                            <option value="<?php echo $categoria['id']; ?>">
-                                                <?php echo htmlspecialchars($categoria['nome']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="tags" class="form-label">Tags</label>
-                                    <input type="text" class="form-control" id="tags" name="tags" 
-                                           placeholder="Separe as tags por vírgula">
-                                    <div class="form-text">Exemplo: tecnologia, marketing, seo</div>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary w-100">Publicar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </main>
+<div class="container mt-5">
+    <h2>Novo Post</h2>
+    <form method="POST" action="save-post.php" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required>
+        </div>
+        <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="slug" name="slug" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="resumo" class="form-label">Resumo</label>
+            <textarea class="form-control" id="resumo" name="resumo" rows="3" maxlength="300"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="conteudo" class="form-label">Conteúdo</label>
+            <textarea class="form-control" id="conteudo" name="conteudo" rows="10"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="categoria_id" class="form-label">Categoria</label>
+            <select class="form-select" id="categoria_id" name="categoria_id" required>
+                <option value="">Selecione uma categoria</option>
+                <?php foreach ($categorias as $categoria): ?>
+                    <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+            <input type="text" class="form-control" id="tags" name="tags">
+        </div>
+        <div class="mb-3">
+            <label for="meta_description" class="form-label">Meta descrição (SEO)</label>
+            <textarea class="form-control" id="meta_description" name="meta_description" rows="2" maxlength="160"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="featured_image" class="form-label">Imagem destacada</label>
+            <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">Publicar</button>
+        <button type="button" class="btn btn-secondary" onclick="previewPost()">Visualizar</button>
+    </form>
+
+    <div id="preview" class="mt-5" style="display: none;">
+        <h3>Pré-visualização</h3>
+        <div id="preview-content" class="border p-3"></div>
     </div>
 </div>
 
-<?php
-// Carregar scripts do editor
-load_editor_scripts('tinymce');
-include 'includes/footer.php';
-?> 
+<script>
+// Gerar slug automaticamente
+function generateSlug(text) {
+    return text.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+document.getElementById('titulo').addEventListener('input', function () {
+    document.getElementById('slug').value = generateSlug(this.value);
+});
+
+// Salvar categoria com localStorage
+const categoriaSelect = document.getElementById('categoria_id');
+categoriaSelect.value = localStorage.getItem('categoria_id') || '';
+categoriaSelect.addEventListener('change', function() {
+    localStorage.setItem('categoria_id', this.value);
+});
+
+// Visualização ao vivo
+function previewPost() {
+    const titulo = document.getElementById('titulo').value;
+    const conteudo = tinymce.get('conteudo').getContent();
+    const preview = document.getElementById('preview');
+    const previewContent = document.getElementById('preview-content');
+
+    preview.style.display = 'block';
+    previewContent.innerHTML = `<h4>${titulo}</h4>` + conteudo;
+}
+
+// Atalho Ctrl+S para enviar
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        document.querySelector('form').submit();
+    }
+});
+</script>
+
+<?php require_once '../includes/footer.php'; ?>

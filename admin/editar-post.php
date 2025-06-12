@@ -12,104 +12,24 @@ require_once 'includes/editors.php';
 // Verificar se o usuário está logado
 check_login();
 
-// Verificar se o ID foi fornecido
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-if (!$id) {
-    header('Location: posts.php');
-    exit;
-}
+// Obter ID do post
+$post_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Processar o formulário
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titulo = filter_input(INPUT_POST, 'titulo', FILTER_UNSAFE_RAW);
-    $resumo = filter_input(INPUT_POST, 'resumo', FILTER_UNSAFE_RAW);
-    $conteudo = $_POST['conteudo']; // Conteúdo do editor pode ter HTML, não sanitizar aqui
-    $categoria_id = filter_input(INPUT_POST, 'categoria_id', FILTER_VALIDATE_INT);
-    $tags = filter_input(INPUT_POST, 'tags', FILTER_UNSAFE_RAW);
-    $status_form = filter_input(INPUT_POST, 'status', FILTER_UNSAFE_RAW); // Obtém o valor do select
-    $editor_type = filter_input(INPUT_POST, 'editor_type', FILTER_UNSAFE_RAW);
-    
-    // Converter o status do formulário para o formato do banco de dados (0 ou 1 para 'publicado')
-    $publicado = ($status_form === 'publicado') ? 1 : 0;
-    
-    // Gerar slug do título
-    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo)));
-    
-    try {
-        // Atualizar o post
-        $stmt = $pdo->prepare("UPDATE posts SET 
-                              titulo = ?, 
-                              slug = ?, 
-                              resumo = ?, 
-                              conteudo = ?, 
-                              categoria_id = ?, 
-                              publicado = ?,
-                              editor_type = ?,
-                              atualizado_em = CURRENT_TIMESTAMP
-                              WHERE id = ?");
-        $stmt->execute([$titulo, $slug, $resumo, $conteudo, $categoria_id, $publicado, $editor_type, $id]);
-        
-        // Remover tags antigas
-        $stmt = $pdo->prepare("DELETE FROM posts_tags WHERE post_id = ?");
-        $stmt->execute([$id]);
-        
-        // Processar novas tags
-        if (!empty($tags)) {
-            $tags_array = array_map('trim', explode(',', $tags));
-            foreach ($tags_array as $tag_nome) {
-                // Verificar se a tag já existe
-                $stmt = $pdo->prepare("SELECT id FROM tags WHERE nome = ?");
-                $stmt->execute([$tag_nome]);
-                $tag = $stmt->fetch();
-                
-                if (!$tag) {
-                    // Criar nova tag
-                    $tag_slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $tag_nome)));
-                    $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
-                    $stmt->execute([$tag_nome, $tag_slug]);
-                    $tag_id = $pdo->lastInsertId();
-                } else {
-                    $tag_id = $tag['id'];
-                }
-                
-                // Associar tag ao post
-                $stmt = $pdo->prepare("INSERT INTO posts_tags (post_id, tag_id) VALUES (?, ?)");
-                $stmt->execute([$id, $tag_id]);
-            }
-        }
-        
-        header('Location: posts.php?success=1');
-        exit;
-        
-    } catch (PDOException $e) {
-        $erro = "Erro ao atualizar o post: " . $e->getMessage();
-    }
-}
-
-// Buscar o post
-try {
+// Buscar post existente
+if ($post_id > 0) {
     $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt->execute([$post_id]);
     $post = $stmt->fetch();
-    
+
     if (!$post) {
+        $_SESSION['error'] = "Post não encontrado.";
         header('Location: posts.php');
         exit;
     }
-    
-    // Garante que as chaves 'publicado' e 'editor_type' existam com valores padrão
-    $post['publicado'] = $post['publicado'] ?? 0; // 0 para rascunho, 1 para publicado
-    $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
-    
-    // Buscar tags do post
-    $stmt = $pdo->prepare("SELECT t.nome FROM tags t 
-                          INNER JOIN posts_tags pt ON t.id = pt.tag_id 
-                          WHERE pt.post_id = ?");
-    $stmt->execute([$id]);
-    $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
-} catch (PDOException $e) {
-    die("Erro ao buscar o post: " . $e->getMessage());
+} else {
+    $_SESSION['error'] = "ID inválido.";
+    header('Location: posts.php');
+    exit;
 }
 
 // Buscar categorias
@@ -122,37 +42,47 @@ include 'includes/header.php';
 <div class="container-fluid">
     <div class="row">
         <?php include 'includes/sidebar.php'; ?>
-        
+
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Editar Post</h1>
             </div>
-            
-            <?php if (isset($erro)): ?>
-                <div class="alert alert-danger"><?php echo $erro; ?></div>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
             <?php endif; ?>
-            
-            <form method="POST" action="" class="needs-validation" novalidate>
+
+            <form method="POST" action="save-post.php" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <input type="hidden" name="id" value="<?php echo $post_id; ?>">
+
                 <div class="row">
                     <div class="col-md-8">
                         <div class="mb-3">
-                            <label for="titulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="titulo" name="titulo" 
-                                   value="<?php echo htmlspecialchars($post['titulo']); ?>" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="resumo" class="form-label">Resumo</label>
-                            <textarea class="form-control" id="resumo" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo']); ?></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Conteúdo</label>
-                            <textarea id="editor" name="content" class="form-control" rows="10"><?php echo $post ? htmlspecialchars($post['content']) : ''; ?></textarea>
+                            <label for="title" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($post['title']); ?>" required>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug</label>
+                            <input type="text" class="form-control" id="slug" name="slug" value="<?php echo htmlspecialchars($post['slug']); ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="excerpt" class="form-label">Resumo</label>
+                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3"><?php echo htmlspecialchars($post['excerpt']); ?></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Conteúdo</label>
+                            <textarea class="form-control" id="content" name="content" rows="15" required><?php echo htmlspecialchars($post['content']); ?></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Prévia</label>
+                            <div id="preview" class="border rounded p-3 bg-light"></div>
+                        </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="card mb-3">
                             <div class="card-header">
@@ -160,35 +90,33 @@ include 'includes/header.php';
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="rascunho" <?php echo ($post['publicado'] ?? 0) == 0 ? 'selected' : ''; ?>>Rascunho</option>
-                                        <option value="publicado" <?php echo ($post['publicado'] ?? 0) == 1 ? 'selected' : ''; ?>>Publicado</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="categoria_id" class="form-label">Categoria</label>
-                                    <select class="form-select" id="categoria_id" name="categoria_id">
+                                    <label for="category_id" class="form-label">Categoria</label>
+                                    <select class="form-select" id="category_id" name="category_id" required>
                                         <option value="">Selecione uma categoria</option>
                                         <?php foreach ($categorias as $categoria): ?>
-                                            <option value="<?php echo $categoria['id']; ?>" 
-                                                    <?php echo ($post['categoria_id'] ?? null) == $categoria['id'] ? 'selected' : ''; ?>>
+                                            <option value="<?php echo $categoria['id']; ?>" <?php echo ($post['category_id'] == $categoria['id']) ? 'selected' : ''; ?>>
                                                 <?php echo htmlspecialchars($categoria['nome']); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                
-                                <div class="mb-3">
-                                    <label for="tags" class="form-label">Tags</label>
-                                    <input type="text" class="form-control" id="tags" name="tags" 
-                                           value="<?php echo htmlspecialchars(implode(', ', $tags)); ?>"
-                                           placeholder="Separe as tags por vírgula">
-                                    <div class="form-text">Exemplo: tecnologia, marketing, seo</div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="published" name="published" <?php echo ($post['published'] ? 'checked' : ''); ?>>
+                                    <label class="form-check-label" for="published">Publicado</label>
                                 </div>
-                                
-                                <button type="submit" class="btn btn-primary w-100">Atualizar</button>
+
+                                <div class="mb-3">
+                                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                                    <input class="form-control" type="file" id="featured_image" name="featured_image" accept="image/*">
+                                    <?php if (!empty($post['featured_image'])): ?>
+                                        <div class="mt-2">
+                                            <img src="<?php echo $post['featured_image']; ?>" alt="Imagem atual" class="img-fluid rounded">
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
                             </div>
                         </div>
                     </div>
@@ -199,27 +127,52 @@ include 'includes/header.php';
 </div>
 
 <?php
-// Carregar scripts do editor
-load_editor_scripts($post['editor_type'] ?? 'tinymce');
+load_editor_scripts('tinymce');
 include 'includes/footer.php';
-?> 
+?>
 
-<!-- AQUI o script vai logo antes de fechar o body -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        tinymce.init(<?php echo json_encode($editor_config); ?>);
+// Atualização automática do slug baseado no título
+const titleInput = document.getElementById('title');
+const slugInput = document.getElementById('slug');
 
-        // Slug automático com base no título
-        document.getElementById('title').addEventListener('input', function () {
-            const title = this.value;
-            const slug = title
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
-            document.getElementById('slug').value = slug;
-        });
-    });
+function generateSlug(text) {
+    return text.toLowerCase()
+        .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim().replace(/\s+/g, '-')
+        .replace(/--+/g, '-');
+}
+
+titleInput.addEventListener('input', () => {
+    slugInput.value = generateSlug(titleInput.value);
+});
+
+// Atualização da prévia do conteúdo
+const contentInput = document.getElementById('content');
+const preview = document.getElementById('preview');
+contentInput.addEventListener('input', () => {
+    preview.innerHTML = tinymce.activeEditor.getContent();
+});
+
+// Salvar categoria com localStorage
+const categorySelect = document.getElementById('category_id');
+categorySelect.addEventListener('change', () => {
+    localStorage.setItem('selected_category', categorySelect.value);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('selected_category');
+    if (saved && categorySelect) {
+        categorySelect.value = saved;
+    }
+});
+
+// Atalho Ctrl+S para salvar
+window.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        document.querySelector('form').submit();
+    }
+});
 </script>
