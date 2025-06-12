@@ -2,19 +2,18 @@
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once 'includes/functions.php';
 require_once 'includes/editor-config.php';
 
 // Verifica se o usuário está logado
 if (!check_login()) {
-    setError('Você precisa estar logado para acessar esta página.');
+    $_SESSION['error'] = 'Você precisa estar logado para acessar esta página.';
     header('Location: login.php');
     exit;
 }
 
 // Verifica se o usuário é admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    setError('Você não tem permissão para acessar esta página.');
+    $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
     header('Location: index.php');
     exit;
 }
@@ -35,17 +34,17 @@ try {
         $post = $stmt->fetch();
 
         if (!$post) {
-            setError("Post não encontrado.");
+            $_SESSION['error'] = "Post não encontrado.";
             header('Location: posts.php');
             exit;
         }
     } else {
-        setError("ID do post inválido.");
+        $_SESSION['error'] = "ID do post inválido.";
         header('Location: posts.php');
         exit;
     }
 } catch (PDOException $e) {
-    setError("Erro ao carregar dados: " . $e->getMessage());
+    $_SESSION['error'] = "Erro ao carregar dados: " . $e->getMessage();
     header('Location: posts.php');
     exit;
 }
@@ -54,8 +53,9 @@ $page_title = "Editar Post";
 include 'includes/header.php';
 
 // Obtém as mensagens da sessão
-$error_message = getError();
-$success_message = getSuccess();
+$error_message = isset($_SESSION['error']) ? $_SESSION['error'] : null;
+$success_message = isset($_SESSION['success']) ? $_SESSION['success'] : null;
+unset($_SESSION['error'], $_SESSION['success']);
 ?>
 
 <div class="container-fluid">
@@ -70,10 +70,16 @@ $success_message = getSuccess();
             <?php 
             // Exibe mensagens de erro ou sucesso
             if ($error_message) {
-                echo getErrorHtml($error_message);
+                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">' .
+                     '<i class="fas fa-exclamation-circle me-2"></i>' . htmlspecialchars($error_message) .
+                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
+                     '</div>';
             }
             if ($success_message) {
-                echo getSuccessHtml($success_message);
+                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">' .
+                     '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($success_message) .
+                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
+                     '</div>';
             }
             ?>
 
