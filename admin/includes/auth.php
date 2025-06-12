@@ -1,23 +1,9 @@
 <?php
-/**
- * Arquivo: auth.php
- * Descrição: Funções de autenticação e controle de acesso
- * Funcionalidades:
- * - Verifica login do usuário
- * - Controla permissões de acesso
- * - Gerencia sessões
- * - Protege contra acesso não autorizado
- */
-
-// Inicia a sessão se ainda não foi iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/**
- * Verifica se o usuário está logado
- * Redireciona para a página de login se não estiver
- */
+// Verificar se o usuário está logado
 function check_login() {
     if (!isset($_SESSION['usuario_id'])) {
         header('Location: login.php');
@@ -25,72 +11,14 @@ function check_login() {
     }
 }
 
-/**
- * Verifica se o usuário está logado
- * @return bool True se estiver logado, False caso contrário
- */
+// Função para verificar se o usuário está logado (alternativa)
 function isLoggedIn() {
     return isset($_SESSION['usuario_id']);
 }
 
-/**
- * Verifica se o usuário é administrador
- * @return bool True se for admin, False caso contrário
- */
+// Função para verificar se o usuário é admin
 function is_admin() {
     return isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin';
-}
-
-/**
- * Verifica se o usuário tem permissão para acessar uma página
- * @param string $required_type Tipo de usuário necessário (admin, editor, etc)
- * @return bool True se tiver permissão, False caso contrário
- */
-function check_permission($required_type) {
-    if (!isLoggedIn()) {
-        return false;
-    }
-    
-    // Admin tem acesso a tudo
-    if (is_admin()) {
-        return true;
-    }
-    
-    // Verifica o tipo específico de permissão
-    return isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === $required_type;
-}
-
-/**
- * Gera um token CSRF para proteção contra ataques
- * @return string Token CSRF
- */
-function generate_csrf_token() {
-    if (!isset($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
-}
-
-/**
- * Verifica se o token CSRF é válido
- * @param string $token Token a ser verificado
- * @return bool True se o token for válido, False caso contrário
- */
-function verify_csrf_token($token) {
-    if (!isset($_SESSION['csrf_token']) || !isset($token)) {
-        return false;
-    }
-    return hash_equals($_SESSION['csrf_token'], $token);
-}
-
-/**
- * Limpa a sessão do usuário (logout)
- */
-function logout() {
-    session_unset();
-    session_destroy();
-    header('Location: login.php');
-    exit;
 }
 
 // Verificar se o usuário é editor
@@ -187,6 +115,22 @@ function do_logout() {
 function is_ajax() {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+}
+
+// Função para gerar token CSRF
+function generate_csrf_token() {
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// Função para verificar token CSRF
+function verify_csrf_token($token) {
+    if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
+        return false;
+    }
+    return true;
 }
 
 // Função para limpar mensagens da sessão
