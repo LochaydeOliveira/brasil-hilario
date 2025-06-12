@@ -5,11 +5,19 @@ require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 require_once 'includes/editor-config.php';
 
-// Verifica se o usuário está autenticado
-check_login();
+// Verifica se o usuário está logado
+if (!check_login()) {
+    setError('Você precisa estar logado para acessar esta página.');
+    header('Location: login.php');
+    exit;
+}
 
-// Verifica se o usuário tem permissão
-check_permission('editor');
+// Verifica se o usuário é admin
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    setError('Você não tem permissão para acessar esta página.');
+    header('Location: index.php');
+    exit;
+}
 
 $categories = [];
 try {

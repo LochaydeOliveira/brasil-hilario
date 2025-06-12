@@ -88,33 +88,6 @@ function showSuccess($message) {
 }
 
 /**
- * Verifica se o usuário tem permissão para acessar uma página
- */
-function checkPermission($required_role = 'admin') {
-    if (!isLoggedIn()) {
-        setError('Você precisa estar logado para acessar esta página.');
-        header('Location: login.php');
-        exit;
-    }
-
-    if ($required_role === 'admin' && !isAdmin()) {
-        setError('Você não tem permissão para acessar esta página.');
-        header('Location: index.php');
-        exit;
-    }
-}
-
-/**
- * Verifica se o usuário é administrador
- */
-function isAdmin() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
-}
-
-/**
  * Formata uma data para o padrão brasileiro
  */
 function formatDate($date) {
