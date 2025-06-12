@@ -1,47 +1,56 @@
 brasil-hilario/
-├── admin/                      # Painel administrativo
-│   ├── includes/              # Arquivos de inclusão do admin
-│   │   ├── config.php        # Configurações
-│   │   ├── auth.php          # Autenticação
-│   │   ├── header.php        # Cabeçalho
-│   │   ├── footer.php        # Rodapé
-│   │   ├── sidebar.php       # Menu lateral
-│   │   └── editor-config.php # Configuração do editor
-│   ├── edit-post.php         # Edição de posts
+├── .github/                   # Configurações do GitHub
+├── .git/                      # Controle de versão Git
+├── admin/                     # Painel administrativo
+│   ├── includes/             # Arquivos de inclusão do admin
+│   ├── .htaccess             # Configuração Apache do admin
+│   ├── editar-post.php       # Edição de posts
+│   ├── gerar_senha.php       # Geração de senhas
+│   ├── index.php             # Dashboard
+│   ├── login.php             # Autenticação
+│   ├── logout.php            # Logout
+│   ├── novo-post.php         # Criação de posts
 │   ├── posts.php             # Lista de posts
-│   ├── categorias.php        # Gerenciamento de categorias
-│   └── upload.php            # Upload de arquivos
-│
-├── assets/                    # Arquivos estáticos
-│   ├── css/                  # Estilos
-│   ├── js/                   # Scripts
-│   └── img/                  # Imagens
-│
-├── includes/                  # Arquivos de inclusão do site
-│   ├── config.php            # Configurações
-│   ├── db.php               # Conexão com banco
-│   └── functions.php        # Funções gerais
-│
-├── uploads/                   # Arquivos enviados
-│   ├── featured/            # Imagens destacadas
-│   └── [ano]/[mês]/        # Organização por data
+│   ├── save-post.php         # Salvamento de posts
+│   ├── update_posts.php      # Atualização de posts
+│   ├── upload.php            # Upload de arquivos
+│   ├── upload-image.php      # Upload de imagens
+│   └── usuarios.php          # Gerenciamento de usuários
 │
 ├── api/                      # Endpoints da API
 │
+├── assets/                   # Arquivos estáticos
+│   ├── css/                 # Estilos
+│   ├── js/                  # Scripts
+│   └── img/                 # Imagens
+│
 ├── config/                   # Configurações
+│
+├── includes/                 # Arquivos de inclusão do site
+│
+├── posts/                    # Posts do blog
 │
 ├── sql/                      # Scripts SQL
 │
+├── uploads/                  # Arquivos enviados
+│
 ├── vendor/                   # Dependências (Composer)
 │
-├── index.php                 # Página inicial
-├── post.php                  # Página de post
+├── .htaccess                 # Configuração Apache
 ├── busca.php                 # Página de busca
-├── sobre.php                 # Página sobre
+├── composer.json             # Configuração Composer
+├── composer.lock             # Lock do Composer
 ├── contato.php              # Página de contato
-├── termos.php               # Termos de uso
+├── credenciais-do-servidor.txt # Credenciais
+├── estrutura-tabelas.txt     # Estrutura do banco
+├── info.php                 # Informações do PHP
+├── index.php                # Página inicial
+├── melhorias-banco-dados.txt # Melhorias do banco
+├── politica-de-privacidade.php # Política de privacidade
+├── post.php                 # Página de post
 ├── privacidade.php          # Política de privacidade
+├── resumo_projeto.txt       # Resumo do projeto
 ├── robots.txt               # Configuração de robots
+├── sobre.php                # Página sobre
 ├── sitemap.xml              # Mapa do site
-├── .htaccess                # Configuração Apache
-└── composer.json            # Configuração Composer
+└── termos.php               # Termos de uso
