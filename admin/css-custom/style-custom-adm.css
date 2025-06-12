@@ -1,3 +1,7 @@
 .sidebar {
     top: 30px!important;
 }
+
+.navbar-brand img {
+    max-height: 60px!important;
+}
