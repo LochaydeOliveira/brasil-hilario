@@ -81,6 +81,7 @@ $usuario = get_logged_user();
             </nav>
 
             <!-- Content -->
-            <div class="container-fluid">
+            <div class="main-content">
+                <div class="container-fluid">
 </body>
 </html> 

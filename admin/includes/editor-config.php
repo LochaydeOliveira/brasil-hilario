@@ -69,6 +69,6 @@ $editor_config = [
     'remove_script_host' => false,
     'convert_urls' => true,
     'language' => 'pt_BR',
-    'language_url' => '/assets/js/tinymce/langs/pt_BR.js'
+    'language_url' => '../assets/js/tinymce/langs/pt_BR.js'
 ];
 ?>

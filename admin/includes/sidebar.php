@@ -46,7 +46,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             
-            <?php if (is_admin()): ?>
+            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin'): ?>
             <li class="nav-item">
                 <a class="nav-link text-white <?php echo $current_page === 'usuarios.php' ? 'active bg-primary' : ''; ?>" href="usuarios.php">
                     <i class="fas fa-users"></i>
