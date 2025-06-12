@@ -1,6 +1,7 @@
 <?php
-require_once 'includes/config.php';
-require_once 'includes/auth.php';
+require_once '../config/config.php';
+require_once '../includes/db.php';
+require_once '../includes/auth.php';
 
 // Verifica se o usuário está autenticado
 if (!isLoggedIn()) {
@@ -14,17 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $post_id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-$title = trim($_POST['title']);
+$titulo = trim($_POST['title']);
 $slug = trim($_POST['slug']);
-$content = trim($_POST['content']);
-$excerpt = trim($_POST['excerpt']);
-$category_id = (int)$_POST['category_id'];
-$published = isset($_POST['published']) ? 1 : 0;
+$conteudo = trim($_POST['content']);
+$resumo = trim($_POST['excerpt']);
+$categoria_id = (int)$_POST['category_id'];
+$publicado = isset($_POST['published']) ? 1 : 0;
+$editor_type = 'tinymce';
+$autor_id = $_SESSION['usuario_id'] ?? null;
 
 // Validações básicas
-if (empty($title) || empty($slug) || empty($content) || empty($category_id)) {
+if (empty($titulo) || empty($slug) || empty($conteudo) || empty($categoria_id)) {
     $_SESSION['error'] = "Todos os campos obrigatórios devem ser preenchidos.";
-    header('Location: edit-post.php' . ($post_id ? "?id=$post_id" : ''));
+    header('Location: editar-post.php' . ($post_id ? "?id=$post_id" : '') . '?error=campos_vazios');
     exit;
 }
 
@@ -34,12 +37,12 @@ try {
     $stmt->execute([$slug, $post_id]);
     if ($stmt->fetch()) {
         $_SESSION['error'] = "Este slug já está em uso. Por favor, escolha outro.";
-        header('Location: edit-post.php' . ($post_id ? "?id=$post_id" : ''));
+        header('Location: editar-post.php' . ($post_id ? "?id=$post_id" : '') . '?error=slug_duplicado');
         exit;
     }
 
     // Processa a imagem destacada
-    $featured_image = null;
+    $imagem_destacada = null;
     if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['featured_image'];
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -67,7 +70,7 @@ try {
 
         // Move o arquivo
         if (move_uploaded_file($file['tmp_name'], $filepath)) {
-            $featured_image = '/uploads/featured/' . date('Y/m') . '/' . $filename;
+            $imagem_destacada = '/uploads/featured/' . date('Y/m') . '/' . $filename;
         } else {
             throw new Exception("Erro ao salvar a imagem");
         }
@@ -76,18 +79,20 @@ try {
     if ($post_id > 0) {
         // Atualiza o post existente
         $sql = "UPDATE posts SET 
-                title = ?, 
+                titulo = ?, 
                 slug = ?, 
-                content = ?, 
-                excerpt = ?, 
-                category_id = ?, 
-                published = ?";
+                conteudo = ?, 
+                resumo = ?, 
+                categoria_id = ?, 
+                publicado = ?, 
+                editor_type = ?, 
+                atualizado_em = CURRENT_TIMESTAMP";
         
-        $params = [$title, $slug, $content, $excerpt, $category_id, $published];
+        $params = [$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $editor_type];
 
-        if ($featured_image) {
-            $sql .= ", featured_image = ?";
-            $params[] = $featured_image;
+        if ($imagem_destacada) {
+            $sql .= ", imagem_destacada = ?";
+            $params[] = $imagem_destacada;
         }
 
         $sql .= " WHERE id = ?";
@@ -99,15 +104,17 @@ try {
         $_SESSION['success'] = "Post atualizado com sucesso!";
     } else {
         // Insere um novo post
-        $sql = "INSERT INTO posts (title, slug, content, excerpt, category_id, published, created_at";
-        $params = [$title, $slug, $content, $excerpt, $category_id, $published, date('Y-m-d H:i:s')];
+        $sql = "INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, editor_type, autor_id, criado_em, atualizado_em";
+        $values = "?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP";
+        $params = [$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $editor_type, $autor_id];
 
-        if ($featured_image) {
-            $sql .= ", featured_image";
-            $params[] = $featured_image;
+        if ($imagem_destacada) {
+            $sql .= ", imagem_destacada";
+            $values .= ", ?";
+            $params[] = $imagem_destacada;
         }
 
-        $sql .= ") VALUES (" . str_repeat("?,", count($params) - 1) . "?)";
+        $sql .= ") VALUES (" . $values . ")";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -119,6 +126,6 @@ try {
     exit;
 } catch (Exception $e) {
     $_SESSION['error'] = "Erro ao salvar o post: " . $e->getMessage();
-    header('Location: editar-post.php' . ($post_id ? "?id=$post_id" : ''));
+    header('Location: ' . ($post_id ? "editar-post.php?id=$post_id" : "novo-post.php") . '&error=db_error');
     exit;
 } 
