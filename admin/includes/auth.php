@@ -10,6 +10,7 @@ function check_login() {
         header('Location: login.php');
         exit;
     }
+    return true;
 }
 
 // Função para verificar se o usuário é admin

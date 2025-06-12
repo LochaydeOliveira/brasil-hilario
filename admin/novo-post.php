@@ -1,11 +1,18 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 
 // Verifica se o usuário está logado
-check_login();
+if (!check_login()) {
+    exit;
+}
 
 // Verifica se o usuário é admin
 if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
