@@ -1,44 +1,28 @@
 <?php
-ob_start();
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 
-// Verifica se o usuário está logado
-if (!check_login()) {
+// Verifica se o usuário está autenticado
+if (!isLoggedIn()) {
+    header('Location: login.php');
     exit;
 }
 
-// Verifica se o usuário é admin
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
-    header('Location: index.php');
-    exit;
-}
-
+$post = null; // Para novo post, $post é nulo
 $categories = [];
+
 try {
     // Busca as categorias
     $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
-    $_SESSION['error'] = "Erro ao carregar categorias: " . $e->getMessage();
-    header('Location: posts.php');
-    exit;
+    $error = "Erro ao carregar dados: " . $e->getMessage();
 }
 
 $page_title = "Novo Post";
 include 'includes/header.php';
-
-// Obtém as mensagens da sessão
-$error_message = isset($_SESSION['error']) ? $_SESSION['error'] : null;
-$success_message = isset($_SESSION['success']) ? $_SESSION['success'] : null;
-unset($_SESSION['error'], $_SESSION['success']);
 ?>
 
 <div class="container-fluid">
@@ -50,31 +34,21 @@ unset($_SESSION['error'], $_SESSION['success']);
                 <h1 class="h2"><?php echo $page_title; ?></h1>
             </div>
 
-            <?php 
-            // Exibe mensagens de erro ou sucesso
-            if ($error_message) {
-                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">' .
-                     '<i class="fas fa-exclamation-circle me-2"></i>' . htmlspecialchars($error_message) .
-                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
-                     '</div>';
-            }
-            if ($success_message) {
-                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">' .
-                     '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($success_message) .
-                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>' .
-                     '</div>';
-            }
-            ?>
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger"><?php echo $error; ?></div>
+            <?php endif; ?>
 
             <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
+                    <input type="text" class="form-control" id="title" name="title" 
+                           value="" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="slug" class="form-label">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" required>
+                    <input type="text" class="form-control" id="slug" name="slug" 
+                           value="" required>
                 </div>
 
                 <div class="mb-3">
@@ -112,12 +86,8 @@ unset($_SESSION['error'], $_SESSION['success']);
                 </div>
 
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Salvar
-                    </button>
-                    <a href="posts.php" class="btn btn-secondary">
-                        <i class="fas fa-times me-2"></i>Cancelar
-                    </a>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a href="posts.php" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </main>
@@ -127,11 +97,12 @@ unset($_SESSION['error'], $_SESSION['success']);
 <!-- TinyMCE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         tinymce.init(<?php echo json_encode($editor_config); ?>);
     });
 
-    document.getElementById('title').addEventListener('input', function () {
+    // Gera o slug automaticamente a partir do título
+    document.getElementById('title').addEventListener('input', function() {
         const title = this.value;
         const slug = title
             .toLowerCase()
@@ -140,15 +111,6 @@ unset($_SESSION['error'], $_SESSION['success']);
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)/g, '');
         document.getElementById('slug').value = slug;
-    });
-
-    // Validação do formulário
-    document.querySelector('form').addEventListener('submit', function(e) {
-        if (!this.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        this.classList.add('was-validated');
     });
 </script>
 

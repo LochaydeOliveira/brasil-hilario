@@ -1,23 +1,20 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-require_once '../includes/db.php';
-require_once __DIR__ . '/../includes/auth.php';
-
-// Verificar login e timeout
-check_login();
-check_session_timeout();
-
-// Obter dados do usuário atual
-$usuario = get_logged_user();
+// Verifica se o usuário está autenticado
+if (!isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Adm</title>
+    <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>Painel Administrativo</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,63 +22,100 @@ $usuario = get_logged_user();
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- Custom CSS -->
     <style>
         .sidebar {
-            min-height: 100vh;
-            background: #343a40;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, .25);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
+        
+        .navbar .navbar-toggler {
+            top: .25rem;
+            right: 1rem;
+        }
+        
+        .navbar .form-control {
+            padding: .75rem 1rem;
+            border-width: 0;
+            border-radius: 0;
+        }
+        
+        .form-control-dark {
             color: #fff;
+            background-color: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .1);
         }
-        .sidebar .nav-link {
-            color: #fff;
-            padding: 10px 20px;
+        
+        .form-control-dark:focus {
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
         }
-        .sidebar .nav-link:hover {
-            background: #495057;
+        
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
-        .sidebar .nav-link.active {
-            background: #0d6efd;
-        }
-        .main-content {
-            padding: 20px;
-        }
-        .navbar {
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .user-info {
-            color: #6c757d;
+        
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="index.php">Brasil Hilário</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="w-100"></div>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="logout.php">Sair</a>
+            </div>
+        </div>
+    </header>
+
     <div class="container-fluid">
         <div class="row">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light mb-4">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="index.php">
-                        <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" class="img-fluid" style="max-width: 150px;">
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($usuario['nome']); ?>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="logout.php">Sair</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <?php include 'sidebar.php'; ?>
                 </div>
             </nav>
 
-            <!-- Content -->
-            <div class="main-content">
-                <div class="container-fluid">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><?php echo isset($page_title) ? $page_title : 'Dashboard'; ?></h1>
+                </div>
+            </main>
+        </div>
+    </div>
 </body>
 </html> 

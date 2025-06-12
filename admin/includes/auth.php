@@ -3,14 +3,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Função para verificar se o usuário está logado
+// Verificar se o usuário está logado
 function check_login() {
     if (!isset($_SESSION['usuario_id'])) {
-        $_SESSION['error'] = 'Você precisa estar logado para acessar esta página.';
         header('Location: login.php');
         exit;
     }
-    return true;
+}
+
+// Função para verificar se o usuário está logado (alternativa)
+function isLoggedIn() {
+    return isset($_SESSION['usuario_id']);
 }
 
 // Função para verificar se o usuário é admin
@@ -125,9 +128,7 @@ function generate_csrf_token() {
 // Função para verificar token CSRF
 function verify_csrf_token($token) {
     if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        $_SESSION['error'] = 'Token de segurança inválido.';
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-        exit;
+        return false;
     }
     return true;
 }
