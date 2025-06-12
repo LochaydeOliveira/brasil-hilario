@@ -1,4 +1,15 @@
 <?php
+/**
+ * Arquivo: header.php
+ * Descrição: Cabeçalho padrão do painel administrativo
+ * Funcionalidades:
+ * - Define estrutura HTML base
+ * - Inclui CSS e JavaScript necessários
+ * - Exibe menu de navegação
+ * - Gerencia sessão e autenticação
+ */
+
+// Inicia a sessão se ainda não foi iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -22,8 +33,9 @@ if (!isLoggedIn()) {
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Custom CSS -->
+    <!-- Estilos personalizados -->
     <style>
+        /* Estilo da barra lateral */
         .sidebar {
             position: fixed;
             top: 0;
@@ -34,113 +46,47 @@ if (!isLoggedIn()) {
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
             background-color: #212529;
         }
-        
-        .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        
-        .navbar {
-            background-color: #fff !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-        }
-        
-        .navbar-brand {
-            padding: .75rem 1rem;
-            background-color: transparent;
-            box-shadow: none;
-        }
-        
-        .navbar-brand img {
-            max-height: 40px;
-            width: auto;
-        }
-        
-        .navbar .navbar-toggler {
-            top: .25rem;
-            right: 1rem;
-            color: #333;
-        }
-        
-        .navbar .form-control {
-            padding: .75rem 1rem;
-            border-width: 0;
-            border-radius: 0;
-        }
-        
-        .form-control-dark {
-            color: #333;
-            background-color: rgba(0, 0, 0, .05);
-            border-color: rgba(0, 0, 0, .1);
-        }
-        
-        .form-control-dark:focus {
-            border-color: transparent;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, .1);
-        }
-        
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-        
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
 
-        .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .nav-link:hover {
-            color: #fff !important;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-link.active {
-            color: #fff !important;
-            background-color: #0d6efd;
-        }
-
-        .nav-link i {
-            margin-right: 0.5rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-heading {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
+        /* Estilo do conteúdo principal */
         .main-content {
             margin-left: 240px;
             padding: 20px;
         }
 
-        .navbar .nav-link {
-            color: #333 !important;
+        /* Estilo da barra de navegação */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
         }
 
-        .navbar .nav-link:hover {
-            color: #0d6efd !important;
-            background-color: transparent;
+        /* Estilo dos links da barra lateral */
+        .sidebar .nav-link {
+            color: #fff;
+            padding: .5rem 1rem;
         }
 
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255,255,255,.1);
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: rgba(255,255,255,.2);
+        }
+
+        /* Estilo do cabeçalho */
+        .navbar-brand {
+            padding: .5rem 1rem;
+        }
+
+        /* Ajuste para telas pequenas */
         @media (max-width: 767.98px) {
+            .sidebar {
+                position: static;
+                height: auto;
+                padding-top: 0;
+            }
             .main-content {
                 margin-left: 0;
             }
@@ -148,36 +94,65 @@ if (!isLoggedIn()) {
     </style>
 </head>
 <body>
-    <header class="navbar sticky-top flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="index.php">
-            <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Brasil Hilário" class="img-fluid">
-        </a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="w-100"></div>
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="logout.php">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </a>
+    <!-- Barra de navegação superior -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <!-- Logo e nome do site -->
+            <a class="navbar-brand" href="index.php">
+                <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Logo" height="30" class="d-inline-block align-text-top">
+                Brasil Hilário
+            </a>
+            
+            <!-- Menu de usuário -->
+            <div class="ms-auto">
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle text-dark" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário'); ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="perfil.php"><i class="fas fa-user-cog"></i> Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </header>
+    </nav>
 
+    <!-- Container principal -->
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <?php include 'sidebar.php'; ?>
-                </div>
+            <!-- Barra lateral -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <?php include 'sidebar.php'; ?>
             </nav>
 
+            <!-- Conteúdo principal -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <?php if (isset($page_title)): ?>
+                <!-- Título da página -->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2"><?php echo $page_title; ?></h1>
+                    <h1 class="h2"><?php echo $page_title ?? 'Dashboard'; ?></h1>
                 </div>
+
+                <!-- Mensagens de alerta -->
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php 
+                        echo $_SESSION['success'];
+                        unset($_SESSION['success']);
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php 
+                        echo $_SESSION['error'];
+                        unset($_SESSION['error']);
+                        ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
                 <?php endif; ?>
             </main>
         </div>

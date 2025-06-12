@@ -1,4 +1,14 @@
 <?php
+/**
+ * Arquivo: login.php
+ * Descrição: Página de login do painel administrativo
+ * Funcionalidades:
+ * - Formulário de login
+ * - Validação de credenciais
+ * - Redirecionamento após login
+ * - Mensagens de erro/sucesso
+ */
+
 // Habilitar exibição de erros
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -11,98 +21,55 @@ function log_error($message) {
     error_log("[$timestamp] $message\n", 3, __DIR__ . '/error.log');
 }
 
-try {
-    session_start();
-    log_error("Iniciando processo de login");
+// Inclui arquivos necessários
+require_once 'includes/config.php';
+require_once 'includes/auth.php';
+require_once 'includes/functions.php';
+
+// Se já estiver logado, redireciona para o painel
+if (isLoggedIn()) {
+    redirect('index.php');
+}
+
+// Processa o formulário de login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitiza os dados do formulário
+    $email = sanitize($_POST['email']);
+    $senha = $_POST['senha'];
     
-    require_once '../config/config.php';
-    log_error("Config carregada");
-    
-    require_once '../includes/db.php';
-    log_error("DB carregada");
-    
-    require_once 'includes/auth.php';
-    log_error("Auth carregada");
-
-    // Se já estiver logado, redireciona para o painel
-    if (isset($_SESSION['usuario_id'])) {
-        log_error("Usuário já logado, redirecionando");
-        header('Location: index.php');
-        exit;
-    }
-
-    $erro = '';
-    $msg = '';
-
-    // Verificar mensagem de timeout
-    if (isset($_GET['msg']) && $_GET['msg'] === 'timeout') {
-        $msg = 'Sua sessão expirou. Por favor, faça login novamente.';
-        log_error("Mensagem de timeout detectada");
-    }
-
-    // Função para limpar input
-    function clean_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
-    // Processar login
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        log_error("Processando formulário POST");
-        
-        $email = clean_input($_POST['email']);
-        $senha = $_POST['senha'];
-        
-        log_error("Tentativa de login para email: " . $email);
-        
-        if (empty($email) || empty($senha)) {
-            $erro = 'Por favor, preencha todos os campos.';
-            log_error("Campos vazios detectados");
-        } else {
-            try {
-                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
-                $stmt->execute([$email]);
-                $usuario = $stmt->fetch();
+    // Valida os campos obrigatórios
+    if (empty($email) || empty($senha)) {
+        setError('Email e senha são obrigatórios.');
+    } else {
+        try {
+            // Conecta ao banco de dados
+            $conn = connectDB();
+            
+            // Busca o usuário pelo email
+            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+            $stmt->execute([$email]);
+            $usuario = $stmt->fetch();
+            
+            // Verifica se o usuário existe e a senha está correta
+            if ($usuario && password_verify($senha, $usuario['senha'])) {
+                // Inicia a sessão
+                session_start();
                 
-                log_error("Usuário encontrado: " . ($usuario ? "Sim" : "Não"));
+                // Armazena dados do usuário na sessão
+                $_SESSION['user_id'] = $usuario['id'];
+                $_SESSION['user_nome'] = $usuario['nome'];
+                $_SESSION['user_email'] = $usuario['email'];
+                $_SESSION['user_tipo'] = $usuario['tipo'];
                 
-                if ($usuario) {
-                    log_error("Verificando senha...");
-                    $senha_verificada = password_verify($senha, $usuario['senha']);
-                    log_error("Senha verificada: " . ($senha_verificada ? "Correta" : "Incorreta"));
-                    
-                    if ($senha_verificada) {
-                        // Login bem sucedido
-                        $_SESSION['usuario_id'] = $usuario['id'];
-                        $_SESSION['usuario_nome'] = $usuario['nome'];
-                        $_SESSION['usuario_email'] = $usuario['email'];
-                        $_SESSION['usuario_tipo'] = $usuario['tipo'];
-                        $_SESSION['ultimo_acesso'] = time();
-
-                        // Atualizar último login
-                        $stmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
-                        $stmt->execute([$usuario['id']]);
-
-                        log_error("Login bem sucedido para: $email");
-                        header('Location: index.php');
-                        exit;
-                    }
-                }
-                
-                $erro = 'Email ou senha inválidos.';
-                log_error("Tentativa de login falhou para: $email");
-                
-            } catch (PDOException $e) {
-                $erro = 'Erro ao tentar fazer login. Por favor, tente novamente.';
-                log_error("Erro de login: " . $e->getMessage());
+                // Redireciona para o painel
+                redirect('index.php');
+            } else {
+                setError('Email ou senha inválidos.');
             }
+        } catch (PDOException $e) {
+            setError('Erro ao processar o login.');
         }
     }
-} catch (Exception $e) {
-    log_error("Erro crítico: " . $e->getMessage());
-    $erro = "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.";
 }
 ?>
 <!DOCTYPE html>
@@ -165,14 +132,8 @@ try {
                 <h4>Painel Administrativo</h4>
             </div>
             <div class="card-body">
-                <?php if ($erro): ?>
-                    <div class="alert alert-danger"><?php echo $erro; ?></div>
-                <?php endif; ?>
+                <?php showMessages(); ?>
                 
-                <?php if ($msg): ?>
-                    <div class="alert alert-warning"><?php echo $msg; ?></div>
-                <?php endif; ?>
-
                 <form method="POST" action="">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
