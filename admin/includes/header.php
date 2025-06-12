@@ -44,12 +44,15 @@ if (!isLoggedIn()) {
             overflow-y: auto;
         }
         
+        .navbar {
+            background-color: #fff !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        
         .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-            font-size: 1rem;
-            background-color: rgba(0, 0, 0, .25);
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+            padding: .75rem 1rem;
+            background-color: transparent;
+            box-shadow: none;
         }
         
         .navbar-brand img {
@@ -60,6 +63,7 @@ if (!isLoggedIn()) {
         .navbar .navbar-toggler {
             top: .25rem;
             right: 1rem;
+            color: #333;
         }
         
         .navbar .form-control {
@@ -69,14 +73,14 @@ if (!isLoggedIn()) {
         }
         
         .form-control-dark {
-            color: #fff;
-            background-color: rgba(255, 255, 255, .1);
-            border-color: rgba(255, 255, 255, .1);
+            color: #333;
+            background-color: rgba(0, 0, 0, .05);
+            border-color: rgba(0, 0, 0, .1);
         }
         
         .form-control-dark:focus {
             border-color: transparent;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, .1);
         }
         
         .bd-placeholder-img {
@@ -127,6 +131,15 @@ if (!isLoggedIn()) {
             padding: 20px;
         }
 
+        .navbar .nav-link {
+            color: #333 !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: #0d6efd !important;
+            background-color: transparent;
+        }
+
         @media (max-width: 767.98px) {
             .main-content {
                 margin-left: 0;
@@ -135,7 +148,7 @@ if (!isLoggedIn()) {
     </style>
 </head>
 <body>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header class="navbar sticky-top flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="index.php">
             <img src="../assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="Brasil Hilário" class="img-fluid">
         </a>
