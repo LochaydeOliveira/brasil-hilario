@@ -38,10 +38,10 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
+            <form method="post" action="save-post.php" class="needs-validation" novalidate>
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
-                    <input type="text" class="form-control" id="title" name="title" 
+                    <input type="text" class="form-control" id="title" name="titulo" 
                            value="" required>
                 </div>
 
@@ -53,7 +53,7 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="category_id" class="form-label">Categoria</label>
-                    <select class="form-select" id="category_id" name="category_id" required>
+                    <select class="form-select" id="category_id" name="categoria_id" required>
                         <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
@@ -65,22 +65,17 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
-                    <textarea id="editor" name="content"></textarea>
+                    <textarea id="editor" name="conteudo"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
-                    <textarea class="form-control" id="excerpt" name="excerpt" rows="3"></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="featured_image" class="form-label">Imagem Destacada</label>
-                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    <textarea class="form-control" id="excerpt" name="resumo" rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="published" name="published" value="1">
+                        <input type="checkbox" class="form-check-input" id="published" name="publicado" value="1" checked>
                         <label class="form-check-label" for="published">Publicar</label>
                     </div>
                 </div>
