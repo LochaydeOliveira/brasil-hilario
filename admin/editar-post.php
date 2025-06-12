@@ -147,20 +147,10 @@ include 'includes/header.php';
                         </div>
                         
                         <div class="mb-3">
-                            <label for="conteudo" class="form-label">Conteúdo</label>
-                            <div class="editor-toolbar mb-2">
-                                <div class="btn-group" role="group">
-                                    <input type="radio" class="btn-check" name="editor_type" id="editor_tinymce" 
-                                           value="tinymce" <?php echo ($post['editor_type'] ?? 'tinymce') === 'tinymce' ? 'checked' : ''; ?>>
-                                    <label class="btn btn-outline-primary" for="editor_tinymce">TinyMCE</label>
-                                    
-                                    <input type="radio" class="btn-check" name="editor_markdown" id="editor_markdown" 
-                                           value="markdown" <?php echo ($post['editor_type'] ?? 'tinymce') === 'markdown' ? 'checked' : ''; ?>>
-                                    <label class="btn btn-outline-primary" for="editor_markdown">Markdown</label>
-                                </div>
-                            </div>
-                            <textarea class="form-control" id="conteudo" name="conteudo" rows="15" required><?php echo htmlspecialchars($post['conteudo']); ?></textarea>
+                            <label for="content" class="form-label">Conteúdo</label>
+                            <textarea id="editor" name="content" class="form-control" rows="10"><?php echo $post ? htmlspecialchars($post['content']) : ''; ?></textarea>
                         </div>
+
                     </div>
                     
                     <div class="col-md-4">
@@ -213,3 +203,23 @@ include 'includes/header.php';
 load_editor_scripts($post['editor_type'] ?? 'tinymce');
 include 'includes/footer.php';
 ?> 
+
+<!-- AQUI o script vai logo antes de fechar o body -->
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        tinymce.init(<?php echo json_encode($editor_config); ?>);
+
+        // Slug automático com base no título
+        document.getElementById('title').addEventListener('input', function () {
+            const title = this.value;
+            const slug = title
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+            document.getElementById('slug').value = slug;
+        });
+    });
+</script>

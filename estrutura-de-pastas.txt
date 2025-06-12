@@ -1,0 +1,47 @@
+brasil-hilario/
+├── admin/                      # Painel administrativo
+│   ├── includes/              # Arquivos de inclusão do admin
+│   │   ├── config.php        # Configurações
+│   │   ├── auth.php          # Autenticação
+│   │   ├── header.php        # Cabeçalho
+│   │   ├── footer.php        # Rodapé
+│   │   ├── sidebar.php       # Menu lateral
+│   │   └── editor-config.php # Configuração do editor
+│   ├── edit-post.php         # Edição de posts
+│   ├── posts.php             # Lista de posts
+│   ├── categorias.php        # Gerenciamento de categorias
+│   └── upload.php            # Upload de arquivos
+│
+├── assets/                    # Arquivos estáticos
+│   ├── css/                  # Estilos
+│   ├── js/                   # Scripts
+│   └── img/                  # Imagens
+│
+├── includes/                  # Arquivos de inclusão do site
+│   ├── config.php            # Configurações
+│   ├── db.php               # Conexão com banco
+│   └── functions.php        # Funções gerais
+│
+├── uploads/                   # Arquivos enviados
+│   ├── featured/            # Imagens destacadas
+│   └── [ano]/[mês]/        # Organização por data
+│
+├── api/                      # Endpoints da API
+│
+├── config/                   # Configurações
+│
+├── sql/                      # Scripts SQL
+│
+├── vendor/                   # Dependências (Composer)
+│
+├── index.php                 # Página inicial
+├── post.php                  # Página de post
+├── busca.php                 # Página de busca
+├── sobre.php                 # Página sobre
+├── contato.php              # Página de contato
+├── termos.php               # Termos de uso
+├── privacidade.php          # Política de privacidade
+├── robots.txt               # Configuração de robots
+├── sitemap.xml              # Mapa do site
+├── .htaccess                # Configuração Apache
+└── composer.json            # Configuração Composer
