@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once 'includes/editor-config.php';
+require_once 'includes/editors.php';
 
 // Verificar se o usuário está logado
 check_login();
@@ -116,7 +116,6 @@ try {
 $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
 $categorias = $stmt->fetchAll();
 
-$page_title = $post ? "Editar Post" : "Novo Post";
 include 'includes/header.php';
 ?>
 
@@ -126,18 +125,14 @@ include 'includes/header.php';
         
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2"><?php echo $page_title; ?></h1>
+                <h1 class="h2">Editar Post</h1>
             </div>
             
             <?php if (isset($erro)): ?>
                 <div class="alert alert-danger"><?php echo $erro; ?></div>
             <?php endif; ?>
             
-            <form method="POST" action="" class="needs-validation" novalidate enctype="multipart/form-data">
-                <?php if ($id): ?>
-                    <input type="hidden" name="id" value="<?php echo $id; ?>">
-                <?php endif; ?>
-
+            <form method="POST" action="" class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-md-8">
                         <div class="mb-3">
@@ -203,17 +198,6 @@ include 'includes/header.php';
                                     <div class="form-text">Exemplo: tecnologia, marketing, seo</div>
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <label for="featured_image" class="form-label">Imagem Destacada</label>
-                                    <?php if ($post && isset($post['featured_image']) && !empty($post['featured_image'])): ?>
-                                        <div class="mb-2">
-                                            <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
-                                                 alt="Imagem destacada" class="img-thumbnail" style="max-height: 200px;">
-                                        </div>
-                                    <?php endif; ?>
-                                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
-                                </div>
-                                
                                 <button type="submit" class="btn btn-primary w-100">Atualizar</button>
                             </div>
                         </div>
@@ -223,26 +207,6 @@ include 'includes/header.php';
         </main>
     </div>
 </div>
-
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        tinymce.init(<?php echo json_encode($editor_config); ?>);
-    });
-
-    // Gera o slug automaticamente a partir do título
-    document.getElementById('titulo').addEventListener('input', function() {
-        const title = this.value;
-        const slug = title
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)/g, '');
-        document.getElementById('slug').value = slug;
-    });
-</script>
 
 <?php
 // Carregar scripts do editor
