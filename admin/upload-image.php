@@ -11,7 +11,7 @@ if (!check_login()) {
 }
 
 // Verifica se o usuário é admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
     $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
     header('Location: index.php');
     exit;
