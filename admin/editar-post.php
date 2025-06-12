@@ -12,10 +12,9 @@ if (!isLoggedIn()) {
 
 $post = null;
 $categories = [];
-$error = null;
 
 // Verifica se foi fornecido um ID
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+if (!isset($_GET['id'])) {
     header('Location: posts.php');
     exit;
 }
@@ -53,7 +52,7 @@ include 'includes/header.php';
                 <h1 class="h2"><?php echo $page_title; ?></h1>
             </div>
 
-            <?php if ($error): ?>
+            <?php if (isset($error)): ?>
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
@@ -63,13 +62,13 @@ include 'includes/header.php';
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="title" 
-                           value="<?php echo htmlspecialchars($post['title']); ?>" required>
+                           value="<?php echo htmlspecialchars($post['titulo'] ?? ''); ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
-                           value="<?php echo htmlspecialchars($post['slug']); ?>" required>
+                           value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" required>
                 </div>
 
                 <div class="mb-3">
@@ -77,9 +76,8 @@ include 'includes/header.php';
                     <select class="form-select" id="category_id" name="category_id" required>
                         <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo $category['id']; ?>" 
-                                    <?php echo $category['id'] == $post['category_id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($category['name']); ?>
+                            <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -87,19 +85,19 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
-                    <textarea id="editor" name="content"><?php echo htmlspecialchars($post['content']); ?></textarea>
+                    <textarea id="editor" name="content"><?php echo htmlspecialchars($post['conteudo'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
-                    <textarea class="form-control" id="excerpt" name="excerpt" rows="3"><?php echo htmlspecialchars($post['excerpt']); ?></textarea>
+                    <textarea class="form-control" id="excerpt" name="excerpt" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="featured_image" class="form-label">Imagem Destacada</label>
-                    <?php if ($post['featured_image']): ?>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
                         <div class="mb-2">
-                            <img src="../uploads/images/<?php echo $post['featured_image']; ?>" 
+                            <img src="../uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                  alt="Imagem atual" class="img-thumbnail" style="max-height: 200px;">
                         </div>
                     <?php endif; ?>
@@ -109,8 +107,8 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="published" name="published" value="1"
-                               <?php echo $post['published'] ? 'checked' : ''; ?>>
+                        <input type="checkbox" class="form-check-input" id="published" name="published" value="1" 
+                               <?php echo (isset($post['publicado']) && $post['publicado']) ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="published">Publicar</label>
                     </div>
                 </div>
