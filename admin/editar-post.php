@@ -5,11 +5,7 @@ require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 
 // Verifica se o usuário está logado
-if (!check_login()) {
-    $_SESSION['error'] = 'Você precisa estar logado para acessar esta página.';
-    header('Location: login.php');
-    exit;
-}
+check_login();
 
 // Verifica se o usuário é admin
 if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
