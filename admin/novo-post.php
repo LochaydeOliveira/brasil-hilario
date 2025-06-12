@@ -5,8 +5,11 @@ require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 require_once 'includes/editor-config.php';
 
-// Verifica se o usuário está autenticado e tem permissão
-checkPermission();
+// Verifica se o usuário está autenticado
+check_login();
+
+// Verifica se o usuário tem permissão
+check_permission('editor');
 
 $categories = [];
 try {

@@ -1,38 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/db.php';
-require_once 'includes/auth.php';
-require_once 'includes/editor-config.php';
-
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
-
-$post_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$post = null;
-$categories = [];
-
-try {
-    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
-    $categories = $stmt->fetchAll();
-
-    if ($post_id > 0) {
-        $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
-        $stmt->execute([$post_id]);
-        $post = $stmt->fetch();
-
-        if (!$post) {
-            header('Location: posts.php');
-            exit;
-        }
-    }
-} catch (PDOException $e) {
-    $error = "Erro ao carregar dados: " . $e->getMessage();
-}
-
-$page_title = $post ? "Editar Post" : "Novo Post";
-include 'includes/header.php';
 
 // Configuração do TinyMCE
 $editor_config = [
