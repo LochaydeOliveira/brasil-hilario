@@ -67,8 +67,6 @@ $editor_config = [
     'images_reuse_filename' => true,
     'relative_urls' => false,
     'remove_script_host' => false,
-    'convert_urls' => true,
-    'language' => 'pt_BR',
-    'language_url' => '../assets/js/tinymce/langs/pt_BR.js'
+    'convert_urls' => true
 ];
 ?>
