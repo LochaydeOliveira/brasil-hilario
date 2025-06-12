@@ -3,15 +3,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Verificar se o usuário está logado
+// Função para verificar se o usuário está logado
 function check_login() {
     if (!isset($_SESSION['usuario_id'])) {
+        $_SESSION['error'] = 'Você precisa estar logado para acessar esta página.';
         header('Location: login.php');
         exit;
     }
 }
 
-// Verificar se o usuário é admin
+// Função para verificar se o usuário é admin
 function is_admin() {
     return isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin';
 }
@@ -48,24 +49,6 @@ function get_logged_user() {
     } catch (PDOException $e) {
         error_log("Erro ao obter dados do usuário: " . $e->getMessage());
         return null;
-    }
-}
-
-// Verificar permissões
-function check_permission($required_type = 'admin') {
-    if (!isset($_SESSION['usuario_tipo'])) {
-        header('Location: login.php');
-        exit;
-    }
-
-    if ($required_type === 'admin' && !is_admin()) {
-        header('Location: index.php?error=permission');
-        exit;
-    }
-
-    if ($required_type === 'editor' && !is_editor()) {
-        header('Location: index.php?error=permission');
-        exit;
     }
 }
 
@@ -141,16 +124,35 @@ function generate_csrf_token() {
 // Função para verificar token CSRF
 function verify_csrf_token($token) {
     if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        return false;
+        $_SESSION['error'] = 'Token de segurança inválido.';
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
     return true;
+}
+
+// Função para limpar mensagens da sessão
+function clear_session_messages() {
+    unset($_SESSION['error']);
+    unset($_SESSION['success']);
+}
+
+// Função para verificar se o usuário tem permissão para editar um post
+function can_edit_post($post_author_id) {
+    // Se for admin, pode editar qualquer post
+    if (is_admin()) {
+        return true;
+    }
+    
+    // Se for editor, só pode editar seus próprios posts
+    return isset($_SESSION['usuario_id']) && $_SESSION['usuario_id'] == $post_author_id;
 }
 
 // Função para obter dados do usuário
 function get_user_data($user_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT id, nome, email, tipo FROM usuarios WHERE id = ?");
         $stmt->execute([$user_id]);
         return $stmt->fetch();
     } catch (PDOException $e) {

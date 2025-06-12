@@ -12,8 +12,12 @@ check_login();
 
 include 'includes/header.php';
 
-// Verificar permissões
-check_permission('editor');
+// Verificar se o usuário é admin
+if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
+    $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
+    header('Location: index.php');
+    exit;
+}
 
 // Inicializar variáveis
 $total_posts = 0;
@@ -62,12 +66,6 @@ try {
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
-            
-            <div class="row">
-                <div class="col-md-12 mb-4">
-                    <h2>Dashboard</h2>
-                </div>
-            </div>
             
             <div class="row">
                 <!-- Cards de Estatísticas -->
