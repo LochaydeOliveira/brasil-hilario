@@ -55,7 +55,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </li>
         </ul>
         
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
             <span>Conta</span>
         </h6>
         

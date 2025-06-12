@@ -15,10 +15,10 @@ $categories = [];
 
 try {
     // Busca as categorias
-    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
-    $error = "Erro ao carregar dados: " . $e->getMessage();
+    $error = "Erro ao carregar categorias: " . $e->getMessage();
 }
 
 $page_title = "Novo Post";
@@ -56,8 +56,8 @@ include 'includes/header.php';
                     <select class="form-select" id="category_id" name="category_id" required>
                         <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo $category['id']; ?>">
-                                <?php echo htmlspecialchars($category['name']); ?>
+                            <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

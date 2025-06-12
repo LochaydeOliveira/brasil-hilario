@@ -34,7 +34,7 @@ try {
     }
 
     // Busca as categorias
-    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
