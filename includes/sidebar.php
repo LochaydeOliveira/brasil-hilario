@@ -1,7 +1,7 @@
 <?php
 // Buscar últimas postagens
 $stmt = $pdo->query("
-    SELECT id, titulo, slug, data_publicacao 
+    SELECT id, titulo, slug, data_publicacao, imagem_destacada 
     FROM posts 
     WHERE publicado = 1 
     ORDER BY data_publicacao DESC 
@@ -33,7 +33,17 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="card-body">
             <ul class="list-unstyled">
                 <?php foreach ($ultimas_postagens as $post): ?>
-                <li class="mb-2">
+                <li class="mb-3">
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="post-thumbnail mb-2">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
+                                <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                     class="img-fluid rounded" 
+                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                                     style="width: 100%; height: 150px; object-fit: cover;">
+                            </a>
+                        </div>
+                    <?php endif; ?>
                     <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
@@ -72,7 +82,17 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="card-body">
             <ul class="list-unstyled">
                 <?php foreach ($posts_populares as $post): ?>
-                <li class="mb-2">
+                <li class="mb-3">
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="post-thumbnail mb-2">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
+                                <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                     class="img-fluid rounded" 
+                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                                     style="width: 100%; height: 150px; object-fit: cover;">
+                            </a>
+                        </div>
+                    <?php endif; ?>
                     <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
