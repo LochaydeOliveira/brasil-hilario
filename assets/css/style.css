@@ -4,14 +4,15 @@
     --text-color: rgba(51, 51, 51, 0.85);
     --light-gray: #f8f9fa;
     --border-color: #dee2e6;
-    --font-primary: 'Roboto', sans-serif;
-    --font-secondary: 'Roboto', sans-serif;
-    --font-post: 'Merriweather', serif;
+    --font-primary: "Merriweather", serif;
+    --font-secondary: "Inter", sans-serif;
 }
 
 body {
     font-family: var(--font-secondary);
+    font-optical-sizing: auto;
     font-weight: 400;
+    font-style: normal;
     line-height: 1.6;
     color: var(--text-color);
     background-color: #fff;
@@ -26,7 +27,10 @@ body {
 
 .site-title {
     font-family: var(--font-primary);
+    font-optical-sizing: auto;
     font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.75rem;
     color: var(--primary-color);
     text-decoration: none;
@@ -41,7 +45,9 @@ body {
 
 .nav-link {
     font-family: var(--font-secondary);
+    font-optical-sizing: auto;
     font-weight: 500;
+    font-style: normal;
     color: var(--text-color);
     padding: 1rem 1.5rem;
     text-transform: uppercase;
@@ -67,8 +73,11 @@ body {
 }
 
 .featured-post .card-title {
-    font-family: var(--font-post);
-    font-weight: 900;
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.75rem;
     line-height: 1.3;
     margin-bottom: 1rem;
@@ -93,14 +102,21 @@ body {
 }
 
 .post-card .card-title {
-    font-family: var(--font-post);
-    font-weight: 900;
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.25rem;
     line-height: 1.4;
     margin: 1rem 0;
 }
 
 .post-meta {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
     color: rgba(102, 102, 102, 0.85);
     font-size: 0.8125rem;
     text-transform: uppercase;
@@ -116,7 +132,10 @@ body {
 
 .sidebar-title {
     font-family: var(--font-primary);
+    font-optical-sizing: auto;
     font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.125rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
@@ -125,8 +144,11 @@ body {
 
 /* Links da Sidebar */
 .sidebar a {
-    color: rgba(0, 0, 0, 0.85);
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
     font-weight: 500;
+    font-style: normal;
+    color: rgba(0, 0, 0, 0.85);
     text-decoration: none;
     transition: color 0.1s ease;
 }
@@ -146,13 +168,20 @@ body {
 
 .footer-title {
     font-family: var(--font-primary);
+    font-optical-sizing: auto;
     font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.125rem;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
 }
 
 .footer-links a {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
     color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
     display: block;
@@ -168,6 +197,10 @@ body {
 
 /* Category Badges */
 .category-badge {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
     background: var(--secondary-color);
     color: white;
     padding: 0.3rem 1rem;
@@ -185,8 +218,11 @@ body {
 
 /* Read More Button */
 .read-more {
-    color: var(--secondary-color);
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
     font-weight: 500;
+    font-style: normal;
+    color: var(--secondary-color);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -199,33 +235,27 @@ body {
 
 /* Post Content */
 .post-content {
-    font-family: var(--font-post);
-    font-weight: 900;
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
     font-size: 1rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: rgba(51, 51, 51, 0.85);
 }
 
 .post-content h2 {
-    font-family: var(--font-post);
-    font-weight: 900;
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
     font-size: 1.5rem;
     margin: 2rem 0 1rem;
 }
 
 .post-content p {
     margin-bottom: 1.5rem;
-}
-
-.post-content a {
-    font-family: var(--font-post);
-    font-weight: 900;
-    color: var(--secondary-color);
-    text-decoration: none;
-}
-
-.post-content a:hover {
-    text-decoration: underline;
 }
 
 /* Responsive */

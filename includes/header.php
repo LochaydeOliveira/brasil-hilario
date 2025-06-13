@@ -36,8 +36,7 @@ require_once 'config/config.php';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
     
     <!-- Schema.org markup para SEO -->
     <script type="application/ld+json">
@@ -52,8 +51,18 @@ require_once 'config/config.php';
 
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
             font-weight: 400;
+            font-style: normal;
+        }
+
+        h1, h2, h3, h4, h5, h6, .site-title, .post-title {
+            font-family: "Merriweather", serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
         }
 
         .btn-search {
