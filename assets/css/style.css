@@ -160,8 +160,8 @@ body {
 }
 
 .sidebar a:hover {
-    color: #0d6efd;
-    text-decoration: none;
+    color: #0b8103;
+    text-decoration: underline;
 }
 
 /* Footer */
