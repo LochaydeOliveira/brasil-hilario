@@ -61,55 +61,55 @@ include 'includes/header.php';
             if (empty($posts)) {
                 echo '<div class="alert alert-info">Nenhum post encontrado.</div>';
             } else {
-                $num_posts = count($posts);
-                for ($i = 0; $i < $num_posts; $i++) {
-                    $post = $posts[$i];
-                ?>
-                <article class="blog-post mb-4" data-aos="fade-up">
-                    <h2 class="display-6 fw-bold mb-3">
-                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
-                            <?php echo htmlspecialchars($post['titulo']); ?>
-                        </a>
-                    </h2>
-                    
-                    <div class="post-meta mb-2">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                            <i class="fas fa-folder ms-2"></i> 
-                            <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
-                                <?php echo htmlspecialchars($post['categoria_nome']); ?>
-                            </a>
-                        </small>
-                    </div>
-                    
-                    <?php if (!empty($post['tags'])): ?>
-                        <div class="post-tags mb-3">
-                            <?php foreach ($post['tags'] as $tag): ?>
-                                <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
-                                   class="badge bg-info text-dark me-1">
-                                    <i class="fas fa-tag"></i> <?php echo htmlspecialchars($tag['nome']); ?>
+                foreach ($posts as $post): ?>
+                    <article class="blog-post mb-4" data-aos="fade-up">
+                        <?php if (!empty($post['imagem_destacada'])): ?>
+                            <div class="post-image mb-3">
+                                <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
+                                    <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                         class="img-fluid rounded" 
+                                         alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                                         style="width: 100%; height: 300px; object-fit: cover;">
                                 </a>
-                            <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <h2 class="display-6 fw-bold mb-3">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
+                                <?php echo htmlspecialchars($post['titulo']); ?>
+                            </a>
+                        </h2>
+                        
+                        <div class="post-meta mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                <i class="fas fa-folder ms-2"></i> 
+                                <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
+                                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
+                                </a>
+                            </small>
                         </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($post['imagem_destacada']): ?>
-                    <img src="<?php echo BLOG_URL; ?>/uploads/<?php echo $post['imagem_destacada']; ?>" 
-                         class="img-fluid rounded mb-3" 
-                         alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                         loading="lazy">
-                    <?php endif; ?>
-                    
-                    <div class="post-excerpt mb-3">
-                        <?php echo $post['resumo']; ?>
-                    </div>
-                    
-                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="read-more">
-                        Ler mais
-                    </a>
-                </article>
-                <?php 
-                }
+                        
+                        <?php if (!empty($post['tags'])): ?>
+                            <div class="post-tags mb-3">
+                                <?php foreach ($post['tags'] as $tag): ?>
+                                    <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
+                                       class="badge bg-info text-dark me-1">
+                                        <i class="fas fa-tag"></i> <?php echo htmlspecialchars($tag['nome']); ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="post-excerpt mb-3">
+                            <?php echo $post['resumo']; ?>
+                        </div>
+                        
+                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="btn btn-primary">
+                            Ler mais
+                        </a>
+                    </article>
+                <?php endforeach;
 
                 // Paginação
                 if ($total_pages > 1):

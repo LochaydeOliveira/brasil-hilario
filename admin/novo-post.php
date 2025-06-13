@@ -36,59 +36,65 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form method="post" action="save-post.php" class="needs-validation" novalidate>
-        <div class="mb-3">
+            <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="" required>
-        </div>
+                </div>
 
-        <div class="mb-3">
-            <label for="slug" class="form-label">Slug</label>
+                <div class="mb-3">
+                    <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="" required>
-        </div>
+                </div>
 
-        <div class="mb-3">
+                <div class="mb-3">
                     <label for="category_id" class="form-label">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
-                <option value="">Selecione uma categoria</option>
+                        <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
                     <textarea id="editor" name="conteudo"></textarea>
                 </div>
 
-        <div class="mb-3">
+                <div class="mb-3">
                     <label for="resumo" class="form-label">Resumo</label>
                     <textarea class="form-control" id="resumo" name="resumo" rows="3" required></textarea>
-        </div>
+                </div>
 
-        <div class="mb-3">
-            <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
-            <input type="text" class="form-control" id="tags" name="tags" placeholder="Ex: humor, política, esportes">
-            <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
-        </div>
+                <div class="mb-3">
+                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
+                </div>
 
-        <div class="mb-3">
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                    <input type="text" class="form-control" id="tags" name="tags" placeholder="Ex: humor, política, esportes">
+                    <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
+                </div>
+
+                <div class="mb-3">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="publicado" name="publicado" value="1" checked>
                         <label class="form-check-label" for="publicado">Publicar</label>
                     </div>
-        </div>
+                </div>
 
-        <div class="mb-3">
+                <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <a href="posts.php" class="btn btn-secondary">Cancelar</a>
-        </div>
-    </form>
+                </div>
+            </form>
         </main>
     </div>
 </div>

@@ -73,7 +73,7 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form method="post" action="save-post.php" class="needs-validation" novalidate>
+            <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
 
                 <div class="mb-3">
@@ -108,6 +108,21 @@ include 'includes/header.php';
                 <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
                     <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="mb-2">
+                            <img src="../uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                 alt="Imagem atual" class="img-thumbnail" style="max-height: 200px;">
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <small class="form-text text-muted">Deixe em branco para manter a imagem atual</small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="mb-3">
