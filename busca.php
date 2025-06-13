@@ -1,11 +1,14 @@
 <?php
+// Iniciar buffer de saída
+ob_start();
+
+// Iniciar sessão antes de qualquer saída
+session_start();
+
 require_once 'config/config.php';
 require_once 'config/database.php';
 require_once 'config/search.php';
 require_once 'includes/header.php';
-
-// Inicia a sessão para o histórico de busca
-session_start();
 
 // Verifica se existe um termo de busca
 $search_term = isset($_GET['q']) ? clean_search_term($_GET['q']) : '';
@@ -39,6 +42,7 @@ function search_posts($term, $page = 1) {
 
         $term = '%' . $term . '%';
         $offset = ($page - 1) * SEARCH_RESULTS_PER_PAGE;
+        $limit = SEARCH_RESULTS_PER_PAGE;
         
         // Primeiro, conta o total de resultados
         $count_sql = "SELECT COUNT(*) as total 
@@ -62,7 +66,7 @@ function search_posts($term, $page = 1) {
                 LIMIT ? OFFSET ?";
         
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssii', $term, $term, $term, SEARCH_RESULTS_PER_PAGE, $offset);
+        $stmt->bind_param('sssii', $term, $term, $term, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $posts = $result->fetch_all(MYSQLI_ASSOC);
