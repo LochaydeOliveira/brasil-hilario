@@ -14,7 +14,7 @@ $editor_config = [
     'toolbar' => 'undo redo | blocks | ' .
                 'bold italic backcolor | alignleft aligncenter ' .
                 'alignright alignjustify | bullist numlist outdent indent | ' .
-                'removeformat | help',
+                'image media | removeformat | help',
     'content_style' => 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; }',
     'images_upload_url' => 'upload-image.php',
     'images_upload_handler' => 'function (blobInfo, success, failure) {
@@ -25,17 +25,26 @@ $editor_config = [
                 failure("Erro ao fazer upload da imagem: " + xhr.statusText);
                 return;
             }
-            var json = JSON.parse(xhr.responseText);
-            if (!json || typeof json.location != "string") {
-                failure("Resposta inválida do servidor");
-                return;
+            try {
+                var json = JSON.parse(xhr.responseText);
+                if (!json || typeof json.location != "string") {
+                    failure("Resposta inválida do servidor");
+                    return;
+                }
+                success(json.location);
+            } catch (e) {
+                failure("Erro ao processar resposta do servidor: " + e.message);
             }
-            success(json.location);
+        };
+        xhr.onerror = function() {
+            failure("Erro de conexão com o servidor");
         };
         var formData = new FormData();
         formData.append("file", blobInfo.blob(), blobInfo.filename());
         xhr.send(formData);
     }',
+    'images_reuse_filename' => true,
+    'images_upload_base_path' => BLOG_URL . '/uploads/images/',
     'language' => 'pt_BR',
     'language_url' => '../assets/js/tinymce/langs/pt_BR.js'
 ];
