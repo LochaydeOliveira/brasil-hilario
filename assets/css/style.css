@@ -513,4 +513,30 @@ footer {
 
 .footer-copyright-text {
     color: #888;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: none;
+}
+
+.card-header {
+    background-color: #fcbd07;
+    border-bottom: none;
+    padding: 1rem;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+.card-body {
+    padding: 1.5rem;
 } 
