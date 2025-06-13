@@ -24,30 +24,21 @@ include 'includes/header.php';
         try {
             // Buscar posts paginados
             $stmt = $pdo->prepare("
-                SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
+                SELECT DISTINCT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
                        GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
-                FROM (
-                    SELECT id
-                    FROM posts
-                    WHERE publicado = 1
-                    ORDER BY data_publicacao DESC
-                    LIMIT ? OFFSET ?
-                ) AS unique_posts
-                JOIN posts p ON unique_posts.id = p.id
-                JOIN categorias c ON p.categoria_id = c.id
+                FROM posts p 
+                JOIN categorias c ON p.categoria_id = c.id 
                 LEFT JOIN post_tags pt ON p.id = pt.post_id
                 LEFT JOIN tags t ON pt.tag_id = t.id
-                GROUP BY p.id
-                ORDER BY p.data_publicacao DESC
+                WHERE p.publicado = 1
+                GROUP BY p.id, p.titulo, p.slug, p.conteudo, p.resumo, p.categoria_id, p.publicado, 
+                         p.autor_id, p.data_publicacao, p.atualizado_em, p.imagem_destacada,
+                         c.nome, c.slug
+                ORDER BY p.data_publicacao DESC 
+                LIMIT ? OFFSET ?
             ");
             $stmt->execute([POSTS_PER_PAGE, $offset]);
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // DEBUG: Exibir o array de posts para verificar duplicações
-            echo '<pre>';
-            var_dump($posts);
-            echo '</pre>';
-            exit; // Remova esta linha após a depuração
 
             // Processar tags para cada post
             foreach ($posts as &$post) {
