@@ -1,4 +1,7 @@
 <?php
+// DEBUG: PHP está sendo executado aqui!
+echo "PHP está sendo executado aqui!";
+
 // Habilitar exibição de erros para debug
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -40,6 +43,9 @@ include 'includes/header.php';
             $stmt->execute([POSTS_PER_PAGE, $offset]);
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            // DEBUG: Verifique os posts retornados pela query
+            echo '<pre>'; print_r($posts); echo '</pre>';
+
             // Processar tags para cada post
             foreach ($posts as &$post) {
                 $post['tags'] = [];
@@ -67,6 +73,8 @@ include 'includes/header.php';
             } else {
                 foreach ($posts as $post):
                 ?>
+                <!-- DEBUG: Verifique o ID do post durante a iteração -->
+                <?php echo 'ID do Post no Loop: ' . $post['id'] . '<br>'; ?>
                 <article class="blog-post mb-4" data-aos="fade-up">
                     <h2 class="display-6 fw-bold mb-3">
                         <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
