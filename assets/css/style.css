@@ -480,6 +480,15 @@ footer {
     font-size: 1.2rem;
 }
 
+.lead {
+    font-size: 15px!important;
+}
+
+
+.badge {
+    border-radius: 3px!important;
+}
+
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
     footer .col-md-3 {
