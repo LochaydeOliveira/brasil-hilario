@@ -382,7 +382,7 @@ body {
 
 /* Posts */
 .blog-post {
-    margin-bottom: 2rem;
+    margin-bottom: 7rem!important;
 }
 
 .post-meta i {

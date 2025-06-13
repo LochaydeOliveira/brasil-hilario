@@ -105,7 +105,7 @@ include 'includes/header.php';
                             <?php echo $post['resumo']; ?>
                         </div>
                         
-                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="btn btn-primary">
+                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="lead btn btn-primary">
                             Ler mais
                         </a>
                     </article>
