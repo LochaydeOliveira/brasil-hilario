@@ -105,7 +105,7 @@ require_once 'config/config.php';
                     <form class="d-flex" action="<?php echo BLOG_URL; ?>/busca.php" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" class="form-control" placeholder="Buscar no blog..." aria-label="Buscar" required>
-                            <button class="btn btn-outline-success" type="submit">
+                            <button class="btn btn-outline-success style-busca" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
