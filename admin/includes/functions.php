@@ -4,13 +4,6 @@
  */
 
 /**
- * Verifica se o usuário está logado
- */
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-/**
  * Verifica se o usuário é administrador
  */
 function isAdmin() {
