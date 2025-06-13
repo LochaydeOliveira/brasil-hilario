@@ -2,7 +2,7 @@
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once 'includes/functions.php';
+require_once __DIR__ . '/includes/functions.php';
 
 // Verifica se o usuário está autenticado
 if (!isLoggedIn()) {
