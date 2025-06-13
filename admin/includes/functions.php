@@ -65,30 +65,6 @@ function getCurrentUserId() {
 }
 
 /**
- * Formata o tipo de usuário para exibição
- */
-function formatUserType($type) {
-    $types = [
-        'admin' => '<span class="badge bg-danger">Administrador</span>',
-        'editor' => '<span class="badge bg-warning">Editor</span>',
-        'autor' => '<span class="badge bg-info">Autor</span>'
-    ];
-    return $types[$type] ?? $types['autor'];
-}
-
-/**
- * Formata o status do usuário para exibição
- */
-function formatUserStatus($status) {
-    $statuses = [
-        'ativo' => '<span class="badge bg-success">Ativo</span>',
-        'inativo' => '<span class="badge bg-secondary">Inativo</span>',
-        'bloqueado' => '<span class="badge bg-danger">Bloqueado</span>'
-    ];
-    return $statuses[$status] ?? $statuses['inativo'];
-}
-
-/**
  * Obtém o menu do painel administrativo
  */
 function getAdminMenu() {
@@ -154,6 +130,41 @@ function getPageTitle() {
         'configuracoes' => 'Configurações'
     ];
     return $titles[$page] ?? 'Painel Administrativo';
+}
+
+/**
+ * Formata o status de um post para exibição
+ */
+function formatPostStatus($status) {
+    $statuses = [
+        0 => '<span class="badge bg-warning">Rascunho</span>',
+        1 => '<span class="badge bg-success">Publicado</span>'
+    ];
+    return $statuses[$status] ?? $statuses[0];
+}
+
+/**
+ * Formata o tipo de usuário para exibição
+ */
+function formatUserType($type) {
+    $types = [
+        'admin' => '<span class="badge bg-danger">Administrador</span>',
+        'editor' => '<span class="badge bg-warning">Editor</span>',
+        'autor' => '<span class="badge bg-info">Autor</span>'
+    ];
+    return $types[$type] ?? $types['autor'];
+}
+
+/**
+ * Formata o status do usuário para exibição
+ */
+function formatUserStatus($status) {
+    $statuses = [
+        'ativo' => '<span class="badge bg-success">Ativo</span>',
+        'inativo' => '<span class="badge bg-secondary">Inativo</span>',
+        'bloqueado' => '<span class="badge bg-danger">Bloqueado</span>'
+    ];
+    return $statuses[$status] ?? $statuses['inativo'];
 }
 
 /**

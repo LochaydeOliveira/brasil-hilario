@@ -3,13 +3,10 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
+check_login();
 
 $post = null;
 $categories = [];
@@ -35,6 +32,12 @@ try {
         exit;
     }
 
+    // Verifica se o usuário tem permissão para editar o post
+    if (!can_edit_post($post['autor_id'])) {
+        showError('Você não tem permissão para editar este post.');
+        exit;
+    }
+
     // Busca as categorias
     $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
     $categories = $stmt->fetchAll();
@@ -53,7 +56,7 @@ try {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
 
-$page_title = "Editar Post";
+$page_title = getPageTitle();
 include 'includes/header.php';
 ?>
 

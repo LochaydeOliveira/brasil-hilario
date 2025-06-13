@@ -3,13 +3,10 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
+check_login();
 
 $post = null; // Para novo post, $post é nulo
 $categories = [];
@@ -22,7 +19,7 @@ try {
     $error = "Erro ao carregar categorias: " . $e->getMessage();
 }
 
-$page_title = "Novo Post";
+$page_title = getPageTitle();
 include 'includes/header.php';
 ?>
 

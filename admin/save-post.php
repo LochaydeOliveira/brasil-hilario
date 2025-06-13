@@ -2,13 +2,10 @@
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
+check_login();
 
 // Verifica se é uma requisição POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -42,6 +39,15 @@ try {
     }
 
     if ($id) {
+        // Verifica se o usuário tem permissão para editar o post
+        $stmt = $pdo->prepare("SELECT autor_id FROM posts WHERE id = ?");
+        $stmt->execute([$id]);
+        $post = $stmt->fetch();
+        
+        if (!$post || !can_edit_post($post['autor_id'])) {
+            throw new Exception("Você não tem permissão para editar este post.");
+        }
+
         // Atualizar post existente
         $stmt = $pdo->prepare("
             UPDATE posts 
@@ -56,10 +62,10 @@ try {
     } else {
         // Inserir novo post
         $stmt = $pdo->prepare("
-            INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, criado_em, atualizado_em)
-            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+            INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado]);
+        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id']]);
         $id = $pdo->lastInsertId();
     }
 
