@@ -37,6 +37,7 @@ require_once 'config/config.php';
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap" rel="stylesheet">
     
     <!-- Schema.org markup para SEO -->
     <script type="application/ld+json">
@@ -50,18 +51,22 @@ require_once 'config/config.php';
     </script>
 
     <style>
+        body {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+        }
 
-    .btn-search {
-        border-color: #0b8103!important;
-        color: #0b8103;
-    }
+        .btn-search {
+            border-color: #0b8103!important;
+            color: #0b8103;
+        }
 
-    .btn-search:hover {
-        color: #ffc107;
-        background-color: #0b8103;
-        border: none!important;
-    }
-</style>
+        .btn-search:hover {
+            color: #ffc107;
+            background-color: #0b8103;
+            border: none!important;
+        }
+    </style>
     
     <!-- Facebook Comments Plugin -->
     <div id="fb-root"></div>

@@ -23,8 +23,16 @@ if (!isLoggedIn()) {
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- Merriweather Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <style>
+        body {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+        }
+        
         .sidebar {
             position: fixed;
             top: 0;
@@ -33,7 +41,7 @@ if (!isLoggedIn()) {
             z-index: 100;
             padding: 48px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            background-color: #212529;
+            background-color: #343a40;
         }
         
         .sidebar-sticky {
@@ -51,9 +59,11 @@ if (!isLoggedIn()) {
         }
         
         .navbar-brand {
-            padding: .75rem 1rem;
-            background-color: transparent;
-            box-shadow: none;
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, .25);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
         }
         
         .navbar-brand img {
@@ -64,7 +74,6 @@ if (!isLoggedIn()) {
         .navbar .navbar-toggler {
             top: .25rem;
             right: 1rem;
-            color: #333;
         }
         
         .navbar .form-control {
@@ -74,14 +83,14 @@ if (!isLoggedIn()) {
         }
         
         .form-control-dark {
-            color: #333;
-            background-color: rgba(0, 0, 0, .05);
-            border-color: rgba(0, 0, 0, .1);
+            color: #fff;
+            background-color: rgba(255, 255, 255, .1);
+            border-color: rgba(255, 255, 255, .1);
         }
         
         .form-control-dark:focus {
             border-color: transparent;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, .1);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
         }
         
         .bd-placeholder-img {
@@ -121,10 +130,8 @@ if (!isLoggedIn()) {
         }
 
         .sidebar-heading {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.75rem;
+            font-size: .75rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
         }
 
         .main-content {
