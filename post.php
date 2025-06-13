@@ -72,7 +72,7 @@ include 'includes/header.php';
                 </ol>
             </nav>
 
-            <h1 class="mt-4 mb-3"><?php echo htmlspecialchars($post['titulo']); ?></h1>
+            <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
             <p class="lead">
                 por <a href="#">Admin</a>
