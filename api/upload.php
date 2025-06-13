@@ -23,7 +23,7 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
 }
 
 // Verificar o tipo do arquivo
-$allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+$allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 if (!in_array($file['type'], $allowed_types)) {
     http_response_code(400);
     die(json_encode(['error' => 'Tipo de arquivo não permitido']));

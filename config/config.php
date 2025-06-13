@@ -19,7 +19,7 @@ define('EXCERPT_LENGTH', 200);
 
 // Configurações de Mídia
 define('UPLOAD_MAX_SIZE', 5242880); // 5MB
-define('ALLOWED_IMAGE_TYPES', ['jpg', 'jpeg', 'png', 'gif']);
+define('ALLOWED_IMAGE_TYPES', ['jpg', 'jpeg', 'png', 'gif', 'webp']);
 define('UPLOAD_PATH', 'uploads');
 define('UPLOAD_URL', BLOG_URL . '/uploads');
 

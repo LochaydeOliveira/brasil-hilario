@@ -37,13 +37,13 @@ if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
 }
 
 $file = $_FILES['file'];
-$allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+$allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 $max_size = 5 * 1024 * 1024; // 5MB
 
 // Verifica o tipo do arquivo
 if (!in_array($file['type'], $allowed_types)) {
     http_response_code(400);
-    echo json_encode(['error' => 'Tipo de arquivo não permitido. Apenas imagens JPG, PNG e GIF são aceitas.']);
+    echo json_encode(['error' => 'Tipo de arquivo não permitido. Apenas imagens JPG, PNG, GIF e WebP são aceitas.']);
     exit;
 }
 
