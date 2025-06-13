@@ -1,6 +1,12 @@
 <?php
 // Buscar últimas postagens
-$stmt = $pdo->query("SELECT id, titulo, data_publicacao FROM posts ORDER BY data_publicacao DESC LIMIT 5");
+$stmt = $pdo->query("
+    SELECT id, titulo, slug, data_publicacao 
+    FROM posts 
+    WHERE publicado = 1 
+    ORDER BY data_publicacao DESC 
+    LIMIT 5
+");
 $ultimas_postagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Buscar categorias
@@ -8,7 +14,13 @@ $stmt = $pdo->query("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
 $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Buscar posts mais lidos
-$stmt = $pdo->query("SELECT id, titulo, visualizacoes FROM posts ORDER BY visualizacoes DESC LIMIT 5");
+$stmt = $pdo->query("
+    SELECT id, titulo, slug, visualizacoes 
+    FROM posts 
+    WHERE publicado = 1 
+    ORDER BY visualizacoes DESC 
+    LIMIT 5
+");
 $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -22,7 +34,7 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <ul class="list-unstyled">
                 <?php foreach ($ultimas_postagens as $post): ?>
                 <li class="mb-2">
-                    <a href="/post/<?php echo $post['id']; ?>" class="text-decoration-none">
+                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
@@ -43,7 +55,7 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <ul class="list-unstyled">
                 <?php foreach ($categorias as $categoria): ?>
                 <li class="mb-2">
-                    <a href="/categoria/<?php echo $categoria['slug']; ?>" class="text-decoration-none">
+                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $categoria['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($categoria['nome']); ?>
                     </a>
                 </li>
@@ -61,7 +73,7 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <ul class="list-unstyled">
                 <?php foreach ($posts_populares as $post): ?>
                 <li class="mb-2">
-                    <a href="/post/<?php echo $post['id']; ?>" class="text-decoration-none">
+                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
