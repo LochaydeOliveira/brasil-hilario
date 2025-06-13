@@ -152,7 +152,7 @@ body {
 .sidebar a {
     font-family: var(--font-primaary);
     font-optical-sizing: auto;
-    font-weight: 900;
+    font-weight: 700;
     font-style: normal;
     color: rgb(0, 0, 0);
     text-decoration: none;
