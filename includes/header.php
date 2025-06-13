@@ -94,7 +94,7 @@ require_once 'config/config.php';
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BLOG_URL; ?>">Home</a>
+                            <a class="nav-link" href="<?php echo BLOG_URL; ?>">Início</a>
                         </li>
                         <?php foreach (PAGES as $page): ?>
                         <li class="nav-item">
