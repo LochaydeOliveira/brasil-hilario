@@ -44,7 +44,6 @@ $editor_config = [
         xhr.send(formData);
     }',
     'images_reuse_filename' => true,
-    'images_upload_base_path' => BLOG_URL . '/uploads/images/',
     'language' => 'pt_BR',
     'language_url' => '../assets/js/tinymce/langs/pt_BR.js'
 ];
