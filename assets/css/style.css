@@ -637,7 +637,7 @@ footer {
 }
 
 .style-busca {
-    border: #fff!important;
+    background: #fff!important;
 }
 
 .input-group .form-control {
@@ -645,6 +645,7 @@ footer {
     border-radius: 4px 0 0 4px;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+    border-color: #fff!important;
 }
 
 .input-group .btn {
