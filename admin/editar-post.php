@@ -1,9 +1,9 @@
 <?php
 require_once '../config/config.php';
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
-require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
 check_login();
