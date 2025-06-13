@@ -3,8 +3,13 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
+// Iniciar sessão se ainda não estiver iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Verifica se o usuário está logado
-if (!check_login()) {
+if (!isset($_SESSION['usuario_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Você precisa estar logado para fazer upload de imagens.']);
     exit;
