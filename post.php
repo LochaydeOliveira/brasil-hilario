@@ -104,11 +104,7 @@ include 'includes/header.php';
             </div>
 
 
-            <?php if (!empty($post['imagem_destacada'])): ?>
-                <img class="img-fluid rounded mb-4" src="<?php echo UPLOAD_URL . '/' . htmlspecialchars($post['imagem_destacada']); ?>" 
-                     alt="<?php echo htmlspecialchars($post['titulo']); ?>">
-                <hr>
-            <?php endif; ?>
+
 
             <div class="post-content">
                 <?php 
