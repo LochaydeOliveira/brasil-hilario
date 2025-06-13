@@ -40,7 +40,7 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                      class="img-fluid rounded" 
                                      alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                                     style="width: 100%; height: 150px; object-fit: cover;">
+                                    >
                             </a>
                         </div>
                     <?php endif; ?>
@@ -89,7 +89,7 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                      class="img-fluid rounded" 
                                      alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                                     style="width: 100%; height: 150px; object-fit: cover;">
+                                     >
                             </a>
                         </div>
                     <?php endif; ?>
