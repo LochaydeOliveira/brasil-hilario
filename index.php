@@ -25,7 +25,7 @@ include 'includes/header.php';
             // Buscar posts paginados
             $stmt = $pdo->prepare("
                 SELECT DISTINCT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
-                       GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) SEPARATOR ',') as tags_data
+                       GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
                 FROM posts p 
                 JOIN categorias c ON p.categoria_id = c.id 
                 LEFT JOIN post_tags pt ON p.id = pt.post_id
