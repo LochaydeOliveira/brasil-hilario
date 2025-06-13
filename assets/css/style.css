@@ -484,6 +484,11 @@ footer {
     font-size: 15px!important;
 }
 
+.lead:hover {
+    color: #0b8103!important;
+    font-weight: 600!important;
+}
+
 .lead a {
     color: #6a6a6a!important;
     font-weight: 600!important;
