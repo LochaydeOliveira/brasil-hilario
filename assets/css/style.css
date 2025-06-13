@@ -150,11 +150,11 @@ body {
 
 /* Links da Sidebar */
 .sidebar a {
-    font-family: var(--font-secondary);
+    font-family: var(--font-primaary);
     font-optical-sizing: auto;
-    font-weight: 500;
+    font-weight: 900;
     font-style: normal;
-    color: rgba(0, 0, 0, 0.85);
+    color: rgb(0, 0, 0);
     text-decoration: none;
     transition: color 0.1s ease;
 }
