@@ -517,14 +517,13 @@ footer {
 
 /* Cards */
 .card {
-    border: none;
-    box-shadow: none;
+    border: none!important;
+    box-shadow: none!important;
 }
 
 .card-header {
-    background-color: #fcbd07;
-    border-bottom: none;
-    padding: 1rem;
+    background-color: #fcbd07!important;
+    border-bottom: none!important;
 }
 
 .card-header h3 {
