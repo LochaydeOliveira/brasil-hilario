@@ -1,11 +1,4 @@
 <?php
-// DEBUG: PHP está sendo executado aqui!
-echo "PHP está sendo executado aqui!";
-
-// Habilitar exibição de erros para debug
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Iniciar buffer de saída
 ob_start();
 
@@ -64,9 +57,6 @@ include 'includes/header.php';
             $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
-
-            // DEBUG: Verifique o array $posts antes do loop de exibição
-            echo '<pre>'; print_r($posts); echo '</pre>';
 
             if (empty($posts)) {
                 echo '<div class="alert alert-info">Nenhum post encontrado.</div>';
