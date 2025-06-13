@@ -43,24 +43,21 @@ include 'includes/header.php';
             $stmt->execute([POSTS_PER_PAGE, $offset]);
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // DEBUG: Verifique os posts retornados pela query
-            echo '<pre>'; print_r($posts); echo '</pre>';
-
             // Processar tags para cada post
-            foreach ($posts as &$post) {
-                $post['tags'] = [];
-                if (!empty($post['tags_data'])) {
-                    $tags_array = explode(',', $post['tags_data']);
+            foreach ($posts as $key => $post_item) {
+                $posts[$key]['tags'] = [];
+                if (!empty($post_item['tags_data'])) {
+                    $tags_array = explode(',', $post_item['tags_data']);
                     foreach ($tags_array as $tag_data) {
                         list($id, $nome, $tag_slug) = explode(':', $tag_data);
-                        $post['tags'][] = [
+                        $posts[$key]['tags'][] = [
                             'id' => $id,
                             'nome' => $nome,
                             'slug' => $tag_slug
                         ];
                     }
                 }
-                unset($post['tags_data']);
+                unset($posts[$key]['tags_data']);
             }
 
             // Buscar o total de posts para paginação
@@ -68,13 +65,16 @@ include 'includes/header.php';
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
+            // DEBUG: Verifique o array $posts antes do loop de exibição
+            echo '<pre>'; print_r($posts); echo '</pre>';
+
             if (empty($posts)) {
                 echo '<div class="alert alert-info">Nenhum post encontrado.</div>';
             } else {
-                foreach ($posts as $post):
+                $num_posts = count($posts);
+                for ($i = 0; $i < $num_posts; $i++) {
+                    $post = $posts[$i];
                 ?>
-                <!-- DEBUG: Verifique o ID do post durante a iteração -->
-                <?php echo 'ID do Post no Loop: ' . $post['id'] . '<br>'; ?>
                 <article class="blog-post mb-4" data-aos="fade-up">
                     <h2 class="display-6 fw-bold mb-3">
                         <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
@@ -119,7 +119,7 @@ include 'includes/header.php';
                     </a>
                 </article>
                 <?php 
-                endforeach;
+                }
 
                 // Paginação
                 if ($total_pages > 1):
