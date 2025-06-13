@@ -65,3 +65,16 @@ Options -Indexes
 
 # Definir charset padrão
 AddDefaultCharset UTF-8 
+
+# Remover www
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Regras para páginas
+RewriteRule ^page/([0-9]+)/?$ index.php?page=$1 [L,QSA]
+
+# Proteger arquivos sensíveis
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch> 

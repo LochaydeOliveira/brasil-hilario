@@ -18,18 +18,39 @@ if (empty($post_slug)) {
 }
 
 try {
-    // Buscar o post
-    $stmt = $pdo->prepare("SELECT p.*, c.nome as categoria_nome 
-                          FROM posts p 
-                          LEFT JOIN categorias c ON p.categoria_id = c.id 
-                          WHERE p.slug = ? AND p.publicado = 1 LIMIT 1");
+    // Buscar o post pelo slug
+    $stmt = $pdo->prepare("
+        SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
+               GROUP_CONCAT(DISTINCT t.id, ':', t.nome, ':', t.slug) as tags_data
+        FROM posts p 
+        JOIN categorias c ON p.categoria_id = c.id 
+        LEFT JOIN post_tags pt ON p.id = pt.post_id
+        LEFT JOIN tags t ON pt.tag_id = t.id
+        WHERE p.slug = ? AND p.publicado = 1
+        GROUP BY p.id
+    ");
     $stmt->execute([$post_slug]);
-    $post = $stmt->fetch();
+    $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$post) {
         header('Location: ' . BLOG_URL . '/404.php'); // Redireciona para uma página 404 se o post não for encontrado
         exit;
     }
+
+    // Processar tags
+    $post['tags'] = [];
+    if (!empty($post['tags_data'])) {
+        $tags_array = explode(',', $post['tags_data']);
+        foreach ($tags_array as $tag_data) {
+            list($id, $nome, $tag_slug) = explode(':', $tag_data);
+            $post['tags'][] = [
+                'id' => $id,
+                'nome' => $nome,
+                'slug' => $tag_slug
+            ];
+        }
+    }
+    unset($post['tags_data']);
 
     // Garante que as chaves 'publicado' e 'editor_type' existam com valores padrão
     $post['publicado'] = $post['publicado'] ?? 0;
@@ -38,13 +59,6 @@ try {
     // Incrementar visualizações
     $stmt = $pdo->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
     $stmt->execute([$post['id']]);
-
-    // Buscar tags do post
-    $stmt = $pdo->prepare("SELECT t.nome, t.slug FROM tags t 
-                          INNER JOIN posts_tags pt ON t.id = pt.tag_id 
-                          WHERE pt.post_id = ?");
-    $stmt->execute([$post['id']]);
-    $tags = $stmt->fetchAll();
 
 } catch (PDOException $e) {
     die("Erro: " . $e->getMessage());
@@ -83,15 +97,22 @@ include 'includes/header.php';
 
             <hr>
 
-            <p>
-                <i class="far fa-clock"></i> Publicado em 
-                <?php echo date('d/m/Y', strtotime($post['criado_em'] ?? 'now')); ?>
-                <span class="ms-3"><i class="far fa-eye"></i> 
-                    <?php echo number_format($post['visualizacoes'], 0, ',', '.'); ?> visualizações
-                </span>
-            </p>
+            <div class="post-meta mb-3">
+                <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['criado_em'])); ?></span>
+                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
+                <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
+            </div>
 
-            <hr>
+            <?php if (!empty($post['tags'])): ?>
+            <div class="post-tags mb-3">
+                <i class="fas fa-tags"></i>
+                <?php foreach ($post['tags'] as $tag): ?>
+                <a href="<?php echo BLOG_URL; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" class="badge bg-secondary text-decoration-none me-1">
+                    <?php echo htmlspecialchars($tag['nome']); ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
 
             <?php if (!empty($post['imagem_destacada'])): ?>
                 <img class="img-fluid rounded mb-4" src="<?php echo UPLOAD_URL . '/' . htmlspecialchars($post['imagem_destacada']); ?>" 
@@ -114,9 +135,9 @@ include 'includes/header.php';
             <hr>
 
             <!-- Tags -->
-            <?php if (!empty($tags)): ?>
+            <?php if (!empty($post['tags'])): ?>
                 <div class="mb-3">
-                    <?php foreach ($tags as $tag): ?>
+                    <?php foreach ($post['tags'] as $tag): ?>
                         <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
                            class="badge bg-info text-dark me-1">
                             <?php echo htmlspecialchars($tag['nome']); ?>

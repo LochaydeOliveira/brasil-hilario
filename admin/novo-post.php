@@ -69,14 +69,20 @@ include 'includes/header.php';
                 </div>
 
         <div class="mb-3">
-                    <label for="excerpt" class="form-label">Resumo</label>
-                    <textarea class="form-control" id="excerpt" name="resumo" rows="3"></textarea>
+                    <label for="resumo" class="form-label">Resumo</label>
+                    <textarea class="form-control" id="resumo" name="resumo" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+            <input type="text" class="form-control" id="tags" name="tags" placeholder="Ex: humor, política, esportes">
+            <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
         </div>
 
         <div class="mb-3">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="published" name="publicado" value="1" checked>
-                        <label class="form-check-label" for="published">Publicar</label>
+                        <input type="checkbox" class="form-check-input" id="publicado" name="publicado" value="1" checked>
+                        <label class="form-check-label" for="publicado">Publicar</label>
                     </div>
         </div>
 

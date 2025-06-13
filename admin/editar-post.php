@@ -3,6 +3,7 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
 if (!isLoggedIn()) {
@@ -12,6 +13,8 @@ if (!isLoggedIn()) {
 
 $post = null;
 $categories = [];
+$tags = [];
+$tags_string = '';
 
 // Verifica se foi fornecido um ID
 if (!isset($_GET['id'])) {
@@ -33,8 +36,19 @@ try {
     }
 
     // Busca as categorias
-$stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
+    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
     $categories = $stmt->fetchAll();
+
+    // Busca tags do post
+    $stmt = $pdo->prepare("
+        SELECT t.nome 
+        FROM tags t 
+        JOIN post_tags pt ON t.id = pt.tag_id 
+        WHERE pt.post_id = ?
+    ");
+    $stmt->execute([$post_id]);
+    $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $tags_string = implode(', ', $tags);
 } catch (PDOException $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
@@ -59,39 +73,45 @@ include 'includes/header.php';
             <form method="post" action="save-post.php" class="needs-validation" novalidate>
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
 
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Título</label>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="<?php echo htmlspecialchars($post['titulo'] ?? ''); ?>" required>
-                        </div>
+                </div>
 
-                        <div class="mb-3">
-                            <label for="slug" class="form-label">Slug</label>
+                <div class="mb-3">
+                    <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" required>
-                        </div>
+                </div>
 
-                                <div class="mb-3">
-                                    <label for="category_id" class="form-label">Categoria</label>
+                <div class="mb-3">
+                    <label for="category_id" class="form-label">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
-                                        <option value="">Selecione uma categoria</option>
+                        <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($category['nome']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
                     <textarea id="editor" name="conteudo"><?php echo htmlspecialchars($post['conteudo'] ?? ''); ?></textarea>
-                                </div>
+                </div>
 
-                                <div class="mb-3">
+                <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
                     <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
-                                </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                    <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($tags_string); ?>" placeholder="Ex: humor, política, esportes">
+                    <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
+                </div>
 
                 <div class="mb-3">
                     <div class="form-check">
@@ -115,7 +135,7 @@ include 'includes/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         tinymce.init(<?php echo json_encode($editor_config); ?>);
-});
+    });
 
     // Gera o slug automaticamente a partir do título
     document.getElementById('title').addEventListener('input', function() {
@@ -127,7 +147,7 @@ include 'includes/header.php';
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)/g, '');
         document.getElementById('slug').value = slug;
-});
+    });
 </script>
 
 <?php include 'includes/footer.php'; ?>

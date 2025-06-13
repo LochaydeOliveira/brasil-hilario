@@ -14,16 +14,38 @@ include 'includes/header.php';
     <!-- Conteúdo Principal -->
     <div class="col-lg-8">
         <?php
-        // Buscar posts
-        $stmt = $pdo->query("
-            SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug 
+        // Buscar posts paginados
+        $stmt = $pdo->prepare("
+            SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
+                   GROUP_CONCAT(DISTINCT t.id, ':', t.nome, ':', t.slug) as tags_data
             FROM posts p 
             JOIN categorias c ON p.categoria_id = c.id 
-            WHERE p.publicado = 1 
+            LEFT JOIN post_tags pt ON p.id = pt.post_id
+            LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE p.publicado = 1
+            GROUP BY p.id
             ORDER BY p.criado_em DESC 
-            LIMIT " . POSTS_PER_PAGE
-        );
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([POSTS_PER_PAGE, $offset]);
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Processar tags para cada post
+        foreach ($posts as &$post) {
+            $post['tags'] = [];
+            if (!empty($post['tags_data'])) {
+                $tags_array = explode(',', $post['tags_data']);
+                foreach ($tags_array as $tag_data) {
+                    list($id, $nome, $tag_slug) = explode(':', $tag_data);
+                    $post['tags'][] = [
+                        'id' => $id,
+                        'nome' => $nome,
+                        'slug' => $tag_slug
+                    ];
+                }
+            }
+            unset($post['tags_data']);
+        }
 
         foreach ($posts as $post):
         ?>
@@ -34,11 +56,26 @@ include 'includes/header.php';
                 </a>
             </h2>
             
-            <div class="post-meta mb-3">
-                <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['criado_em'])); ?></span>
-                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
-                <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
+            <div class="post-meta mb-2">
+                <small class="text-muted">
+                    <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['criado_em'])); ?>
+                    <i class="fas fa-folder ms-2"></i> 
+                    <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
+                        <?php echo htmlspecialchars($post['categoria_nome']); ?>
+                    </a>
+                </small>
             </div>
+            
+            <?php if (!empty($post['tags'])): ?>
+                <div class="post-tags mb-3">
+                    <?php foreach ($post['tags'] as $tag): ?>
+                        <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
+                           class="badge bg-info text-dark me-1">
+                            <i class="fas fa-tag"></i> <?php echo htmlspecialchars($tag['nome']); ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             
             <?php if ($post['imagem_destacada']): ?>
             <img src="<?php echo BLOG_URL; ?>/uploads/<?php echo $post['imagem_destacada']; ?>" 

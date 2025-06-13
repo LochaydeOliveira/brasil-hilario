@@ -2,6 +2,7 @@
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
 if (!isLoggedIn()) {
@@ -15,59 +16,87 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Obtém os dados do formulário
-$id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-$titulo = trim($_POST['titulo']);
-$slug = trim($_POST['slug']);
-$conteudo = trim($_POST['conteudo']);
-$resumo = trim($_POST['resumo']);
-$categoria_id = (int)$_POST['categoria_id'];
-$publicado = isset($_POST['publicado']) ? 1 : 0;
-
-// Validação básica
-if (empty($titulo) || empty($slug) || empty($conteudo) || $categoria_id <= 0) {
-    $_SESSION['error'] = "Todos os campos obrigatórios devem ser preenchidos.";
-    header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
-    exit;
-}
-
 try {
-    // Verifica se o slug já existe
-    $stmt = $pdo->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
-    $stmt->execute([$slug, $id]);
-    if ($stmt->fetch()) {
-        $_SESSION['error'] = "Este slug já está em uso. Por favor, escolha outro.";
-        header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
-        exit;
+    $pdo->beginTransaction();
+
+    // Processar dados do formulário
+    $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
+    $titulo = trim($_POST['titulo']);
+    $slug = trim($_POST['slug']);
+    $conteudo = trim($_POST['conteudo']);
+    $resumo = trim($_POST['resumo']);
+    $categoria_id = (int)$_POST['categoria_id'];
+    $publicado = isset($_POST['publicado']) ? 1 : 0;
+    $tags = isset($_POST['tags']) ? array_map('trim', explode(',', $_POST['tags'])) : [];
+
+    // Validar dados
+    if (empty($titulo) || empty($slug) || empty($conteudo) || empty($resumo) || empty($categoria_id)) {
+        throw new Exception("Todos os campos obrigatórios devem ser preenchidos.");
     }
 
-    if ($id > 0) {
-        // Atualiza o post existente
-        $stmt = $pdo->prepare("UPDATE posts SET 
-                titulo = ?, 
-                slug = ?, 
-                conteudo = ?, 
-                resumo = ?, 
-                categoria_id = ?, 
-                publicado = ?,
-                atualizado_em = NOW()
-                WHERE id = ?");
+    // Verificar se o slug já existe (exceto para o próprio post)
+    $stmt = $pdo->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
+    $stmt->execute([$slug, $id ?? 0]);
+    if ($stmt->fetch()) {
+        throw new Exception("Este slug já está em uso. Por favor, escolha outro.");
+    }
+
+    if ($id) {
+        // Atualizar post existente
+        $stmt = $pdo->prepare("
+            UPDATE posts 
+            SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, atualizado_em = NOW()
+            WHERE id = ?
+        ");
         $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $id]);
 
-        $_SESSION['success'] = "Post atualizado com sucesso!";
+        // Remover tags antigas
+        $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
+        $stmt->execute([$id]);
     } else {
-        // Insere um novo post
-        $stmt = $pdo->prepare("INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, criado_em) 
-                              VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        // Inserir novo post
+        $stmt = $pdo->prepare("
+            INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, criado_em, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+        ");
         $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado]);
-
-        $_SESSION['success'] = "Post criado com sucesso!";
+        $id = $pdo->lastInsertId();
     }
 
+    // Processar tags
+    foreach ($tags as $tag_nome) {
+        if (empty($tag_nome)) continue;
+
+        // Criar slug da tag
+        $tag_slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9-]/', '-', $tag_nome)));
+        $tag_slug = preg_replace('/-+/', '-', $tag_slug);
+        $tag_slug = trim($tag_slug, '-');
+
+        // Verificar se a tag já existe
+        $stmt = $pdo->prepare("SELECT id FROM tags WHERE slug = ?");
+        $stmt->execute([$tag_slug]);
+        $tag_id = $stmt->fetchColumn();
+
+        if (!$tag_id) {
+            // Inserir nova tag
+            $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
+            $stmt->execute([$tag_nome, $tag_slug]);
+            $tag_id = $pdo->lastInsertId();
+        }
+
+        // Relacionar tag com o post
+        $stmt = $pdo->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+        $stmt->execute([$id, $tag_id]);
+    }
+
+    $pdo->commit();
+    $_SESSION['success'] = "Post salvo com sucesso!";
     header('Location: posts.php');
     exit;
-} catch (PDOException $e) {
-    $_SESSION['error'] = "Erro ao salvar o post: " . $e->getMessage();
+
+} catch (Exception $e) {
+    $pdo->rollBack();
+    $_SESSION['error'] = $e->getMessage();
     header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
     exit;
 }
