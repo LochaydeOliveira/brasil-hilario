@@ -154,4 +154,83 @@ function showWarning($message) {
  */
 function showInfo($message) {
     return '<div class="alert alert-info">' . $message . '</div>';
+}
+
+/**
+ * Processa e salva a imagem destacada do post
+ * @param array $file Array do arquivo enviado ($_FILES['featured_image'])
+ * @param string $old_image Nome da imagem antiga (opcional)
+ * @return string|false Nome do arquivo salvo ou false em caso de erro
+ */
+function process_featured_image($file, $old_image = null) {
+    // Verifica se um arquivo foi enviado
+    if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+        return false;
+    }
+
+    // Tipos de arquivo permitidos
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    
+    // Verifica o tipo do arquivo
+    if (!in_array($file['type'], $allowed_types)) {
+        return false;
+    }
+
+    // Tamanho máximo (5MB)
+    $max_size = 5 * 1024 * 1024;
+    if ($file['size'] > $max_size) {
+        return false;
+    }
+
+    // Cria o diretório de uploads se não existir
+    $upload_dir = 'uploads/images/';
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+
+    // Gera um nome único para o arquivo
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = uniqid() . '.' . $extension;
+    $filepath = $upload_dir . $filename;
+
+    // Move o arquivo
+    if (move_uploaded_file($file['tmp_name'], $filepath)) {
+        // Se houver uma imagem antiga, remove
+        if ($old_image && file_exists($upload_dir . $old_image)) {
+            unlink($upload_dir . $old_image);
+        }
+        return $filename;
+    }
+
+    return false;
+}
+
+/**
+ * Retorna a URL completa da imagem destacada
+ * @param string $image_name Nome do arquivo da imagem
+ * @return string URL completa da imagem
+ */
+function get_featured_image_url($image_name) {
+    if (empty($image_name)) {
+        return BLOG_URL . '/assets/img/no-image.jpg'; // Imagem padrão
+    }
+    return BLOG_URL . '/uploads/images/' . $image_name;
+}
+
+/**
+ * Retorna o HTML da imagem destacada com classes e atributos padrão
+ * @param string $image_name Nome do arquivo da imagem
+ * @param string $alt Texto alternativo
+ * @param string $class Classes CSS adicionais
+ * @return string HTML da imagem
+ */
+function get_featured_image_html($image_name, $alt = '', $class = '') {
+    $url = get_featured_image_url($image_name);
+    $class = 'img-fluid rounded ' . $class;
+    return sprintf(
+        '<img src="%s" alt="%s" class="%s" loading="lazy">',
+        htmlspecialchars($url),
+        htmlspecialchars($alt),
+        htmlspecialchars($class)
+    );
 } 

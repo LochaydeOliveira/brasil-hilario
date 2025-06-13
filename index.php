@@ -91,11 +91,8 @@ include 'includes/header.php';
                         </div>
                     <?php endif; ?>
                     
-                    <?php if ($post['imagem_destacada']): ?>
-                    <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo $post['imagem_destacada']; ?>" 
-                         class="img-fluid rounded mb-3" 
-                         alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                         loading="lazy">
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <?php echo get_featured_image_html($post['imagem_destacada'], $post['titulo'], 'mb-3'); ?>
                     <?php endif; ?>
                     
                     <div class="post-excerpt mb-3">

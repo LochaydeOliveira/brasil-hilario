@@ -73,7 +73,7 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form method="post" action="save-post.php" class="needs-validation" novalidate>
+            <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
 
                 <div class="mb-3">
@@ -114,6 +114,17 @@ include 'includes/header.php';
                     <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
                     <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($tags_string); ?>" placeholder="Ex: humor, política, esportes">
                     <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="mb-2">
+                            <?php echo get_featured_image_html($post['imagem_destacada'], $post['titulo'], 'img-thumbnail'); ?>
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    <small class="form-text text-muted">Deixe em branco para manter a imagem atual</small>
                 </div>
 
                 <div class="mb-3">
