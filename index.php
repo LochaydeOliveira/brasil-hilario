@@ -24,16 +24,16 @@ include 'includes/header.php';
         try {
             // Buscar posts paginados
             $stmt = $pdo->prepare("
-                SELECT DISTINCT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
-                       GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
+                SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
                 FROM posts p 
                 JOIN categorias c ON p.categoria_id = c.id 
-                LEFT JOIN post_tags pt ON p.id = pt.post_id
-                LEFT JOIN tags t ON pt.tag_id = t.id
+                LEFT JOIN (
+                    SELECT pt.post_id, GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
+                    FROM post_tags pt
+                    JOIN tags t ON pt.tag_id = t.id
+                    GROUP BY pt.post_id
+                ) as t_grouped ON p.id = t_grouped.post_id
                 WHERE p.publicado = 1
-                GROUP BY p.id, p.titulo, p.slug, p.conteudo, p.resumo, p.categoria_id, p.publicado, 
-                         p.autor_id, p.data_publicacao, p.atualizado_em, p.imagem_destacada,
-                         c.nome, c.slug
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ? OFFSET ?
             ");
@@ -58,7 +58,7 @@ include 'includes/header.php';
             }
 
             // Buscar o total de posts para paginação
-            $stmt = $pdo->query("SELECT COUNT(DISTINCT id) FROM posts WHERE publicado = 1");
+            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
