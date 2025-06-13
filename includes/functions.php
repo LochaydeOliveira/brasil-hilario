@@ -4,13 +4,6 @@
  */
 
 /**
- * Verifica se o usuário está logado
- */
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-/**
  * Gera um slug a partir de um texto
  */
 function generateSlug($text) {
@@ -183,9 +176,12 @@ function process_featured_image($file, $old_image = null) {
     }
 
     // Cria o diretório de uploads se não existir
-    $upload_dir = 'uploads/images/';
+    $upload_dir = dirname(dirname(__FILE__)) . '/uploads/images/';
     if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
+        if (!mkdir($upload_dir, 0755, true)) {
+            error_log("Erro ao criar diretório: " . $upload_dir);
+            return false;
+        }
     }
 
     // Gera um nome único para o arquivo
@@ -202,6 +198,7 @@ function process_featured_image($file, $old_image = null) {
         return $filename;
     }
 
+    error_log("Erro ao mover arquivo para: " . $filepath);
     return false;
 }
 
