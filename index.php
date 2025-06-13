@@ -61,7 +61,9 @@ include 'includes/header.php';
             if (empty($posts)) {
                 echo '<div class="alert alert-info">Nenhum post encontrado.</div>';
             } else {
-                foreach ($posts as $post) {
+                $num_posts = count($posts);
+                for ($i = 0; $i < $num_posts; $i++) {
+                    $post = $posts[$i];
                 ?>
                 <article class="blog-post mb-4" data-aos="fade-up">
                     <h2 class="display-6 fw-bold mb-3">
@@ -91,8 +93,11 @@ include 'includes/header.php';
                         </div>
                     <?php endif; ?>
                     
-                    <?php if (!empty($post['imagem_destacada'])): ?>
-                        <?php echo get_featured_image_html($post['imagem_destacada'], $post['titulo'], 'mb-3'); ?>
+                    <?php if ($post['imagem_destacada']): ?>
+                    <img src="<?php echo BLOG_URL; ?>/uploads/<?php echo $post['imagem_destacada']; ?>" 
+                         class="img-fluid rounded mb-3" 
+                         alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                         loading="lazy">
                     <?php endif; ?>
                     
                     <div class="post-excerpt mb-3">

@@ -2,7 +2,7 @@
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
-require_once '../includes/functions.php';
+require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
 check_login();
@@ -25,23 +25,6 @@ try {
     $categoria_id = (int)$_POST['categoria_id'];
     $publicado = isset($_POST['publicado']) ? 1 : 0;
     $tags = isset($_POST['tags']) ? array_map('trim', explode(',', $_POST['tags'])) : [];
-
-    // Processar imagem destacada
-    $imagem_destacada = null;
-    if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
-        // Se for edição, buscar imagem atual
-        $old_image = null;
-        if ($id) {
-            $stmt = $pdo->prepare("SELECT imagem_destacada FROM posts WHERE id = ?");
-            $stmt->execute([$id]);
-            $old_image = $stmt->fetchColumn();
-        }
-        
-        $imagem_destacada = process_featured_image($_FILES['featured_image'], $old_image);
-        if ($imagem_destacada === false) {
-            throw new Exception("Erro ao processar a imagem destacada.");
-        }
-    }
 
     // Validar dados
     if (empty($titulo) || empty($slug) || empty($conteudo) || empty($resumo) || empty($categoria_id)) {
@@ -68,11 +51,10 @@ try {
         // Atualizar post existente
         $stmt = $pdo->prepare("
             UPDATE posts 
-            SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
-                imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
+            SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, atualizado_em = NOW()
             WHERE id = ?
         ");
-        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id]);
+        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $id]);
 
         // Remover tags antigas
         $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
@@ -80,10 +62,10 @@ try {
     } else {
         // Inserir novo post
         $stmt = $pdo->prepare("
-            INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, imagem_destacada, criado_em, atualizado_em)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+            INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id'], $imagem_destacada]);
+        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id']]);
         $id = $pdo->lastInsertId();
     }
 

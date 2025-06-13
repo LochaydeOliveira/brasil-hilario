@@ -36,7 +36,7 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
+            <form method="post" action="save-post.php" class="needs-validation" novalidate>
         <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
@@ -76,12 +76,6 @@ include 'includes/header.php';
             <input type="text" class="form-control" id="tags" name="tags" placeholder="Ex: humor, política, esportes">
             <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
         </div>
-
-        <div class="mb-3">
-                    <label for="featured_image" class="form-label">Imagem Destacada</label>
-                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
-                    <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
-                </div>
 
         <div class="mb-3">
                     <div class="form-check">
