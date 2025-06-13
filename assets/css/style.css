@@ -1,7 +1,7 @@
 :root {
     --primary-color: #1a1a1a;
     --secondary-color: #c41230;
-    --text-color: rgba(51, 51, 51, 0.85);
+    --text-color: #333;
     --light-gray: #f8f9fa;
     --border-color: #dee2e6;
     --font-primary: 'Roboto', sans-serif;
@@ -10,8 +10,7 @@
 
 body {
     font-family: var(--font-secondary);
-    font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.8;
     color: var(--text-color);
     background-color: #fff;
 }
@@ -25,8 +24,8 @@ body {
 
 .site-title {
     font-family: var(--font-primary);
+    font-size: 2.5rem;
     font-weight: 700;
-    font-size: 1.75rem;
     color: var(--primary-color);
     text-decoration: none;
     letter-spacing: -0.5px;
@@ -40,11 +39,11 @@ body {
 
 .nav-link {
     font-family: var(--font-secondary);
-    font-weight: 500;
     color: var(--text-color);
+    font-weight: 500;
     padding: 1rem 1.5rem;
     text-transform: uppercase;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     letter-spacing: 0.5px;
     transition: color 0.3s;
 }
@@ -67,9 +66,9 @@ body {
 
 .featured-post .card-title {
     font-family: var(--font-primary);
+    font-size: 2.5rem;
     font-weight: 700;
-    font-size: 1.75rem;
-    line-height: 1.3;
+    line-height: 1.2;
     margin-bottom: 1rem;
 }
 
@@ -93,15 +92,15 @@ body {
 
 .post-card .card-title {
     font-family: var(--font-primary);
+    font-size: 1.8rem;
     font-weight: 700;
-    font-size: 1.25rem;
-    line-height: 1.4;
+    line-height: 1.3;
     margin: 1rem 0;
 }
 
 .post-meta {
-    color: rgba(102, 102, 102, 0.85);
-    font-size: 0.8125rem;
+    color: #666;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -115,8 +114,8 @@ body {
 
 .sidebar-title {
     font-family: var(--font-primary);
+    font-size: 1.5rem;
     font-weight: 700;
-    font-size: 1.125rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--secondary-color);
@@ -124,8 +123,8 @@ body {
 
 /* Links da Sidebar */
 .sidebar a {
-    color: rgba(0, 0, 0, 0.85);
-    font-weight: 500;
+    color: #000;
+    font-weight: 600;
     text-decoration: none;
     transition: color 0.1s ease;
 }
@@ -145,18 +144,18 @@ body {
 
 .footer-title {
     font-family: var(--font-primary);
+    font-size: 1.5rem;
     font-weight: 700;
-    font-size: 1.125rem;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
 }
 
 .footer-links a {
-    color: rgba(255, 255, 255, 0.85);
+    color: #fff;
     text-decoration: none;
     display: block;
     margin-bottom: 0.8rem;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     text-transform: none;
     letter-spacing: 0.5px;
 }
@@ -171,7 +170,7 @@ body {
     color: white;
     padding: 0.3rem 1rem;
     border-radius: 0;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-decoration: none;
@@ -189,7 +188,7 @@ body {
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
 }
 
 .read-more:hover {
@@ -198,15 +197,13 @@ body {
 
 /* Post Content */
 .post-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(51, 51, 51, 0.85);
+    font-size: 1.1rem;
+    line-height: 1.8;
 }
 
 .post-content h2 {
     font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 2rem 0 1rem;
 }
 
@@ -221,11 +218,11 @@ body {
     }
     
     .featured-post .card-title {
-        font-size: 1.25rem;
+        font-size: 2rem;
     }
     
     .site-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
 }
 

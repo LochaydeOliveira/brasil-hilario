@@ -33,7 +33,7 @@ try {
     }
 
     // Busca as categorias
-    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
+$stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
     $categories = $stmt->fetchAll();
 } catch (PDOException $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
@@ -46,7 +46,7 @@ include 'includes/header.php';
 <div class="container-fluid">
     <div class="row">
         <?php include 'includes/sidebar.php'; ?>
-        
+
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2"><?php echo $page_title; ?></h1>
@@ -58,40 +58,40 @@ include 'includes/header.php';
 
             <form method="post" action="save-post.php" class="needs-validation" novalidate>
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
-                
-                <div class="mb-3">
-                    <label for="title" class="form-label">Título</label>
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="<?php echo htmlspecialchars($post['titulo'] ?? ''); ?>" required>
-                </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" required>
-                </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="category_id" class="form-label">Categoria</label>
+                                <div class="mb-3">
+                                    <label for="category_id" class="form-label">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
-                        <option value="">Selecione uma categoria</option>
+                                        <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($category['nome']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
                     <textarea id="editor" name="conteudo"><?php echo htmlspecialchars($post['conteudo'] ?? ''); ?></textarea>
-                </div>
+                                </div>
 
-                <div class="mb-3">
+                                <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
                     <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
-                </div>
+                                </div>
 
                 <div class="mb-3">
                     <div class="form-check">
@@ -115,7 +115,7 @@ include 'includes/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         tinymce.init(<?php echo json_encode($editor_config); ?>);
-    });
+});
 
     // Gera o slug automaticamente a partir do título
     document.getElementById('title').addEventListener('input', function() {
@@ -127,7 +127,7 @@ include 'includes/header.php';
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)/g, '');
         document.getElementById('slug').value = slug;
-    });
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>

@@ -39,52 +39,52 @@ include 'includes/header.php';
             <?php endif; ?>
 
             <form method="post" action="save-post.php" class="needs-validation" novalidate>
-                <div class="mb-3">
+        <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="" required>
-                </div>
+        </div>
 
-                <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
+        <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="" required>
-                </div>
+        </div>
 
-                <div class="mb-3">
+        <div class="mb-3">
                     <label for="category_id" class="form-label">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
-                        <option value="">Selecione uma categoria</option>
+                <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
                     <textarea id="editor" name="conteudo"></textarea>
                 </div>
 
-                <div class="mb-3">
+        <div class="mb-3">
                     <label for="excerpt" class="form-label">Resumo</label>
                     <textarea class="form-control" id="excerpt" name="resumo" rows="3"></textarea>
-                </div>
+        </div>
 
-                <div class="mb-3">
+        <div class="mb-3">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="published" name="publicado" value="1" checked>
                         <label class="form-check-label" for="published">Publicar</label>
                     </div>
-                </div>
+        </div>
 
-                <div class="mb-3">
+        <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <a href="posts.php" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
+        </div>
+    </form>
         </main>
     </div>
 </div>
@@ -101,12 +101,12 @@ include 'includes/header.php';
         const title = this.value;
         const slug = title
             .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9]+/g, '-')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)/g, '');
         document.getElementById('slug').value = slug;
-    });
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>
