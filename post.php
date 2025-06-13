@@ -74,7 +74,7 @@ include 'includes/header.php';
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>">Home</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>">Início</a></li>
                     <?php if (isset($post['categoria_nome'])): ?>
                         <li class="breadcrumb-item"><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_nome']); ?>">
                             <?php echo htmlspecialchars($post['categoria_nome']); ?>
@@ -89,7 +89,7 @@ include 'includes/header.php';
             <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
             <p class="lead">
-                por <a href="#">Admin</a>
+                por <a href="#">Hilário Brasileiro</a>
                 <span class="badge bg-secondary ms-2">
                     <?php echo htmlspecialchars($post['categoria_nome'] ?? 'Sem Categoria'); ?>
                 </span>
@@ -103,16 +103,6 @@ include 'includes/header.php';
                 <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
             </div>
 
-            <?php if (!empty($post['tags'])): ?>
-            <div class="post-tags mb-3">
-                <i class="fas fa-tags"></i>
-                <?php foreach ($post['tags'] as $tag): ?>
-                <a href="<?php echo BLOG_URL; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" class="badge bg-secondary text-decoration-none me-1">
-                    <?php echo htmlspecialchars($tag['nome']); ?>
-                </a>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
 
             <?php if (!empty($post['imagem_destacada'])): ?>
                 <img class="img-fluid rounded mb-4" src="<?php echo UPLOAD_URL . '/' . htmlspecialchars($post['imagem_destacada']); ?>" 
@@ -136,14 +126,14 @@ include 'includes/header.php';
 
             <!-- Tags -->
             <?php if (!empty($post['tags'])): ?>
-                <div class="mb-3">
-                    <?php foreach ($post['tags'] as $tag): ?>
-                        <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
-                           class="badge bg-info text-dark me-1">
-                            <?php echo htmlspecialchars($tag['nome']); ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+            <div class="post-tags mb-3">
+                <i class="fas fa-tags"></i>
+                <?php foreach ($post['tags'] as $tag): ?>
+                <a href="<?php echo BLOG_URL; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" class="badge bg-secondary text-decoration-none me-1">
+                    <?php echo htmlspecialchars($tag['nome']); ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
             <?php endif; ?>
 
             <!-- Social Share Buttons -->
