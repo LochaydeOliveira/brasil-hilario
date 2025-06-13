@@ -522,8 +522,9 @@ footer {
 }
 
 .card-header {
-    background-color: #fcbd07!important;
+    background-color: #0b8103 !important;
     border-bottom: none!important;
+    color: #fff!important;
 }
 
 .card-header h3 {
