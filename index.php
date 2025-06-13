@@ -5,6 +5,9 @@ ob_start();
 require_once 'includes/db.php';
 require_once 'config/config.php';
 
+// Definir o offset para paginação
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * POSTS_PER_PAGE;
 
 // Incluir o header
 include 'includes/header.php';
@@ -46,6 +49,11 @@ include 'includes/header.php';
             }
             unset($post['tags_data']);
         }
+
+        // Buscar o total de posts para paginação
+        $stmt = $pdo->query("SELECT COUNT(*) FROM posts WHERE publicado = 1");
+        $total_posts = $stmt->fetchColumn();
+        $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
         foreach ($posts as $post):
         ?>
@@ -97,15 +105,31 @@ include 'includes/header.php';
         <!-- Paginação -->
         <nav aria-label="Navegação de posts" class="mt-4">
             <ul class="pagination justify-content-center">
+                <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page - 1; ?>">Anterior</a>
+                </li>
+                <?php else: ?>
                 <li class="page-item disabled">
                     <a class="page-link" href="#" tabindex="-1">Anterior</a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Próximo</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
                 </li>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page + 1; ?>">Próximo</a>
+                </li>
+                <?php else: ?>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Próximo</a>
+                </li>
+                <?php endif; ?>
             </ul>
         </nav>
     </div>
