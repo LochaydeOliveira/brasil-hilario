@@ -28,10 +28,6 @@ if (!isLoggedIn()) {
     
     <!-- Custom CSS -->
     <style>
-        body {
-            font-family: 'Merriweather', serif;
-            font-weight: 900;
-        }
         
         .sidebar {
             position: fixed;
