@@ -173,7 +173,7 @@ body {
 }
 
 .footer-title {
-    font-family: var(--font-primary);
+    font-family: var(--font-secondary);
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
