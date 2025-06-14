@@ -51,7 +51,7 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="<?php echo BLOG_URL; ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=02" rel="stylesheet">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous"></script>
@@ -165,4 +165,4 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
             </div>
         </nav>
     </header>
-    <main class="container py-4">
+    <main class="container">
