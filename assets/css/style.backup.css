@@ -443,6 +443,25 @@ footer {
     }
 }
 
+@media (max-width: 480px) {
+    .logo-img {
+        height: 70px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .logo-img {
+        height: 70px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .logo-img {
+        height: 70px;
+    }
+}
+
+
 .footer-copyright-text {
     color: #888;
 } 
