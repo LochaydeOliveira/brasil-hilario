@@ -103,4 +103,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+
+    // Controle do menu dropdown no rodapé
+    const footerTitles = document.querySelectorAll('.footer-title');
+    
+    footerTitles.forEach(title => {
+        title.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+                const target = this.getAttribute('data-bs-target');
+                const menu = document.querySelector(target);
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                
+                this.setAttribute('aria-expanded', !isExpanded);
+                menu.classList.toggle('show');
+            }
+        });
+    });
 }); 
