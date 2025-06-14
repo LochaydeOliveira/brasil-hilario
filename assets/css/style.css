@@ -536,6 +536,20 @@ footer {
     }
 }
 
+@media (min-width: 768px) {
+    .footer-links.collapse {
+        display: block !important;
+    }
+    
+    .footer-title {
+        pointer-events: none;
+    }
+    
+    .footer-title i {
+        display: none;
+    }
+}
+
 /* Logo */
 .logo-img {
     height: 70px;

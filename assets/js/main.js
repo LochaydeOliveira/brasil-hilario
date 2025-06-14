@@ -108,12 +108,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const footerTitles = document.querySelectorAll('.footer-title');
     
     footerTitles.forEach(title => {
-        title.addEventListener('click', function() {
+        title.addEventListener('click', function(e) {
             if (window.innerWidth < 768) {
+                e.preventDefault();
                 const target = this.getAttribute('data-bs-target');
                 const menu = document.querySelector(target);
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
                 
+                // Fecha todos os outros menus
+                footerTitles.forEach(otherTitle => {
+                    if (otherTitle !== this) {
+                        const otherTarget = otherTitle.getAttribute('data-bs-target');
+                        const otherMenu = document.querySelector(otherTarget);
+                        otherTitle.setAttribute('aria-expanded', 'false');
+                        otherMenu.classList.remove('show');
+                    }
+                });
+                
+                // Toggle do menu atual
                 this.setAttribute('aria-expanded', !isExpanded);
                 menu.classList.toggle('show');
             }
