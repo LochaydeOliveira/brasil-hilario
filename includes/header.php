@@ -1,16 +1,41 @@
 <?php
 require_once 'config/config.php';
+
+// Definir valores padrão para as meta tags, caso não sejam definidos por um post específico
+$page_title = isset($og_title) ? $og_title : BLOG_TITLE;
+$page_description = isset($meta_description) ? $meta_description : BLOG_DESCRIPTION;
+$page_keywords = isset($meta_keywords) ? $meta_keywords : META_KEYWORDS;
+$page_url = isset($og_url) ? $og_url : BLOG_URL;
+$page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
+$page_og_type = isset($og_type) ? $og_type : 'website';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo BLOG_TITLE; ?></title>
-    <meta name="description" content="<?php echo BLOG_DESCRIPTION; ?>">
-    <meta name="keywords" content="<?php echo META_KEYWORDS; ?>">
+    <title><?php echo $page_title; ?></title>
+    <meta name="description" content="<?php echo $page_description; ?>">
+    <meta name="keywords" content="<?php echo $page_keywords; ?>">
 
-    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="<?php echo $page_og_type; ?>">
+    <meta property="og:url" content="<?php echo $page_url; ?>">
+    <meta property="og:title" content="<?php echo $page_title; ?>">
+    <meta property="og:description" content="<?php echo $page_description; ?>">
+    <meta property="og:image" content="<?php echo $page_image; ?>">
+    <meta property="og:site_name" content="<?php echo BLOG_TITLE; ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="pt_BR">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo $page_url; ?>">
+    <meta property="twitter:title" content="<?php echo $page_title; ?>">
+    <meta property="twitter:description" content="<?php echo $page_description; ?>">
+    <meta property="twitter:image" content="<?php echo $page_image; ?>">
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
@@ -42,10 +67,36 @@ require_once 'config/config.php';
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "<?php echo BLOG_TITLE; ?>",
-        "description": "<?php echo BLOG_DESCRIPTION; ?>",
-        "url": "<?php echo BLOG_URL; ?>"
+        "@type": "<?php echo isset($is_post) && $is_post ? 'Article' : 'Blog'; ?>",
+        "name": "<?php echo $page_title; ?>",
+        "description": "<?php echo $page_description; ?>",
+        "url": "<?php echo $page_url; ?>"
+        <?php if (isset($is_post) && $is_post): ?>
+        ,
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "<?php echo $page_url; ?>"
+        },
+        "headline": "<?php echo $page_title; ?>",
+        "image": [
+            "<?php echo $page_image; ?>"
+        ],
+        "datePublished": "<?php echo date('c', strtotime($post['data_publicacao'])); ?>",
+        "dateModified": "<?php echo date('c', strtotime($post['data_atualizacao'] ?? $post['data_publicacao'])); ?>",
+        "author": {
+            "@type": "Person",
+            "name": "<?php echo htmlspecialchars($post['autor_nome']); ?>"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "<?php echo BLOG_TITLE; ?>",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg"
+            }
+        },
+        "description": "<?php echo $page_description; ?>"
+        <?php endif; ?>
     }
     </script>
 
@@ -105,7 +156,7 @@ require_once 'config/config.php';
                     <form class="d-flex" action="<?php echo BLOG_URL; ?>/busca.php" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" class="form-control" placeholder="Buscar no blog..." aria-label="Buscar" required>
-                            <button class="btn btn-outline-success style-busca" type="submit">
+                            <button class="btn btn-outline-success" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>

@@ -60,6 +60,14 @@ try {
     $stmt = $pdo->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
     $stmt->execute([$post['id']]);
 
+    // Definir meta tags para Open Graph e SEO
+    $og_title = htmlspecialchars($post['titulo']);
+    $og_description = !empty($post['resumo']) ? htmlspecialchars($post['resumo']) : htmlspecialchars(generate_excerpt($post['conteudo'], 200));
+    $og_url = BLOG_URL . '/post/' . htmlspecialchars($post['slug']);
+    $og_image = !empty($post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
+    $meta_description = $og_description;
+    $meta_keywords = implode(', ', array_column($post['tags'], 'nome')) . ', ' . META_KEYWORDS;
+
 } catch (PDOException $e) {
     die("Erro: " . $e->getMessage());
 }
