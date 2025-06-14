@@ -512,6 +512,28 @@ footer {
     .footer-description {
         text-align: center;
     }
+    
+    .footer-title {
+        cursor: pointer;
+        padding: 10px 0;
+        margin-bottom: 0;
+    }
+    
+    .footer-title i {
+        transition: transform 0.3s ease;
+    }
+    
+    .footer-title[aria-expanded="true"] i {
+        transform: rotate(180deg);
+    }
+    
+    .footer-links.collapse {
+        margin-top: 10px;
+    }
+    
+    .footer-links.collapse:not(.show) {
+        display: none;
+    }
 }
 
 /* Logo */

@@ -14,8 +14,11 @@
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">INSTITUCIONAL</h5>
-                    <ul class="list-unstyled footer-links">
+                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" role="button" aria-expanded="false" aria-controls="institucionalMenu">
+                        INSTITUCIONAL
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </h5>
+                    <ul class="list-unstyled footer-links collapse" id="institucionalMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/equipe">Sobre Nós</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/equipe">Nossos Editores Web</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/contato">Fale Conosco</a></li>
@@ -24,8 +27,11 @@
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">CATEGORIAS</h5>
-                    <ul class="list-unstyled footer-links">
+                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" role="button" aria-expanded="false" aria-controls="categoriasMenu">
+                        CATEGORIAS
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </h5>
+                    <ul class="list-unstyled footer-links collapse" id="categoriasMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/categoria/politica">Política</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/categoria/economia">Economia</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/categoria/brasil">Brasil</a></li>
@@ -40,8 +46,11 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">USUÁRIOS</h5>
-                    <ul class="list-unstyled footer-links">
+                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" role="button" aria-expanded="false" aria-controls="usuariosMenu">
+                        USUÁRIOS
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </h5>
+                    <ul class="list-unstyled footer-links collapse" id="usuariosMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conta</a></li>
                     </ul>
