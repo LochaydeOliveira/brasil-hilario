@@ -7,6 +7,7 @@ ob_start();
 session_start();
 require_once 'config/config.php';
 require_once 'includes/db.php';
+require_once 'config/search.php';
 require_once 'vendor/autoload.php'; // Usar o autoload do Composer
 
 // Obter o slug do post da URL
