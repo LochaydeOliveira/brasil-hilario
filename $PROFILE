@@ -1,0 +1,8 @@
+# Alias para o comando de push
+function Git-Push {
+    param([string]$mensagem)
+    & "$PSScriptRoot\git-push.ps1" $mensagem
+}
+
+# Alias mais curto
+Set-Alias -Name gp -Value Git-Push 
