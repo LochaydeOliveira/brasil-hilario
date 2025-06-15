@@ -64,6 +64,7 @@ body {
 
 .no-pad {
     padding: 2rem 0!important;
+    border-bottom: 1px solid #b9b9b96b;
 }
 
 .no-pad a {
