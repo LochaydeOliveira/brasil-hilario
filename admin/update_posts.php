@@ -8,12 +8,12 @@ check_login();
 
 try {
     // Atualizar posts sem data de criação
-    $stmt = $pdo->prepare("UPDATE posts SET data_criacao = CURRENT_TIMESTAMP WHERE data_criacao IS NULL");
+    $stmt = $conn->prepare("UPDATE posts SET data_criacao = CURRENT_TIMESTAMP WHERE data_criacao IS NULL");
     $stmt->execute();
     
     echo "Posts atualizados com sucesso!<br>";
     echo "<a href='index.php'>Voltar para o Dashboard</a>";
     
-} catch (PDOException $e) {
+} catch (Exception $e) {
     die("Erro: " . $e->getMessage());
 } 

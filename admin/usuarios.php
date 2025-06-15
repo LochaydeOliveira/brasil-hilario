@@ -24,27 +24,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Verificar se o email já existe
-            $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-            $stmt->execute([$email]);
-            if ($stmt->fetch()) {
+            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->fetch_assoc()) {
                 $error = "Este email já está em uso";
             } else {
                 // Criar novo usuário
                 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, status) VALUES (?, ?, ?, 'ativo')");
-                $stmt->execute([$nome, $email, $senha_hash]);
+                $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, status) VALUES (?, ?, ?, 'ativo')");
+                $stmt->bind_param("sss", $nome, $email, $senha_hash);
+                $stmt->execute();
                 
                 $success = "Usuário criado com sucesso!";
             }
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             $error = "Erro ao criar usuário: " . $e->getMessage();
         }
     }
 }
 
 // Buscar todos os usuários
-$stmt = $pdo->query("SELECT * FROM usuarios ORDER BY nome");
-$usuarios = $stmt->fetchAll();
+$stmt = $conn->prepare("SELECT * FROM usuarios ORDER BY nome");
+$stmt->execute();
+$usuarios = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 include 'includes/header.php';
 ?>

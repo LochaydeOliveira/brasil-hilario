@@ -14,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $pdo->beginTransaction();
+    // Iniciar transação para garantir atomicidade
+    $conn->autocommit(FALSE);
 
     // Processar dados do formulário
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
@@ -66,17 +67,21 @@ try {
     }
 
     // Verificar se o slug já existe (exceto para o próprio post)
-    $stmt = $pdo->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
-    $stmt->execute([$slug, $id ?? 0]);
-    if ($stmt->fetch()) {
+    $stmt = $conn->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
+    $stmt->bind_param("si", $slug, $id ?? 0);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->fetch_assoc()) {
         throw new Exception("Este slug já está em uso. Por favor, escolha outro.");
     }
 
     if ($id) {
         // Verifica se o usuário tem permissão para editar o post
-        $stmt = $pdo->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
-        $stmt->execute([$id]);
-        $post = $stmt->fetch();
+        $stmt = $conn->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $post = $result->fetch_assoc();
         
         if (!$post || !can_edit_post($post['autor_id'])) {
             throw new Exception("Você não tem permissão para editar este post.");
@@ -91,25 +96,28 @@ try {
         }
 
         // Atualizar post existente
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             UPDATE posts 
             SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
                 imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
             WHERE id = ?
         ");
-        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id]);
+        $stmt->bind_param("ssssiiis", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
+        $stmt->execute();
 
         // Remover tags antigas
-        $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
     } else {
         // Inserir novo post
-        $stmt = $pdo->prepare("
+        $stmt = $conn->prepare("
             INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id']]);
-        $id = $pdo->lastInsertId();
+        $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id']);
+        $stmt->execute();
+        $id = $conn->insert_id;
     }
 
     // Processar tags
@@ -122,29 +130,34 @@ try {
         $tag_slug = trim($tag_slug, '-');
 
         // Verificar se a tag já existe
-        $stmt = $pdo->prepare("SELECT id FROM tags WHERE slug = ?");
-        $stmt->execute([$tag_slug]);
-        $tag_id = $stmt->fetchColumn();
+        $stmt = $conn->prepare("SELECT id FROM tags WHERE slug = ?");
+        $stmt->bind_param("s", $tag_slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $tag = $result->fetch_assoc();
+        $tag_id = $tag['id'] ?? null;
 
         if (!$tag_id) {
             // Inserir nova tag
-            $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
-            $stmt->execute([$tag_nome, $tag_slug]);
-            $tag_id = $pdo->lastInsertId();
+            $stmt = $conn->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
+            $stmt->bind_param("ss", $tag_nome, $tag_slug);
+            $stmt->execute();
+            $tag_id = $conn->insert_id;
         }
 
         // Relacionar tag com o post
-        $stmt = $pdo->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
-        $stmt->execute([$id, $tag_id]);
+        $stmt = $conn->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $id, $tag_id);
+        $stmt->execute();
     }
 
-    $pdo->commit();
+    $conn->commit();
     $_SESSION['success'] = "Post salvo com sucesso!";
     header('Location: posts.php');
     exit;
 
 } catch (Exception $e) {
-    $pdo->rollBack();
+    $conn->rollback();
     $_SESSION['error'] = $e->getMessage();
     header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
     exit;

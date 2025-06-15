@@ -21,24 +21,26 @@ if (empty($post_id)) {
 }
 
 try {
-    $pdo->beginTransaction();
+    $conn->autocommit(FALSE);
 
     // Excluir registros relacionados na tabela post_tags
-    $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
-    $stmt->execute([$post_id]);
+    $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
 
     // Excluir o post da tabela posts
-    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
-    $stmt->execute([$post_id]);
+    $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
 
-    $pdo->commit();
+    $conn->commit();
 
     $_SESSION['success_message'] = "Post excluído com sucesso!";
     header('Location: ' . ADMIN_URL . '/posts.php');
     exit;
 
-} catch (PDOException $e) {
-    $pdo->rollBack();
+} catch (Exception $e) {
+    $conn->rollback();
     $_SESSION['error_message'] = "Erro ao excluir o post: " . $e->getMessage();
     header('Location: ' . ADMIN_URL . '/posts.php');
     exit;

@@ -23,9 +23,11 @@ $post_id = (int)$_GET['id'];
 
 try {
     // Busca o post
-    $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
-    $stmt->execute([$post_id]);
-    $post = $stmt->fetch();
+    $stmt = $conn->prepare("SELECT * FROM posts WHERE id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $post = $result->fetch_assoc();
 
     if (!$post) {
         header('Location: posts.php');
@@ -39,20 +41,25 @@ try {
     }
 
     // Busca as categorias
-    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
-    $categories = $stmt->fetchAll();
+    $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
 
     // Busca tags do post
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         SELECT t.nome 
         FROM tags t 
         JOIN post_tags pt ON t.id = pt.tag_id 
         WHERE pt.post_id = ?
     ");
-    $stmt->execute([$post_id]);
-    $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $tags_data = $result->fetch_all(MYSQLI_ASSOC);
+    $tags = array_column($tags_data, 'nome');
     $tags_string = implode(', ', $tags);
-} catch (PDOException $e) {
+} catch (Exception $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
 

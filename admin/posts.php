@@ -13,12 +13,13 @@ check_login();
 
 // Buscar posts
 try {
-    $stmt = $pdo->query("SELECT p.*, c.nome as categoria_nome 
+    $stmt = $conn->prepare("SELECT p.*, c.nome as categoria_nome 
                          FROM posts p 
                          LEFT JOIN categorias c ON p.categoria_id = c.id 
                          ORDER BY p.criado_em DESC");
-    $posts = $stmt->fetchAll();
-} catch (PDOException $e) {
+    $stmt->execute();
+    $posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
     die("Erro ao buscar posts: " . $e->getMessage());
 }
 

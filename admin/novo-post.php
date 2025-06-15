@@ -13,9 +13,11 @@ $categories = [];
 
 try {
     // Busca as categorias
-    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
-    $categories = $stmt->fetchAll();
-} catch (PDOException $e) {
+    $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
     $error = "Erro ao carregar categorias: " . $e->getMessage();
 }
 
