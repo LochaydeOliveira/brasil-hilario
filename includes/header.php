@@ -165,4 +165,4 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
             </div>
         </nav>
     </header>
-    <main class="container">
+    <main class="container mg-custom">

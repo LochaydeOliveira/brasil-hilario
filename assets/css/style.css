@@ -514,6 +514,10 @@ footer {
     border-radius: 15px!important;
 }
 
+.mg-custom {
+    margin: 5rem auto;
+}
+
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
     footer .col-md-3 {
