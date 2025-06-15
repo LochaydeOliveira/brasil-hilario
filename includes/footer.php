@@ -1,4 +1,10 @@
     </main>
+    <?php
+    // Buscar categorias para o rodapé
+    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+    $stmt->execute();
+    $footer_categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    ?>
     <footer class="bg-white py-5 mt-5">
         <div class="container">
             <div class="row">
@@ -32,16 +38,9 @@
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </h5>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/politica">Política</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/economia">Economia</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/brasil">Brasil</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/mundo">Mundo</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/tecnologia">Tecnologia</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/empreendedorismo">Empreendedorismo</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/agro">Agro</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/musica">Música</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/cinema">Cinema</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/famosos">Famosos</a></li>
+                        <?php foreach ($footer_categorias as $categoria): ?>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($categoria['slug']); ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
 
