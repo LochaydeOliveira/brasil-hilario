@@ -1,6 +1,7 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/functions.php';
+require_once 'includes/db.php'; // Adicionando a conexão com o banco de dados
 
 // Iniciar buffer de saída
 ob_start();

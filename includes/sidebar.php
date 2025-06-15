@@ -1,27 +1,30 @@
 <?php
 // Buscar últimas postagens
-$stmt = $pdo->query("
+$stmt = $conn->prepare("
     SELECT id, titulo, slug, data_publicacao, imagem_destacada 
     FROM posts 
     WHERE publicado = 1 
     ORDER BY data_publicacao DESC 
     LIMIT 5
 ");
-$ultimas_postagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->execute();
+$ultimas_postagens = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 // Buscar categorias
-$stmt = $pdo->query("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-$categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+$stmt->execute();
+$categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 // Buscar posts mais lidos
-$stmt = $pdo->query("
+$stmt = $conn->prepare("
     SELECT id, titulo, slug, visualizacoes 
     FROM posts 
     WHERE publicado = 1 
     ORDER BY visualizacoes DESC 
     LIMIT 5
 ");
-$posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->execute();
+$posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="sidebar">
