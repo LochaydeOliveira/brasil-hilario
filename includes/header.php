@@ -158,14 +158,21 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
                                 $stmt->execute();
                                 $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 
-                                foreach ($categorias as $cat): 
+                                if (empty($categorias)): 
                                 ?>
-                                <li>
-                                    <a class="dropdown-item" href="<?php echo BLOG_URL; ?>/categoria/<?php echo $cat['slug']; ?>">
-                                        <?php echo htmlspecialchars($cat['nome']); ?>
-                                    </a>
-                                </li>
-                                <?php endforeach; ?>
+                                    <li><span class="dropdown-item">Nenhuma categoria encontrada</span></li>
+                                <?php else: 
+                                    foreach ($categorias as $cat): 
+                                ?>
+                                    <li>
+                                        <a class="dropdown-item" href="<?php echo BLOG_URL; ?>/categoria/<?php echo $cat['slug']; ?>">
+                                            <?php echo htmlspecialchars($cat['nome']); ?>
+                                        </a>
+                                    </li>
+                                <?php 
+                                    endforeach;
+                                endif; 
+                                ?>
                             </ul>
                         </li>
                         

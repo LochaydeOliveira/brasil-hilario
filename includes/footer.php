@@ -34,9 +34,9 @@
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
                         <?php
                         // Busca todas as categorias
-                        $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
+                        $stmt = $pdo->prepare("SELECT * FROM categorias ORDER BY nome");
                         $stmt->execute();
-                        $categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         
                         foreach ($categorias as $cat): 
                         ?>
