@@ -68,7 +68,7 @@ include 'includes/header.php';
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
                             <?php if ($post['imagem_destacada']): ?>
-                                <img src="<?php echo BLOG_URL . '/uploads/' . $post['imagem_destacada']; ?>" 
+                                <img src="<?php echo BLOG_URL . '/uploads/images/' . $post['imagem_destacada']; ?>" 
                                      class="card-img-top" 
                                      alt="<?php echo htmlspecialchars($post['titulo']); ?>">
                             <?php endif; ?>
