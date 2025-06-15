@@ -32,14 +32,16 @@
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </h5>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
-                        <?php
-                        // Buscar categorias
-                        $stmt = $pdo->query("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        
-                        foreach ($categorias as $categoria): ?>
-                            <li><a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $categoria['slug']; ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
-                        <?php endforeach; ?>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/politica">Política</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/economia">Economia</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/brasil">Brasil</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/mundo">Mundo</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/tecnologia">Tecnologia</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/empreendedorismo">Empreendedorismo</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/agro">Agro</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/musica">Música</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/cinema">Cinema</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/famosos">Famosos</a></li>
                     </ul>
                 </div>
 
