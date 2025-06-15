@@ -24,7 +24,7 @@ include 'includes/header.php';
                 FROM posts p 
                 LEFT JOIN usuarios u ON p.autor_id = u.id 
                 LEFT JOIN categorias c ON p.categoria_id = c.id
-                WHERE p.status = 'publicado' 
+                WHERE p.publicado = 1 
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ?
             ");

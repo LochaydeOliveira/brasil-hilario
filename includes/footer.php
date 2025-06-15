@@ -34,8 +34,8 @@
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
                         <?php
                         // Buscar categorias
-                        $stmt = $conn->query("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-                        $categorias = $stmt->fetch_all(MYSQLI_ASSOC);
+                        $stmt = $pdo->query("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         
                         foreach ($categorias as $categoria): ?>
                             <li><a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $categoria['slug']; ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
