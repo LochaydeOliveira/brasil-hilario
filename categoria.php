@@ -89,7 +89,7 @@ include 'includes/header.php';
                                         <i class="fas fa-calendar-alt"></i> 
                                         <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
                                     </small>
-                                    <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" class="btn btn-outline-primary btn-sm">
+                                    <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" class="lead">
                                         Ler mais
                                     </a>
                                 </div>
