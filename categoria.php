@@ -11,11 +11,9 @@ if (empty($categoria_slug)) {
 }
 
 // Busca a categoria pelo slug
-$stmt = $conn->prepare("SELECT * FROM categorias WHERE slug = ?");
-$stmt->bind_param("s", $categoria_slug);
-$stmt->execute();
-$result = $stmt->get_result();
-$categoria = $result->fetch_assoc();
+$stmt = $pdo->prepare("SELECT * FROM categorias WHERE slug = ?");
+$stmt->execute([$categoria_slug]);
+$categoria = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$categoria) {
     header('Location: ' . BLOG_URL);
@@ -23,7 +21,7 @@ if (!$categoria) {
 }
 
 // Busca os posts da categoria
-$stmt = $conn->prepare("
+$stmt = $pdo->prepare("
     SELECT p.*, u.nome as autor_nome 
     FROM posts p 
     INNER JOIN usuarios u ON p.autor_id = u.id 
@@ -31,9 +29,8 @@ $stmt = $conn->prepare("
     WHERE pc.categoria_id = ? AND p.status = 'publicado' 
     ORDER BY p.data_publicacao DESC
 ");
-$stmt->bind_param("i", $categoria['id']);
-$stmt->execute();
-$posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->execute([$categoria['id']]);
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Configuração das meta tags para SEO
 $og_title = "Categoria: " . $categoria['nome'] . " - " . BLOG_TITLE;
