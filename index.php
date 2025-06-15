@@ -19,6 +19,7 @@ include 'includes/header.php';
         <?php
         try {
             // Buscar posts paginados
+            $limit = POSTS_PER_PAGE;
             $stmt = $conn->prepare("
                 SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
                 FROM posts p 
@@ -33,7 +34,7 @@ include 'includes/header.php';
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ? OFFSET ?
             ");
-            $stmt->bind_param("ii", POSTS_PER_PAGE, $offset);
+            $stmt->bind_param("ii", $limit, $offset);
             $stmt->execute();
             $result = $stmt->get_result();
             $posts = $result->fetch_all(MYSQLI_ASSOC);
