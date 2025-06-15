@@ -20,12 +20,10 @@
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">
-                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" aria-expanded="false" aria-controls="institucionalMenu">
-                            INSTITUCIONAL
-                            <i class="fas fa-chevron-down d-md-none"></i>
-                        </button>
-                    </h5>
+                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" aria-expanded="false" aria-controls="institucionalMenu">
+                        INSTITUCIONAL
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="institucionalMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/equipe">Sobre Nós</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/equipe">Nossos Editores Web</a></li>
@@ -35,12 +33,10 @@
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">
-                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" aria-expanded="false" aria-controls="categoriasMenu">
-                            CATEGORIAS
-                            <i class="fas fa-chevron-down d-md-none"></i>
-                        </button>
-                    </h5>
+                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" aria-expanded="false" aria-controls="categoriasMenu">
+                        CATEGORIAS
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
                         <?php foreach ($footer_categorias as $categoria): ?>
                         <li><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($categoria['slug']); ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
@@ -49,12 +45,10 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title">
-                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" aria-expanded="false" aria-controls="usuariosMenu">
-                            USUÁRIOS
-                            <i class="fas fa-chevron-down d-md-none"></i>
-                        </button>
-                    </h5>
+                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" aria-expanded="false" aria-controls="usuariosMenu">
+                        USUÁRIOS
+                        <i class="fas fa-chevron-down d-md-none"></i>
+                    </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="usuariosMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conta</a></li>
