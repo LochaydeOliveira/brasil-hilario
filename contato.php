@@ -13,7 +13,7 @@ include 'includes/header.php';
     <!-- Conteúdo Principal -->
     <div class="col-lg-8">
         <article class="blog-post" data-aos="fade-up">
-            <h1 class="display-5 fw-bold mb-3">Entre em Contato</h1>
+            <h1 class="display-5 fw-bold mb-3 header-pg-ctt">Entre em Contato</h1>
             
             <div class="post-content width-custom">
                 <p>Preencha o formulário abaixo para entrar em contato conosco. Responderemos o mais breve possível.</p>

@@ -501,9 +501,14 @@ footer {
     color: #000!important;
 }
 
+.header-pg-ctt {
+    margin: 10rem 0;
+    font-size: 2rem;
+}
+
 .width-custom {
     max-width: 50%!important;
-    margin: 10rem 0!important;
+    margin: 2rem 0!important;
     border: 1px solid #e5e5e5!important;
     padding: 3rem!important;
     border-radius: 15px!important;
