@@ -90,6 +90,32 @@ include 'includes/header.php';
                 </div>
 
                 <div class="mb-3">
+                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="mb-2">
+                            <img src="../uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                 alt="Imagem atual" class="img-thumbnail" style="max-height: 200px;">
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
+                    <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <small class="form-text text-muted">Deixe em branco para manter a imagem atual</small>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                    <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($tags_string); ?>" placeholder="Ex: humor, política, esportes">
+                    <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="excerpt" class="form-label">Resumo</label>
+                    <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
+                </div>
+
+                <div class="mb-3">
                     <label for="slug" class="form-label">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" required>
@@ -110,32 +136,6 @@ include 'includes/header.php';
                 <div class="mb-3">
                     <label for="content" class="form-label">Conteúdo</label>
                     <textarea id="editor" name="conteudo"><?php echo htmlspecialchars($post['conteudo'] ?? ''); ?></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="excerpt" class="form-label">Resumo</label>
-                    <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="featured_image" class="form-label">Imagem Destacada</label>
-                    <?php if (!empty($post['imagem_destacada'])): ?>
-                        <div class="mb-2">
-                            <img src="../uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
-                                 alt="Imagem atual" class="img-thumbnail" style="max-height: 200px;">
-                        </div>
-                    <?php endif; ?>
-                    <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
-                    <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
-                    <?php if (!empty($post['imagem_destacada'])): ?>
-                        <small class="form-text text-muted">Deixe em branco para manter a imagem atual</small>
-                    <?php endif; ?>
-                </div>
-
-                <div class="mb-3">
-                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
-                    <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($tags_string); ?>" placeholder="Ex: humor, política, esportes">
-                    <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
                 </div>
 
                 <div class="mb-3">
