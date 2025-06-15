@@ -75,7 +75,7 @@ include 'includes/header.php';
                                     <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                          class="img-fluid" 
                                          alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                                         style="width: 100%; height: 300px; object-fit: cover;" loading="lazy">
+                                         style="width: 100%; height: 300px; object-fit: cover;">
                                 </a>
                             </div>
                         <?php endif; ?>
