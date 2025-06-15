@@ -15,7 +15,7 @@ include 'includes/header.php';
         <article class="blog-post" data-aos="fade-up">
             <h1 class="display-5 fw-bold mb-3">Entre em Contato</h1>
             
-            <div class="post-content">
+            <div class="post-content width-custom">
                 <p>Preencha o formulário abaixo para entrar em contato conosco. Responderemos o mais breve possível.</p>
 
                 <form action="<?php echo BLOG_PATH; ?>/api/enviar-contato.php" method="POST" class="mt-4">

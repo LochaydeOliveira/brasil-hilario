@@ -501,6 +501,14 @@ footer {
     color: #000!important;
 }
 
+.width-custom {
+    max-width: 50%!important;
+    margin: 10rem 0!important;
+    border: 1px solid #e5e5e5!important;
+    padding: 3rem!important;
+    border-radius: 15px!important;
+}
+
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
     footer .col-md-3 {
