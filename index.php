@@ -33,7 +33,7 @@ include 'includes/header.php';
                     JOIN tags t ON pt.tag_id = t.id
                     GROUP BY pt.post_id
                 ) as t_grouped ON p.id = t_grouped.post_id
-                WHERE p.status = 'publicado'
+                WHERE p.publicado = 1
                 GROUP BY p.id
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ? OFFSET ?
@@ -75,7 +75,7 @@ include 'includes/header.php';
             }
 
             // Buscar o total de posts para paginação
-            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE status = 'publicado'");
+            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
