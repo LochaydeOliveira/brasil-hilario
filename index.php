@@ -20,24 +20,45 @@ include 'includes/header.php';
         try {
             // Buscar posts paginados
             $stmt = $pdo->prepare("
-                SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
+                SELECT p.*, u.nome as autor_nome, 
+                       GROUP_CONCAT(DISTINCT CONCAT(c.id, ':', c.nome, ':', c.slug) SEPARATOR ',') as categorias_data,
+                       t_grouped.tags_data
                 FROM posts p 
-                JOIN categorias c ON p.categoria_id = c.id 
+                LEFT JOIN usuarios u ON p.autor_id = u.id
+                LEFT JOIN posts_categorias pc ON p.id = pc.post_id
+                LEFT JOIN categorias c ON pc.categoria_id = c.id
                 LEFT JOIN (
                     SELECT pt.post_id, GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
                     FROM post_tags pt
                     JOIN tags t ON pt.tag_id = t.id
                     GROUP BY pt.post_id
                 ) as t_grouped ON p.id = t_grouped.post_id
-                WHERE p.publicado = 1
+                WHERE p.status = 'publicado'
+                GROUP BY p.id
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ? OFFSET ?
             ");
             $stmt->execute([POSTS_PER_PAGE, $offset]);
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Processar tags para cada post
+            // Processar categorias e tags para cada post
             foreach ($posts as $key => $post_item) {
+                // Processar categorias
+                $posts[$key]['categorias'] = [];
+                if (!empty($post_item['categorias_data'])) {
+                    $categorias_array = explode(',', $post_item['categorias_data']);
+                    foreach ($categorias_array as $cat_data) {
+                        list($id, $nome, $slug) = explode(':', $cat_data);
+                        $posts[$key]['categorias'][] = [
+                            'id' => $id,
+                            'nome' => $nome,
+                            'slug' => $slug
+                        ];
+                    }
+                }
+                unset($posts[$key]['categorias_data']);
+
+                // Processar tags
                 $posts[$key]['tags'] = [];
                 if (!empty($post_item['tags_data'])) {
                     $tags_array = explode(',', $post_item['tags_data']);
@@ -54,7 +75,7 @@ include 'includes/header.php';
             }
 
             // Buscar o total de posts para paginação
-            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
+            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE status = 'publicado'");
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
@@ -83,12 +104,20 @@ include 'includes/header.php';
                         <div class="post-meta mb-2">
                             <small class="text-muted">
                                 <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                                <i class="fas fa-folder ms-2"></i> 
-                                <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
-                                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
-                                </a>
+                                <i class="fas fa-user ms-2"></i> <?php echo htmlspecialchars($post['autor_nome']); ?>
                             </small>
                         </div>
+                        
+                        <?php if (!empty($post['categorias'])): ?>
+                            <div class="post-categories mb-2">
+                                <?php foreach ($post['categorias'] as $categoria): ?>
+                                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($categoria['slug']); ?>" 
+                                       class="badge bg-primary text-white me-1">
+                                        <i class="fas fa-folder"></i> <?php echo htmlspecialchars($categoria['nome']); ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                         
                         <?php if (!empty($post['tags'])): ?>
                             <div class="post-tags mb-3">
@@ -164,3 +193,4 @@ include 'includes/footer.php';
 // Enviar o buffer de saída
 ob_end_flush();
 ?>
+

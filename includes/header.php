@@ -147,20 +147,27 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo BLOG_URL; ?>">Início</a>
                         </li>
-                        <?php 
-                        // Busca todas as categorias
-                        $stmt = $pdo->prepare("SELECT * FROM categorias ORDER BY nome");
-                        $stmt->execute();
-                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        
-                        foreach ($categorias as $cat): 
-                        ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BLOG_URL; ?>/categoria/<?php echo $cat['slug']; ?>">
-                                <?php echo htmlspecialchars($cat['nome']); ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categorias
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <?php 
+                                // Busca todas as categorias
+                                $stmt = $pdo->prepare("SELECT * FROM categorias ORDER BY nome");
+                                $stmt->execute();
+                                $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                
+                                foreach ($categorias as $cat): 
+                                ?>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo BLOG_URL; ?>/categoria/<?php echo $cat['slug']; ?>">
+                                        <?php echo htmlspecialchars($cat['nome']); ?>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
-                        <?php endforeach; ?>
                         
                         <?php foreach (PAGES as $page): ?>
                         <li class="nav-item">
