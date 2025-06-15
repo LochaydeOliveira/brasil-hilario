@@ -70,7 +70,7 @@ include 'includes/header.php';
                             <?php if ($post['imagem_destacada']): ?>
                                 <img src="<?php echo BLOG_URL . '/uploads/images/' . $post['imagem_destacada']; ?>" 
                                      class="card-img-top" 
-                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>">
+                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>" loading="lazy">
                             <?php endif; ?>
                             
                             <div class="card-body no-pad">

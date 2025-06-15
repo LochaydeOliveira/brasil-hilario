@@ -114,13 +114,17 @@ include 'includes/header.php';
 
             <div class="post-content">
                 <?php 
+                $content_to_display = $post['conteudo'];
+
                 if ($post['editor_type'] === 'markdown') {
-                    // Conteúdo Markdown
-                    echo '<div class="markdown-content">' . (new Parsedown())->text($post['conteudo']) . '</div>';
-                } else {
-                    // Conteúdo TinyMCE (HTML)
-                    echo $post['conteudo'];
+                    // Conteúdo Markdown: converte Markdown para HTML primeiro
+                    $content_to_display = (new Parsedown())->text($content_to_display);
                 }
+                
+                // Adicionar loading="lazy" a todas as tags <img>
+                $content_to_display = preg_replace('/<img(.*?)>/i', '<img$1 loading="lazy">', $content_to_display);
+
+                echo $content_to_display;
                 ?>
             </div>
 
