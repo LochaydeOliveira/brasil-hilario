@@ -41,7 +41,7 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         <div class="post-thumbnail mb-2">
                             <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
                                 <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
-                                     class="img-fluid rounded" 
+                                     class="img-fluid" 
                                      alt="<?php echo htmlspecialchars($post['titulo']); ?>"
                                     >
                             </a>
