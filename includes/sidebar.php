@@ -31,7 +31,7 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Widget de Últimas Postagens -->
     <div class="card mb-4" data-aos="fade-left">
         <div class="card-header">
-            <h5 class="mb-0">Últimas Postagens</h5>
+            <h3 class="mb-0">Últimas Postagens</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
@@ -62,7 +62,7 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Widget de Categorias -->
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="100">
         <div class="card-header">
-            <h5 class="mb-0">Categorias</h5>
+            <h3 class="mb-0">Categorias</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
@@ -80,7 +80,7 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Widget de Posts Populares -->
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
-            <h5 class="mb-0">Posts Mais Lidos</h5>
+            <h3 class="mb-0">Posts Mais Lidos</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">

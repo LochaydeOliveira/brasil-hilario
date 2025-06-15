@@ -14,15 +14,17 @@
                     </a>
                     <p class="footer-description mb-3"><?php echo BLOG_DESCRIPTION; ?></p>
                     <div class="social-links d-flex">
-                        <a href="https://www.facebook.com/profile.php?id=61577306277011" target="_blank" class="social-icon me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" target="_blank" class="social-icon me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank" class="social-icon me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61577306277011" target="_blank" class="social-icon me-2" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank" class="social-icon me-2" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank" class="social-icon me-2" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" role="button" aria-expanded="false" aria-controls="institucionalMenu">
-                        INSTITUCIONAL
-                        <i class="fas fa-chevron-down d-md-none"></i>
+                    <h5 class="footer-title">
+                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" aria-expanded="false" aria-controls="institucionalMenu">
+                            INSTITUCIONAL
+                            <i class="fas fa-chevron-down d-md-none"></i>
+                        </button>
                     </h5>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="institucionalMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/equipe">Sobre Nós</a></li>
@@ -33,9 +35,11 @@
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" role="button" aria-expanded="false" aria-controls="categoriasMenu">
-                        CATEGORIAS
-                        <i class="fas fa-chevron-down d-md-none"></i>
+                    <h5 class="footer-title">
+                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" aria-expanded="false" aria-controls="categoriasMenu">
+                            CATEGORIAS
+                            <i class="fas fa-chevron-down d-md-none"></i>
+                        </button>
                     </h5>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
                         <?php foreach ($footer_categorias as $categoria): ?>
@@ -45,9 +49,11 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <h5 class="footer-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" role="button" aria-expanded="false" aria-controls="usuariosMenu">
-                        USUÁRIOS
-                        <i class="fas fa-chevron-down d-md-none"></i>
+                    <h5 class="footer-title">
+                        <button class="btn btn-link footer-toggle-button d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" aria-expanded="false" aria-controls="usuariosMenu">
+                            USUÁRIOS
+                            <i class="fas fa-chevron-down d-md-none"></i>
+                        </button>
                     </h5>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="usuariosMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>

@@ -433,9 +433,9 @@ footer {
 }
 
 .footer-description {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #666;
+    color: #333;
+    font-size: 0.9375rem;
+    line-height: 1.8;
 }
 
 .social-links .social-icon {
@@ -595,7 +595,8 @@ footer {
 }
 
 .footer-copyright-text {
-    color: #888;
+    color: #333;
+    font-size: 0.875rem;
 }
 
 /* Cards */
