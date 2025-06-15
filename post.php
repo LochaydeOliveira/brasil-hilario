@@ -99,9 +99,6 @@ include 'includes/header.php';
 
             <p class="lead">
                 por <a href="#">Hilário Brasileiro</a>
-                <span class="badge bg-secondary ms-2">
-                    <?php echo htmlspecialchars($post['categoria_nome'] ?? 'Sem Categoria'); ?>
-                </span>
             </p>
 
             <hr>
