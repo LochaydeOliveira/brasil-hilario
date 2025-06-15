@@ -59,7 +59,7 @@ body {
 }
 
 .nav-link:hover {
-    color: var(--secondary-color);
+    color: #0b8103!important;
 }
 
 /* Featured Post */
