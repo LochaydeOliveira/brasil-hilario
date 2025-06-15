@@ -67,8 +67,9 @@ try {
     }
 
     // Verificar se o slug já existe (exceto para o próprio post)
+    $id_para_verificacao = $id ?? 0;
     $stmt = $conn->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
-    $stmt->bind_param("si", $slug, $id ?? 0);
+    $stmt->bind_param("si", $slug, $id_para_verificacao);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->fetch_assoc()) {
@@ -102,7 +103,7 @@ try {
                 imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
             WHERE id = ?
         ");
-        $stmt->bind_param("ssssiiis", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
+        $stmt->bind_param("ssssiisi", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
         $stmt->execute();
 
         // Remover tags antigas
@@ -111,11 +112,12 @@ try {
         $stmt->execute();
     } else {
         // Inserir novo post
+        $autor_id = $_SESSION['usuario_id'];
         $stmt = $conn->prepare("
             INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $_SESSION['usuario_id']);
+        $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $autor_id);
         $stmt->execute();
         $id = $conn->insert_id;
     }
