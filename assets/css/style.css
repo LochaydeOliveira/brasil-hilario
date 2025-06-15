@@ -62,6 +62,14 @@ body {
     color: #0b8103!important;
 }
 
+.no-pad {
+    padding: 0!important;
+}
+
+.no-pad a {
+    color: #000!important;
+}
+
 /* Featured Post */
 .featured-post {
     background: #fff;

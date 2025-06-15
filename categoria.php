@@ -73,7 +73,7 @@ include 'includes/header.php';
                                      alt="<?php echo htmlspecialchars($post['titulo']); ?>">
                             <?php endif; ?>
                             
-                            <div class="card-body">
+                            <div class="card-body no-pad">
                                 <h5 class="card-title">
                                     <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" class="text-decoration-none">
                                         <?php echo htmlspecialchars($post['titulo']); ?>
