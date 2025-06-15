@@ -63,10 +63,25 @@ $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                <?php foreach ($categorias as $categoria): ?>
+                <?php
+                // Busca todas as categorias com contagem de posts
+                $stmt = $conn->prepare("
+                    SELECT c.*, COUNT(pc.post_id) as total_posts 
+                    FROM categorias c 
+                    LEFT JOIN posts_categorias pc ON c.id = pc.categoria_id 
+                    LEFT JOIN posts p ON pc.post_id = p.id AND p.status = 'publicado'
+                    GROUP BY c.id 
+                    ORDER BY c.nome
+                ");
+                $stmt->execute();
+                $categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+                
+                foreach ($categorias as $cat): 
+                ?>
                 <li class="mb-2">
-                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $categoria['slug']; ?>" class="text-decoration-none">
-                        <?php echo htmlspecialchars($categoria['nome']); ?>
+                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $cat['slug']; ?>" class="d-flex justify-content-between align-items-center">
+                        <?php echo htmlspecialchars($cat['nome']); ?>
+                        <span class="badge bg-primary rounded-pill"><?php echo $cat['total_posts']; ?></span>
                     </a>
                 </li>
                 <?php endforeach; ?>
