@@ -53,9 +53,6 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
     <!-- Custom CSS -->
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=02" rel="stylesheet">
     
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous"></script>
-    
     <!-- Preconnect para melhor performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -156,7 +153,7 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
                     <form class="d-flex" action="<?php echo BLOG_URL; ?>/busca.php" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" class="form-control" placeholder="Buscar no blog..." aria-label="Buscar" required>
-                            <button class="btn btn-outline-success" type="submit">
+                            <button class="btn btn-outline-success" type="submit" aria-label="Buscar">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
