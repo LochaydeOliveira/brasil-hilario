@@ -154,4 +154,65 @@ function showWarning($message) {
  */
 function showInfo($message) {
     return '<div class="alert alert-info">' . $message . '</div>';
+}
+
+/**
+ * Busca uma categoria pelo slug
+ */
+function get_categoria_by_slug($slug) {
+    global $conn;
+    
+    $stmt = $conn->prepare("SELECT * FROM categorias WHERE slug = ?");
+    $stmt->bind_param("s", $slug);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result->fetch_assoc();
+}
+
+/**
+ * Busca posts por categoria com paginação
+ */
+function get_posts_by_categoria($categoria_id, $limit, $offset) {
+    global $conn;
+    
+    $stmt = $conn->prepare("
+        SELECT p.*, u.nome as autor_nome 
+        FROM posts p 
+        LEFT JOIN usuarios u ON p.autor_id = u.id 
+        WHERE p.categoria_id = ? AND p.status = 'publicado' 
+        ORDER BY p.data_publicacao DESC 
+        LIMIT ? OFFSET ?
+    ");
+    
+    $stmt->bind_param("iii", $categoria_id, $limit, $offset);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $posts = [];
+    while ($row = $result->fetch_assoc()) {
+        $posts[] = $row;
+    }
+    
+    return $posts;
+}
+
+/**
+ * Conta o total de posts em uma categoria
+ */
+function get_total_posts_by_categoria($categoria_id) {
+    global $conn;
+    
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM posts 
+        WHERE categoria_id = ? AND status = 'publicado'
+    ");
+    
+    $stmt->bind_param("i", $categoria_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    return $row['total'];
 } 

@@ -85,7 +85,7 @@ include 'includes/header.php';
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>">Início</a></li>
                     <?php if (isset($post['categoria_nome'])): ?>
-                        <li class="breadcrumb-item"><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_nome']); ?>">
+                        <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>">
                             <?php echo htmlspecialchars($post['categoria_nome']); ?>
                         </a></li>
                     <?php endif; ?>
@@ -103,14 +103,17 @@ include 'includes/header.php';
 
             <hr>
 
-            <div class="post-meta mb-3">
-                <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?></span>
-                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
-                <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
+            <div class="post-meta mb-4">
+                <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $post['categoria_slug']; ?>" class="category-badge">
+                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
+                </a>
+                <span class="ms-2">
+                    <i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                </span>
+                <span class="ms-2">
+                    <i class="far fa-user"></i> <?php echo htmlspecialchars($post['autor_nome']); ?>
+                </span>
             </div>
-
-
-
 
             <div class="post-content">
                 <?php 

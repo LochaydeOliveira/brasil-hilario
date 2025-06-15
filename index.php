@@ -18,23 +18,19 @@ include 'includes/header.php';
     <div class="col-lg-8">
         <?php
         try {
-            // Buscar posts paginados
-            $stmt = $pdo->prepare("
-                SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
+            // Buscar posts recentes
+            $stmt = $conn->prepare("
+                SELECT p.*, u.nome as autor_nome, c.nome as categoria_nome, c.slug as categoria_slug
                 FROM posts p 
-                JOIN categorias c ON p.categoria_id = c.id 
-                LEFT JOIN (
-                    SELECT pt.post_id, GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) ORDER BY t.nome ASC SEPARATOR ',') as tags_data
-                    FROM post_tags pt
-                    JOIN tags t ON pt.tag_id = t.id
-                    GROUP BY pt.post_id
-                ) as t_grouped ON p.id = t_grouped.post_id
-                WHERE p.publicado = 1
+                LEFT JOIN usuarios u ON p.autor_id = u.id 
+                LEFT JOIN categorias c ON p.categoria_id = c.id
+                WHERE p.status = 'publicado' 
                 ORDER BY p.data_publicacao DESC 
-                LIMIT ? OFFSET ?
+                LIMIT ?
             ");
-            $stmt->execute([POSTS_PER_PAGE, $offset]);
-            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->bind_param("i", $posts_por_pagina);
+            $stmt->execute();
+            $posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             // Processar tags para cada post
             foreach ($posts as $key => $post_item) {
@@ -80,14 +76,15 @@ include 'includes/header.php';
                             </a>
                         </h2>
                         
-                        <div class="post-meta mb-2">
-                            <small class="text-muted">
-                                <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                                <i class="fas fa-folder ms-2"></i> 
-                                <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
+                        <div class="card-body">
+                            <div class="post-meta mb-2">
+                                <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo $post['categoria_slug']; ?>" class="category-badge">
                                     <?php echo htmlspecialchars($post['categoria_nome']); ?>
                                 </a>
-                            </small>
+                                <span class="ms-2">
+                                    <i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                </span>
+                            </div>
                         </div>
                         
                         <?php if (!empty($post['tags'])): ?>
