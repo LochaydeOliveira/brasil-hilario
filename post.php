@@ -20,7 +20,7 @@ if (empty($post_slug)) {
 
 try {
     // Buscar o post pelo slug
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
                GROUP_CONCAT(DISTINCT t.id, ':', t.nome, ':', t.slug) as tags_data
         FROM posts p 
@@ -30,8 +30,10 @@ try {
         WHERE p.slug = ? AND p.publicado = 1
         GROUP BY p.id
     ");
-    $stmt->execute([$post_slug]);
-    $post = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->bind_param("s", $post_slug);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $post = $result->fetch_assoc();
 
     if (!$post) {
         header('Location: ' . BLOG_URL . '/404.php'); // Redireciona para uma página 404 se o post não for encontrado
@@ -58,8 +60,9 @@ try {
     $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
 
     // Incrementar visualizações
-    $stmt = $pdo->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
-    $stmt->execute([$post['id']]);
+    $stmt = $conn->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
+    $stmt->bind_param("i", $post['id']);
+    $stmt->execute();
 
     // Definir meta tags para Open Graph e SEO
     $og_title = htmlspecialchars($post['titulo']);
@@ -69,7 +72,7 @@ try {
     $meta_description = $og_description;
     $meta_keywords = implode(', ', array_column($post['tags'], 'nome')) . ', ' . META_KEYWORDS;
 
-} catch (PDOException $e) {
+} catch (Exception $e) {
     die("Erro: " . $e->getMessage());
 }
 
@@ -108,9 +111,6 @@ include 'includes/header.php';
                 <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
                 <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
             </div>
-
-
-
 
             <div class="post-content">
                 <?php 
