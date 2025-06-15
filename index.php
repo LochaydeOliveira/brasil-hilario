@@ -19,7 +19,7 @@ include 'includes/header.php';
         <?php
         try {
             // Buscar posts recentes
-            $stmt = $conn->prepare("
+            $stmt = $pdo->prepare("
                 SELECT p.*, u.nome as autor_nome, c.nome as categoria_nome, c.slug as categoria_slug
                 FROM posts p 
                 LEFT JOIN usuarios u ON p.autor_id = u.id 
@@ -28,9 +28,8 @@ include 'includes/header.php';
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ?
             ");
-            $stmt->bind_param("i", $posts_por_pagina);
-            $stmt->execute();
-            $posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            $stmt->execute([POSTS_PER_PAGE]);
+            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             // Processar tags para cada post
             foreach ($posts as $key => $post_item) {
@@ -50,7 +49,7 @@ include 'includes/header.php';
             }
 
             // Buscar o total de posts para paginação
-            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
+            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE status = 'publicado'");
             $total_posts = $stmt->fetchColumn();
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
