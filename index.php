@@ -19,7 +19,7 @@ include 'includes/header.php';
         <?php
         try {
             // Buscar posts paginados
-            $stmt = $pdo->prepare("
+            $stmt = $conn->prepare("
                 SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
                 FROM posts p 
                 JOIN categorias c ON p.categoria_id = c.id 
@@ -33,8 +33,10 @@ include 'includes/header.php';
                 ORDER BY p.data_publicacao DESC 
                 LIMIT ? OFFSET ?
             ");
-            $stmt->execute([POSTS_PER_PAGE, $offset]);
-            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->bind_param("ii", POSTS_PER_PAGE, $offset);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $posts = $result->fetch_all(MYSQLI_ASSOC);
 
             // Processar tags para cada post
             foreach ($posts as $key => $post_item) {
@@ -54,8 +56,11 @@ include 'includes/header.php';
             }
 
             // Buscar o total de posts para paginação
-            $stmt = $pdo->query("SELECT COUNT(id) FROM posts WHERE publicado = 1");
-            $total_posts = $stmt->fetchColumn();
+            $stmt = $conn->prepare("SELECT COUNT(id) as total FROM posts WHERE publicado = 1");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $total_posts = $row['total'];
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
             if (empty($posts)) {
@@ -146,7 +151,7 @@ include 'includes/header.php';
                 <?php endif; ?>
             <?php
             }
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             echo '<div class="alert alert-danger">Erro ao carregar posts: ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
         ?>
