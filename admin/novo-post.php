@@ -40,36 +40,36 @@ include 'includes/header.php';
 
             <form method="post" action="save-post.php" class="needs-validation" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label for="title" class="form-label">Título</label>
+                    <label for="title" class="form-label titles-form-adm">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <label for="featured_image" class="form-label titles-form-adm">Imagem Destacada</label>
                     <input type="file" class="form-control" id="featured_image" name="featured_image" accept="image/*">
                     <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF e WebP. Tamanho máximo: 5MB</small>
                 </div>
 
                 <div class="mb-3">
-                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                    <label for="tags" class="form-label titles-form-adm">Tags (separadas por vírgula)</label>
                     <input type="text" class="form-control" id="tags" name="tags" placeholder="Ex: humor, política, esportes">
                     <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="resumo" class="form-label">Resumo</label>
+                    <label for="resumo" class="form-label titles-form-adm">Resumo</label>
                     <textarea class="form-control" id="resumo" name="resumo" rows="3" required></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
+                    <label for="slug" class="form-label titles-form-adm">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="category_id" class="form-label">Categoria</label>
+                    <label for="category_id" class="form-label titles-form-adm">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
                         <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
@@ -81,7 +81,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="mb-3">
-                    <label for="content" class="form-label">Conteúdo</label>
+                    <label for="content" class="form-label titles-form-adm">Conteúdo</label>
                     <textarea id="editor" name="conteudo"></textarea>
                 </div>
 

@@ -84,13 +84,13 @@ include 'includes/header.php';
                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
 
                 <div class="mb-3">
-                    <label for="title" class="form-label">Título</label>
+                    <label for="title" class="form-label titles-form-adm">Título</label>
                     <input type="text" class="form-control" id="title" name="titulo" 
                            value="<?php echo htmlspecialchars($post['titulo'] ?? ''); ?>" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="featured_image" class="form-label">Imagem Destacada</label>
+                    <label for="featured_image" class="form-label titles-form-adm">Imagem Destacada</label>
                     <?php if (!empty($post['imagem_destacada'])): ?>
                         <div class="mb-2">
                             <img src="../uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
@@ -105,24 +105,24 @@ include 'includes/header.php';
                 </div>
 
                 <div class="mb-3">
-                    <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                    <label for="tags" class="form-label titles-form-adm">Tags (separadas por vírgula)</label>
                     <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($tags_string); ?>" placeholder="Ex: humor, política, esportes">
                     <div class="form-text">Digite as tags separadas por vírgula. Ex: humor, política, esportes</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="excerpt" class="form-label">Resumo</label>
+                    <label for="excerpt" class="form-label titles-form-adm">Resumo</label>
                     <textarea class="form-control" id="excerpt" name="resumo" rows="3"><?php echo htmlspecialchars($post['resumo'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
+                    <label for="slug" class="form-label titles-form-adm">Slug</label>
                     <input type="text" class="form-control" id="slug" name="slug" 
                            value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="category_id" class="form-label">Categoria</label>
+                    <label for="category_id" class="form-label titles-form-adm">Categoria</label>
                     <select class="form-select" id="category_id" name="categoria_id" required>
                         <option value="">Selecione uma categoria</option>
                         <?php foreach ($categories as $category): ?>
@@ -134,7 +134,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="mb-3">
-                    <label for="content" class="form-label">Conteúdo</label>
+                    <label for="content" class="form-label titles-form-adm">Conteúdo</label>
                     <textarea id="editor" name="conteudo"><?php echo htmlspecialchars($post['conteudo'] ?? ''); ?></textarea>
                 </div>
 
