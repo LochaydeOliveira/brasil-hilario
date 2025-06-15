@@ -73,7 +73,7 @@ include 'includes/header.php';
                             <div class="post-image mb-3">
                                 <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
                                     <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
-                                         class="img-fluid rounded" 
+                                         class="img-fluid" 
                                          alt="<?php echo htmlspecialchars($post['titulo']); ?>"
                                          style="width: 100%; height: 300px; object-fit: cover;">
                                 </a>
