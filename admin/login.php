@@ -62,9 +62,11 @@ try {
             log_error("Campos vazios detectados");
         } else {
             try {
-                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
-                $stmt->execute([$email]);
-                $usuario = $stmt->fetch();
+                $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
+                $stmt->bind_param("s", $email);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $usuario = $result->fetch_assoc();
                 
                 log_error("Usuário encontrado: " . ($usuario ? "Sim" : "Não"));
                 
@@ -82,8 +84,9 @@ try {
                         $_SESSION['ultimo_acesso'] = time();
 
                         // Atualizar último login
-                        $stmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
-                        $stmt->execute([$usuario['id']]);
+                        $stmt = $conn->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
+                        $stmt->bind_param("i", $usuario['id']);
+                        $stmt->execute();
 
                         log_error("Login bem sucedido para: $email");
                         header('Location: index.php');
@@ -94,7 +97,7 @@ try {
                 $erro = 'Email ou senha inválidos.';
                 log_error("Tentativa de login falhou para: $email");
                 
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 $erro = 'Erro ao tentar fazer login. Por favor, tente novamente.';
                 log_error("Erro de login: " . $e->getMessage());
             }
