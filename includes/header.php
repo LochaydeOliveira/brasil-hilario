@@ -6,7 +6,7 @@ $page_title = isset($og_title) ? $og_title : BLOG_TITLE;
 $page_description = isset($meta_description) ? $meta_description : BLOG_DESCRIPTION;
 $page_keywords = isset($meta_keywords) ? $meta_keywords : META_KEYWORDS;
 $page_url = isset($og_url) ? $og_url : BLOG_URL;
-$page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
+$page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
 $page_og_type = isset($og_type) ? $og_type : 'website';
 ?>
 <!DOCTYPE html>
