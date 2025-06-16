@@ -6,7 +6,7 @@
     $footer_categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     ?>
     <footer class="bg-white py-5 mt-5">
-        <div class="container">
+        <div class="container pd-cst-ftr">
             <div class="row">
                 <div class="col-md-3 mb-4">
                     <a class="footer-logo-link d-flex align-items-center mb-3" href="<?php echo BLOG_PATH; ?>">

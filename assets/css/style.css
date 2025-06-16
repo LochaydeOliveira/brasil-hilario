@@ -438,6 +438,8 @@ footer {
     line-height: 1.8;
 }
 
+
+
 .social-links .social-icon {
     font-size: 1.2rem;
     color: white;
@@ -685,6 +687,9 @@ footer {
 }
 
 @media (max-width: 575.98px) {
+    .pd-cst-ftr {
+        padding: 0 3rem!important;
+    }
     .post-image img {
         height: 180px;
     }
