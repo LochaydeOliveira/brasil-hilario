@@ -687,6 +687,9 @@ footer {
 }
 
 @media (max-width: 575.98px) {
+    .footer-copyright-text {
+        font-size: 0.7rem;
+    }
     .mg-sociais-footer {
         margin: 0 0 5rem 0;
     }
