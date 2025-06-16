@@ -13,7 +13,7 @@
                         <img src="<?php echo BLOG_PATH; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="footer-logo-img me-2">
                     </a>
                     <p class="footer-description mb-3"><?php echo BLOG_DESCRIPTION; ?></p>
-                    <div class="social-links d-flex">
+                    <div class="social-links d-flex mg-sociais-footer">
                         <a href="https://www.facebook.com/profile.php?id=61577306277011" target="_blank" class="social-icon me-2" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
                         <a href="#" target="_blank" class="social-icon me-2" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                         <a href="#" target="_blank" class="social-icon me-2" aria-label="Instagram"><i class="fab fa-instagram"></i></a>

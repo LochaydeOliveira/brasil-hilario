@@ -687,8 +687,11 @@ footer {
 }
 
 @media (max-width: 575.98px) {
+    .mg-sociais-footer {
+        margin: 0 0 5rem 0;
+    }
     .pd-cst-ftr {
-        padding: 0 3rem!important;
+        padding: 0 3rem;
     }
     .post-image img {
         height: 180px;
