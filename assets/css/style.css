@@ -23,7 +23,14 @@ body {
 
 .ht-custom {
     height: 60px;
-    background: #ebebeb;
+}
+
+@media (max-width: 768px) { 
+
+    .ht-custom {
+        height: 80px;
+    }
+
 }
 
 /* Header */
