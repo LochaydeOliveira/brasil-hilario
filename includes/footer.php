@@ -16,7 +16,7 @@
                     <div class="social-links d-flex mg-sociais-footer">
                         <a href="https://www.facebook.com/profile.php?id=61577306277011" target="_blank" class="social-icon me-2" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
                         <a href="#" target="_blank" class="social-icon me-2" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank" class="social-icon me-2" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/brasilhilariooficial/" target="_blank" class="social-icon me-2" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
