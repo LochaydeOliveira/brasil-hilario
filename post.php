@@ -59,10 +59,18 @@ try {
     $post['publicado'] = $post['publicado'] ?? 0;
     $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
 
-    // Incrementar visualizações
-    $stmt = $conn->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
-    $stmt->bind_param("i", $post['id']);
-    $stmt->execute();
+    // Obter o IP do visitante
+    $visitor_ip = $_SERVER['REMOTE_ADDR'];
+
+    // Definir o IP do administrador que não deve ser contado
+    define('ADMIN_IP', '179.48.2.57'); // Substitua pelo seu IP real
+
+    // Incrementar visualizações apenas se o visitante não for o administrador
+    if ($visitor_ip !== ADMIN_IP) {
+        $stmt = $conn->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
+        $stmt->bind_param("i", $post['id']);
+        $stmt->execute();
+    }
 
     // Definir meta tags para Open Graph e SEO
     $og_title = htmlspecialchars($post['titulo']);
