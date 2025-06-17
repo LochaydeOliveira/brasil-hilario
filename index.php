@@ -11,7 +11,33 @@ $offset = ($page - 1) * POSTS_PER_PAGE;
 
 // Incluir o header
 include 'includes/header.php';
+
+// Buscar todas as categorias para a barra de navegação
+$categories = [];
+try {
+    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
+    // Em caso de erro, as categorias ficarão vazias e a navegação não será exibida
+    error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
+}
 ?>
+
+<nav class="category-navbar">
+    <div class="container">
+        <ul class="nav justify-content-center">
+            <?php foreach ($categories as $category): ?>
+                <li class="nav-item">
+                    <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                        <?php echo htmlspecialchars($category['nome']); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</nav>
 
 <div class="row">
     <!-- Conteúdo Principal -->
