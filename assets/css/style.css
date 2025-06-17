@@ -537,13 +537,16 @@ footer {
     padding: 3rem!important;
     border-radius: 15px!important;
 }
-
+    
 .mg-custom {
-    margin: 1rem auto;
+    margin: 3rem auto;
 }
 
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
+    .mg-custom {
+        margin: 3rem auto;
+    }
     footer .col-md-3 {
         text-align: center;
     }
@@ -806,7 +809,22 @@ footer {
 @media (max-width: 767.98px) {
     .category-navbar {
         padding: 0.3rem 0;
+        position: relative; /* Para a sombra */
     }
+
+    .category-navbar .container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        /* Sombra para indicar rolagem */
+        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.3); /* Sombra à direita */
+    }
+
+    .category-navbar .nav {
+        flex-wrap: nowrap;
+        justify-content: flex-start; /* Alinha à esquerda para rolagem */
+        padding: 0 1rem; /* Adiciona padding nas laterais para que os itens não fiquem colados */
+    }
+
     .category-nav-link {
         font-size: 0.7rem;
         padding: 0.2rem 0.6rem;
