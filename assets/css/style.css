@@ -761,6 +761,20 @@ footer {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.category-navbar .container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.category-navbar .nav {
+    flex-wrap: nowrap;
+    justify-content: flex-start; /* Alinha à esquerda para rolagem */
+}
+
+.category-navbar .nav-item {
+    flex-shrink: 0; /* Impede que os itens encolham */
+}
+
 .category-nav-link {
     font-family: var(--font-secondary);
     font-optical-sizing: auto;
