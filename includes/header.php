@@ -144,7 +144,7 @@ try {
 </head>
 <body>
     <header class="bg-light shadow-sm">
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg navbar-light ht-custom">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" href="<?php echo BLOG_URL; ?>">
                     <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="logo-img me-2">

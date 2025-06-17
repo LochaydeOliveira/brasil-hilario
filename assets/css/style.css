@@ -21,6 +21,11 @@ body {
     background-color: #fff;
 }
 
+.ht-custom {
+    height: 60px;
+    background: #ebebeb;
+}
+
 /* Header */
 .site-header {
     background: #fff;
@@ -581,7 +586,7 @@ footer {
 
 /* Logo */
 .logo-img {
-    height: 70px;
+    height: 60px;
     width: auto;
     transition: transform 0.3s ease;
     object-fit: contain;
@@ -593,7 +598,7 @@ footer {
 
 @media (max-width: 768px) {
     .logo-img {
-        height: 70px;
+        height: 60px;
     }
 }
 
