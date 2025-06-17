@@ -8,6 +8,19 @@ $page_keywords = isset($meta_keywords) ? $meta_keywords : META_KEYWORDS;
 $page_url = isset($og_url) ? $og_url : BLOG_URL;
 $page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
 $page_og_type = isset($og_type) ? $og_type : 'website';
+
+
+$categories = [];
+try {
+    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
+} catch (Exception $e) {
+
+    error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

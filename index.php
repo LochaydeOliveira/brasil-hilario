@@ -13,16 +13,6 @@ $offset = ($page - 1) * POSTS_PER_PAGE;
 include 'includes/header.php';
 
 
-$categories = [];
-try {
-    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $categories = $result->fetch_all(MYSQLI_ASSOC);
-} catch (Exception $e) {
-
-    error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
-}
 ?>
 
 
