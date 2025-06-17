@@ -8,6 +8,7 @@
     --border-color: #dee2e6;
     --font-primary: "Merriweather", serif;
     --font-secondary: "Inter", sans-serif;
+    --logo-green-color: #0b8103;
 }
 
 body {
@@ -740,5 +741,48 @@ footer {
     .input-group {
         max-width: 100%;
         margin-top: 1rem;
+    }
+}
+
+/* Barra de Navegação de Categorias */
+.category-navbar {
+    background-color: var(--logo-green-color);
+    width: 100%;
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.category-nav-link {
+    font-family: var(--font-secondary);
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    color: #fff;
+    padding: 0.3rem 0.8rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Responsividade para a barra de categorias */
+@media (max-width: 767.98px) {
+    .category-navbar {
+        padding: 0.3rem 0;
+    }
+    .category-nav-link {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
     }
 } 
