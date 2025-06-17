@@ -162,4 +162,19 @@ $page_og_type = isset($og_type) ? $og_type : 'website';
             </div>
         </nav>
     </header>
+
+<nav class="category-navbar">
+    <div class="container">
+        <ul class="nav justify-content-center">
+            <?php foreach ($categories as $category): ?>
+                <li class="nav-item">
+                    <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                        <?php echo htmlspecialchars($category['nome']); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</nav>
+
     <main class="container mg-custom">

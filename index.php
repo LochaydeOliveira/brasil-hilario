@@ -12,7 +12,7 @@ $offset = ($page - 1) * POSTS_PER_PAGE;
 // Incluir o header
 include 'includes/header.php';
 
-// Buscar todas as categorias para a barra de navegação
+
 $categories = [];
 try {
     $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
@@ -20,31 +20,19 @@ try {
     $result = $stmt->get_result();
     $categories = $result->fetch_all(MYSQLI_ASSOC);
 } catch (Exception $e) {
-    // Em caso de erro, as categorias ficarão vazias e a navegação não será exibida
+
     error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
 }
 ?>
 
-<nav class="category-navbar">
-    <div class="container">
-        <ul class="nav justify-content-center">
-            <?php foreach ($categories as $category): ?>
-                <li class="nav-item">
-                    <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
-                        <?php echo htmlspecialchars($category['nome']); ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</nav>
+
 
 <div class="row">
-    <!-- Conteúdo Principal -->
+
     <div class="col-lg-8">
         <?php
         try {
-            // Buscar posts paginados
+
             $limit = POSTS_PER_PAGE;
             $stmt = $conn->prepare("
                 SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
@@ -65,7 +53,7 @@ try {
             $result = $stmt->get_result();
             $posts = $result->fetch_all(MYSQLI_ASSOC);
 
-            // Processar tags para cada post
+
             foreach ($posts as $key => $post_item) {
                 $posts[$key]['tags'] = [];
                 if (!empty($post_item['tags_data'])) {
@@ -82,7 +70,7 @@ try {
                 unset($posts[$key]['tags_data']);
             }
 
-            // Buscar o total de posts para paginação
+
             $stmt = $conn->prepare("SELECT COUNT(id) as total FROM posts WHERE publicado = 1");
             $stmt->execute();
             $result = $stmt->get_result();
@@ -143,7 +131,7 @@ try {
                     </article>
                 <?php endforeach;
 
-                // Paginação
+
                 if ($total_pages > 1):
                 ?>
                 <nav aria-label="Navegação de posts" class="mt-4">
@@ -184,7 +172,7 @@ try {
         ?>
     </div>
 
-    <!-- Sidebar -->
+
     <div class="col-lg-4">
         <?php include 'includes/sidebar.php'; ?>
     </div>
@@ -193,6 +181,5 @@ try {
 
 <?php 
 include 'includes/footer.php';
-// Enviar o buffer de saída
 ob_end_flush();
 ?>
