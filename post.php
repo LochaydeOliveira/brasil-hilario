@@ -60,7 +60,17 @@ try {
     $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
 
     // Obter o IP do visitante
-    $visitor_ip = $_SERVER['REMOTE_ADDR'];
+    function getUserIP() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            // Pode conter múltiplos IPs, pega o primeiro
+            return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+    $visitor_ip = getUserIP();
 
     // Definir o IP do administrador que não deve ser contado
     define('ADMIN_IP', '179.48.2.57'); // Substitua pelo seu IP real
