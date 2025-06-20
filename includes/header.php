@@ -181,6 +181,13 @@ try {
                 display: none;
             }
         }
+
+        @media (max-width: 767.98px) {
+            .category-navbar .nav {
+                flex-wrap: nowrap;
+                padding: 0;
+            }
+        }
     </style>
     
     <!-- Facebook Comments Plugin -->
