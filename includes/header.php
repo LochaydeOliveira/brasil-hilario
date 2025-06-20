@@ -150,22 +150,19 @@ try {
         .category-scroll-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE 10+ */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             flex: 1;
         }
-
         .category-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
-
         .category-navbar .nav {
             display: flex;
             flex-wrap: nowrap;
             margin: 0;
             padding: 0;
         }
-
         .arrow {
             background: none;
             border: none;
@@ -175,17 +172,41 @@ try {
             cursor: pointer;
             z-index: 2;
         }
-
         @media (min-width: 768px) {
             .arrow {
                 display: none;
             }
         }
-
+        .category-nav-link {
+            font-family: var(--font-secondary);
+            font-weight: 500;
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .category-nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: #fff;
+            text-decoration: none;
+        }
         @media (max-width: 767.98px) {
             .category-navbar .nav {
                 flex-wrap: nowrap;
                 padding: 0;
+            }
+            .category-navbar .nav-item:first-child {
+                margin-left: 8px;
+            }
+            .category-navbar .nav-item:last-child {
+                margin-right: 8px;
+            }
+            .category-nav-link {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
             }
         }
     </style>
@@ -252,11 +273,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const leftArrow = document.querySelector('.arrow.left');
     const rightArrow = document.querySelector('.arrow.right');
 
+    function updateArrows() {
+        // Só mostra as setas se houver overflow (scroll possível)
+        const canScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth + 2;
+        if (!canScroll) {
+            leftArrow.style.display = 'none';
+            rightArrow.style.display = 'none';
+            return;
+        }
+        // Seta esquerda só aparece se já deslizou
+        leftArrow.style.display = (scrollContainer.scrollLeft > 2) ? '' : 'none';
+        // Seta direita só aparece se ainda há mais para deslizar
+        rightArrow.style.display = (scrollContainer.scrollLeft < scrollContainer.scrollWidth - scrollContainer.clientWidth - 2) ? '' : 'none';
+    }
+
+    // Atualiza as setas ao rolar, redimensionar e ao carregar fontes
+    scrollContainer.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    if (document.fonts) {
+        document.fonts.ready.then(updateArrows);
+    }
+    window.addEventListener('load', updateArrows);
+
     leftArrow.addEventListener('click', function() {
         scrollContainer.scrollBy({ left: -120, behavior: 'smooth' });
     });
     rightArrow.addEventListener('click', function() {
         scrollContainer.scrollBy({ left: 120, behavior: 'smooth' });
     });
+
+    // Inicializa as setas
+    updateArrows();
 });
 </script>
