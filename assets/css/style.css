@@ -6894,6 +6894,7 @@ footer {
     flex-wrap: nowrap;
     margin: 0;
     padding: 0;
+    justify-content: center;
 }
 
 .arrow {
@@ -6936,6 +6937,7 @@ footer {
     .category-navbar .nav {
         flex-wrap: nowrap;
         padding: 0;
+        justify-content: none;
     }
     .category-navbar .nav-item:first-child {
         margin-left: 8px;
