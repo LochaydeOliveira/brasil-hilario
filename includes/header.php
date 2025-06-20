@@ -222,7 +222,7 @@ require_once 'config/config.php';
                         </li>
                         <?php endforeach; ?>
                     </ul>
-                    <form class="d-flex" action="<?php echo BLOG_URL; ?>/busca.php" method="GET">
+                    <form class="d-flex mg-bt-search" action="<?php echo BLOG_URL; ?>/busca.php" method="GET">
                         <div class="input-group">
                             <input type="search" name="q" class="form-control" placeholder="Buscar no blog..." aria-label="Buscar" required>
                             <button class="btn btn-outline-success" type="submit" aria-label="Buscar">
