@@ -6954,6 +6954,9 @@ footer {
         background: #f8f9fa;
         z-index: 9;
     }
+    .mg-bt-search {
+        margin-bottom: 0.8rem;
+    }
 }
 
 
@@ -6967,7 +6970,7 @@ footer {
 }
 
 .mg-bt-search {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0;
 }
 
 .navbar-toggler {
