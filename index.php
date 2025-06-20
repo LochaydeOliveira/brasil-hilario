@@ -1,16 +1,15 @@
 <?php
-// Iniciar buffer de saída
-ob_start();
 
-require_once 'includes/db.php';
-require_once 'config/config.php';
+    ob_start();
 
-// Definir o offset para paginação
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * POSTS_PER_PAGE;
+    require_once 'includes/db.php';
+    require_once 'config/config.php';
 
-// Incluir o header
-include 'includes/header.php';
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * POSTS_PER_PAGE;
+
+
+    include 'includes/header.php';
 
 
 ?>

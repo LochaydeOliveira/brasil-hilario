@@ -1,107 +1,105 @@
 <?php
-error_reporting(E_ALL); // Forçar a exibição de todos os erros
-ini_set('display_errors', 1); // Forçar a exibição de erros no navegador
+    error_reporting(E_ALL); 
+    ini_set('display_errors', 1); 
 
-// Iniciar buffer de saída
-ob_start();
-session_start();
-require_once 'config/config.php';
-require_once 'includes/db.php';
-require_once 'config/search.php';
-require_once 'vendor/autoload.php'; // Usar o autoload do Composer
 
-// Obter o slug do post da URL
-$post_slug = filter_input(INPUT_GET, 'slug', FILTER_SANITIZE_URL);
+    ob_start();
+    session_start();
+    require_once 'config/config.php';
+    require_once 'includes/db.php';
+    require_once 'config/search.php';
+    require_once 'vendor/autoload.php';
 
-if (empty($post_slug)) {
-    header('Location: ' . BLOG_URL);
-    exit;
-}
 
-try {
-    // Buscar o post pelo slug
-    $stmt = $conn->prepare("
-        SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
-               GROUP_CONCAT(DISTINCT t.id, ':', t.nome, ':', t.slug) as tags_data
-        FROM posts p 
-        JOIN categorias c ON p.categoria_id = c.id 
-        LEFT JOIN post_tags pt ON p.id = pt.post_id
-        LEFT JOIN tags t ON pt.tag_id = t.id
-        WHERE p.slug = ? AND p.publicado = 1
-        GROUP BY p.id
-    ");
-    $stmt->bind_param("s", $post_slug);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $post = $result->fetch_assoc();
+    $post_slug = filter_input(INPUT_GET, 'slug', FILTER_SANITIZE_URL);
 
-    if (!$post) {
-        header('Location: ' . BLOG_URL . '/404.php'); // Redireciona para uma página 404 se o post não for encontrado
+    if (empty($post_slug)) {
+        header('Location: ' . BLOG_URL);
         exit;
     }
 
-    // Processar tags
-    $post['tags'] = [];
-    if (!empty($post['tags_data'])) {
-        $tags_array = explode(',', $post['tags_data']);
-        foreach ($tags_array as $tag_data) {
-            list($id, $nome, $tag_slug) = explode(':', $tag_data);
-            $post['tags'][] = [
-                'id' => $id,
-                'nome' => $nome,
-                'slug' => $tag_slug
-            ];
-        }
-    }
-    unset($post['tags_data']);
+    try {
 
-    // Garante que as chaves 'publicado' e 'editor_type' existam com valores padrão
-    $post['publicado'] = $post['publicado'] ?? 0;
-    $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
-
-    // Obter o IP do visitante
-    function getUserIP() {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            return $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            // Pode conter múltiplos IPs, pega o primeiro
-            return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
-        }
-    }
-    $visitor_ip = getUserIP();
-
-    // Definir o IP do administrador que não deve ser contado
-    define('ADMIN_IP', '179.48.2.57'); // Substitua pelo seu IP real
-
-    // Incrementar visualizações apenas se o visitante não for o administrador
-    if ($visitor_ip !== ADMIN_IP) {
-        $stmt = $conn->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
-        $stmt->bind_param("i", $post['id']);
+        $stmt = $conn->prepare("
+            SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
+                GROUP_CONCAT(DISTINCT t.id, ':', t.nome, ':', t.slug) as tags_data
+            FROM posts p 
+            JOIN categorias c ON p.categoria_id = c.id 
+            LEFT JOIN post_tags pt ON p.id = pt.post_id
+            LEFT JOIN tags t ON pt.tag_id = t.id
+            WHERE p.slug = ? AND p.publicado = 1
+            GROUP BY p.id
+        ");
+        $stmt->bind_param("s", $post_slug);
         $stmt->execute();
-    }
+        $result = $stmt->get_result();
+        $post = $result->fetch_assoc();
 
-    // Definir meta tags para Open Graph e SEO
-    $og_title = htmlspecialchars($post['titulo']);
-    $og_description = !empty($post['resumo']) ? htmlspecialchars($post['resumo']) : htmlspecialchars(generate_excerpt($post['conteudo'], 200));
-    $og_url = BLOG_URL . '/post/' . htmlspecialchars($post['slug']);
-    $og_image = !empty($post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
-    $meta_description = $og_description;
-    $meta_keywords = implode(', ', array_column($post['tags'], 'nome')) . ', ' . META_KEYWORDS;
+        if (!$post) {
+            header('Location: ' . BLOG_URL . '/404.php');
+        }
 
-} catch (Exception $e) {
-    die("Erro: " . $e->getMessage());
+
+        $post['tags'] = [];
+        if (!empty($post['tags_data'])) {
+            $tags_array = explode(',', $post['tags_data']);
+            foreach ($tags_array as $tag_data) {
+                list($id, $nome, $tag_slug) = explode(':', $tag_data);
+                $post['tags'][] = [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'slug' => $tag_slug
+                ];
+            }
+        }
+        unset($post['tags_data']);
+
+
+        $post['publicado'] = $post['publicado'] ?? 0;
+        $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
+
+
+        function getUserIP() {
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                return $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                // Pode conter múltiplos IPs, pega o primeiro
+                return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+            } else {
+                return $_SERVER['REMOTE_ADDR'];
+            }
+        }
+        $visitor_ip = getUserIP();
+
+        define('ADMIN_IP', '179.48.2.57'); 
+
+
+        if ($visitor_ip !== ADMIN_IP) {
+            $stmt = $conn->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
+            $stmt->bind_param("i", $post['id']);
+            $stmt->execute();
+        }
+
+
+        $og_title = htmlspecialchars($post['titulo']);
+        $og_description = !empty($post['resumo']) ? htmlspecialchars($post['resumo']) : htmlspecialchars(generate_excerpt($post['conteudo'], 200));
+        $og_url = BLOG_URL . '/post/' . htmlspecialchars($post['slug']);
+        $og_image = !empty($post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
+        $meta_description = $og_description;
+        $meta_keywords = implode(', ', array_column($post['tags'], 'nome')) . ', ' . META_KEYWORDS;
+
+    } catch (Exception $e) {
+        die("Erro: " . $e->getMessage());
 }
 
-// Incluir o header
+
 include 'includes/header.php';
 ?>
 
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <!-- Breadcrumb -->
+
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>">Início</a></li>
@@ -133,10 +131,10 @@ include 'includes/header.php';
             <div class="post-content">
                 <?php 
                 if ($post['editor_type'] === 'markdown') {
-                    // Conteúdo Markdown
+                    
                     echo '<div class="markdown-content">' . (new Parsedown())->text($post['conteudo']) . '</div>';
                 } else {
-                    // Conteúdo TinyMCE (HTML)
+                    
                     echo $post['conteudo'];
                 }
                 ?>
@@ -144,7 +142,7 @@ include 'includes/header.php';
 
             <hr>
 
-            <!-- Tags -->
+
             <?php if (!empty($post['tags'])): ?>
             <div class="post-tags mb-3">
                 <i class="fas fa-tags"></i>
@@ -156,7 +154,7 @@ include 'includes/header.php';
             </div>
             <?php endif; ?>
 
-            <!-- Social Share Buttons -->
+
             <div class="mb-4">
                 <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>"
                    target="_blank" class="btn btn-primary btn-sm me-1">
@@ -172,7 +170,7 @@ include 'includes/header.php';
                 </a>
             </div>
 
-            <!-- Comments Section (Facebook Comments Plugin) -->
+
             <div class="card my-4">
                 <h5 class="card-header">Deixe um Comentário:</h5>
                 <div class="card-body">
