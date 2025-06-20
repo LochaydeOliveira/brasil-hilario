@@ -1,27 +1,27 @@
 <?php
 require_once 'config/config.php';
 
-// Definir valores padrão para as meta tags, caso não sejam definidos por um post específico
-$page_title = isset($og_title) ? $og_title : BLOG_TITLE;
-$page_description = isset($meta_description) ? $meta_description : BLOG_DESCRIPTION;
-$page_keywords = isset($meta_keywords) ? $meta_keywords : META_KEYWORDS;
-$page_url = isset($og_url) ? $og_url : BLOG_URL;
-$page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
-$page_og_type = isset($og_type) ? $og_type : 'website';
+    $page_title = isset($og_title) ? $og_title : BLOG_TITLE;
+    $page_description = isset($meta_description) ? $meta_description : BLOG_DESCRIPTION;
+    $page_keywords = isset($meta_keywords) ? $meta_keywords : META_KEYWORDS;
+    $page_url = isset($og_url) ? $og_url : BLOG_URL;
+    $page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
+    $page_og_type = isset($og_type) ? $og_type : 'website';
 
 
-$categories = [];
-try {
-    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $categories = $result->fetch_all(MYSQLI_ASSOC);
-} catch (Exception $e) {
+    $categories = [];
+    try {
+        $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categories = $result->fetch_all(MYSQLI_ASSOC);
+    } catch (Exception $e) {
 
-    error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
-}
+        error_log("Erro ao carregar categorias para a barra de navegação: " . $e->getMessage());
+    }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -31,7 +31,6 @@ try {
     <meta name="description" content="<?php echo $page_description; ?>">
     <meta name="keywords" content="<?php echo $page_keywords; ?>">
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="<?php echo $page_og_type; ?>">
     <meta property="og:url" content="<?php echo $page_url; ?>">
     <meta property="og:title" content="<?php echo $page_title; ?>">
@@ -42,38 +41,25 @@ try {
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="pt_BR">
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="<?php echo $page_url; ?>">
     <meta property="twitter:title" content="<?php echo $page_title; ?>">
     <meta property="twitter:description" content="<?php echo $page_description; ?>">
     <meta property="twitter:image" content="<?php echo $page_image; ?>">
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
-    
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- AOS - Animate On Scroll -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=02" rel="stylesheet">
-    
-    <!-- Preconnect para melhor performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Google Fonts -->
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
     
-    <!-- Schema.org markup para SEO -->
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -211,14 +197,14 @@ try {
         }
     </style>
     
-    <!-- Facebook Comments Plugin -->
+
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v18.0"></script>
 </head>
 <body>
     <header class="bg-light shadow-sm">
         <nav class="navbar navbar-expand-lg navbar-light ht-custom">
-            <div class="container">
+            <div class="container bg-nav-custom">
                 <a class="navbar-brand d-flex align-items-center" href="<?php echo BLOG_URL; ?>">
                     <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="logo-img me-2">
                 </a>

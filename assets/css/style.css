@@ -1121,7 +1121,7 @@ footer {
     }
 }
 
-/* Exemplo para um menu mobile */
+
 .menu-mobile-aberto {
     position: fixed;
     top: 0;
@@ -1130,7 +1130,7 @@ footer {
     height: 100vh;
     background: #fff;
     z-index: 1050;
-    /* outros estilos */
+
 }
 
     .category-navbar {
@@ -1146,13 +1146,13 @@ footer {
 .category-scroll-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
     flex: 1;
 }
 
 .category-scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
     }
 
     .category-navbar .nav {
@@ -1215,7 +1215,7 @@ footer {
     }
 } 
 
-/* Exemplo para um menu mobile */
+
 .menu-mobile-aberto {
     position: fixed;
     top: 0;
@@ -1224,7 +1224,7 @@ footer {
     height: 100vh;
     background: #fff;
     z-index: 1050;
-    /* outros estilos */
+
 }
 
 .category-navbar {
@@ -1240,13 +1240,13 @@ footer {
 .category-scroll-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
     flex: 1;
 }
 
 .category-scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none; 
 }
 
 .category-navbar .nav {
@@ -1309,7 +1309,7 @@ footer {
     }
 }
 
-/* Exemplo para um menu mobile */
+
 .menu-mobile-aberto {
     position: fixed;
     top: 0;
@@ -1318,7 +1318,7 @@ footer {
     height: 100vh;
     background: #fff;
     z-index: 1050;
-    /* outros estilos */
+  
 }
 
 .category-navbar {
@@ -1334,13 +1334,13 @@ footer {
 .category-scroll-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
     flex: 1;
 }
 
 .category-scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none; 
 }
 
 .category-navbar .nav {
@@ -1403,7 +1403,7 @@ footer {
     }
 }
 
-/* Exemplo para um menu mobile */
+
 .menu-mobile-aberto {
     position: fixed;
     top: 0;
@@ -1412,7 +1412,7 @@ footer {
     height: 100vh;
     background: #fff;
     z-index: 1050;
-    /* outros estilos */
+
 }
 
 .category-navbar {
@@ -1428,13 +1428,13 @@ footer {
 .category-scroll-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;  
     flex: 1;
 }
 
 .category-scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
 }
 
 .category-navbar .nav {
@@ -6951,7 +6951,12 @@ footer {
     }
 }
 
-/* Exemplo para um menu mobile */
+
 .menu-mobile-aberto {
     position: fixed;
     top: 0;
+}
+
+.bg-nav-custom{
+    background: #fff;
+}
