@@ -6949,6 +6949,10 @@ footer {
         font-size: 0.7rem;
         padding: 0.2rem 0.6rem;
     }
+
+    .bg-nav-custom {
+        z-index: 0;
+    }
 }
 
 
