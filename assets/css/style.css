@@ -6937,6 +6937,7 @@ footer {
     .category-navbar .nav {
         flex-wrap: nowrap;
         padding: 0;
+        justify-content: flex-start;
     }
     .category-navbar .nav-item:first-child {
         margin-left: 8px;
