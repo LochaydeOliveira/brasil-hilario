@@ -6958,5 +6958,7 @@ footer {
 }
 
 .bg-nav-custom{
-    background: #fff;
+    background: #f8f9fa;
+    z-index: 9;
+    padding-bottom: 1.2rem;
 }
