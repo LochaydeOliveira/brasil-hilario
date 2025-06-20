@@ -6973,3 +6973,8 @@ footer {
 .navbar-toggler:focus {
     box-shadow: none!important;
 }
+
+.navbar-toggler:focus .navbar-toggler-icon {
+    width: 1.8em;
+    height: 1.8em;
+}
