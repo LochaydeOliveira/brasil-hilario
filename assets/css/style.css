@@ -6962,3 +6962,7 @@ footer {
     z-index: 9;
     padding-bottom: 1.2rem;
 }
+
+.mg-bt-search {
+    margin-bottom: 0.8rem;
+}
