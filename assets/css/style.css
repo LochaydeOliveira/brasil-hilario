@@ -4977,7 +4977,6 @@ footer {
 .post-thumbnail:hover img {
     transform: scale(1.05);
 }
-
 /* Responsividade */
 @media (max-width: 991.98px) {
     .post-image img {
