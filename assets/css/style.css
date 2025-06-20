@@ -6951,7 +6951,8 @@ footer {
     }
 
     .bg-nav-custom {
-        z-index: 0;
+        background: #f8f9fa;
+        z-index: 9;
     }
 }
 
@@ -6961,9 +6962,8 @@ footer {
     top: 0;
 }
 
-.bg-nav-custom{
-    background: #f8f9fa;
-    z-index: 9;
+.bg-nav-custom {
+    z-index: 0;
 }
 
 .mg-bt-search {
