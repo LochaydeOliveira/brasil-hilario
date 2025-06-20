@@ -6965,3 +6965,7 @@ footer {
 .mg-bt-search {
     margin-bottom: 0.8rem;
 }
+
+.navbar-toggler {
+    border: none!important;
+}
