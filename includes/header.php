@@ -136,6 +136,51 @@ try {
             background-color: #0b8103;
             border: none!important;
         }
+
+        .category-navbar {
+            display: flex;
+            align-items: center;
+            position: relative;
+            background-color: var(--logo-green-color);
+            width: 100%;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .category-scroll-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE 10+ */
+            flex: 1;
+        }
+
+        .category-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .category-navbar .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        .arrow {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            padding: 0 0.5rem;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        @media (min-width: 768px) {
+            .arrow {
+                display: none;
+            }
+        }
     </style>
     
     <!-- Facebook Comments Plugin -->
@@ -177,8 +222,9 @@ try {
     </header>
 
 <nav class="category-navbar">
-    <div class="container">
-        <ul class="nav justify-content-center">
+    <button class="arrow left" aria-label="Categorias anteriores">&#8592;</button>
+    <div class="category-scroll-container">
+        <ul class="nav">
             <?php foreach ($categories as $category): ?>
                 <li class="nav-item">
                     <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
@@ -188,6 +234,22 @@ try {
             <?php endforeach; ?>
         </ul>
     </div>
+    <button class="arrow right" aria-label="Próximas categorias">&#8594;</button>
 </nav>
 
     <main class="container mg-custom">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollContainer = document.querySelector('.category-scroll-container');
+    const leftArrow = document.querySelector('.arrow.left');
+    const rightArrow = document.querySelector('.arrow.right');
+
+    leftArrow.addEventListener('click', function() {
+        scrollContainer.scrollBy({ left: -120, behavior: 'smooth' });
+    });
+    rightArrow.addEventListener('click', function() {
+        scrollContainer.scrollBy({ left: 120, behavior: 'smooth' });
+    });
+});
+</script>

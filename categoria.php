@@ -53,13 +53,13 @@ $meta_description = "Posts sobre " . $categoria['nome'] . " no " . BLOG_TITLE;
 $og_url = BLOG_URL . "/categoria/" . $categoria_slug;
 $og_type = "website";
 
-// Incluir o cabeçalho
+
 include 'includes/header.php';
 ?>
 
 <div class="container mt-4">
     <div class="row">
-        <!-- Conteúdo Principal -->
+
         <div class="col-lg-8">
             <h1 class="mb-4">Categoria: <?php echo htmlspecialchars($categoria['nome']); ?></h1>
             
