@@ -778,11 +778,11 @@ footer {
 
 .category-navbar .nav {
     flex-wrap: nowrap;
-    justify-content: flex-start; /* Alinha à esquerda para rolagem */
+    justify-content: center;
 }
 
 .category-navbar .nav-item {
-    flex-shrink: 0; /* Impede que os itens encolham */
+    flex-shrink: 0;
 }
 
 .category-nav-link {
@@ -809,7 +809,7 @@ footer {
 @media (max-width: 767.98px) {
     .category-navbar {
         padding: 0.3rem 0;
-        position: relative; /* Para a sombra */
+        position: relative;
     }
 
     .category-navbar .container {
@@ -818,12 +818,24 @@ footer {
 
     .category-navbar .nav {
         flex-wrap: nowrap;
-        justify-content: flex-start; /* Alinha à esquerda para rolagem */
-        padding: 0 1rem; /* Adiciona padding nas laterais para que os itens não fiquem colados */
+        justify-content: center;
+        padding: 0 1rem;
     }
 
     .category-nav-link {
         font-size: 0.7rem;
         padding: 0.2rem 0.6rem;
     }
+}
+
+/* Exemplo para um menu mobile */
+.menu-mobile-aberto {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 1050;
+    /* outros estilos */
 } 
