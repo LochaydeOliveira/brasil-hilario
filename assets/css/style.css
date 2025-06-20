@@ -772,8 +772,8 @@ footer {
 }
 
 .category-navbar .container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+
+
 }
 
 .category-navbar .nav {
@@ -805,7 +805,7 @@ footer {
     text-decoration: none;
 }
 
-/* Responsividade para a barra de categorias */
+
 @media (max-width: 767.98px) {
     .category-navbar {
         padding: 0.3rem 0;
@@ -813,10 +813,7 @@ footer {
     }
 
     .category-navbar .container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        /* Sombra para indicar rolagem */
-        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.3); /* Sombra à direita */
+
     }
 
     .category-navbar .nav {
