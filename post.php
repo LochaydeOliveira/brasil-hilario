@@ -40,6 +40,27 @@
         }
 
 
+        $related_posts = [];
+        if (isset($post['categoria_id'])) {
+            $stmt_related = $conn->prepare("
+                SELECT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
+                FROM posts p
+                JOIN categorias c ON p.categoria_id = c.id
+                WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
+                ORDER BY RAND()
+                LIMIT 3
+            ");
+            if($stmt_related) {
+                $stmt_related->bind_param("ii", $post['categoria_id'], $post['id']);
+                $stmt_related->execute();
+                $result_related = $stmt_related->get_result();
+                while ($row = $result_related->fetch_assoc()) {
+                    $related_posts[] = $row;
+                }
+            }
+        }
+
+
         $post['tags'] = [];
         if (!empty($post['tags_data'])) {
             $tags_array = explode(',', $post['tags_data']);
@@ -90,7 +111,52 @@
 
     } catch (Exception $e) {
         die("Erro: " . $e->getMessage());
-}
+    }
+
+
+    function injectRelatedPosts($content, $related_posts, $injection_point = 3) {
+        if (empty($related_posts) || count($related_posts) === 0) {
+            return $content;
+        }
+
+        $paragraphs = explode('</p>', $content);
+        $count = count($paragraphs);
+        
+        // Para evitar quebrar o layout, injeta no meio do texto, mas não muito no final.
+        $injection_point = min($injection_point, max(1, floor($count * 0.5)));
+
+        if ($count < $injection_point + 1) { 
+            return $content;
+        }
+        
+        // Constrói o bloco HTML dos posts relacionados
+        $related_posts_html = '<section class="related-posts-block my-5">';
+        $related_posts_html .= '<h4 class="related-posts-title">Leia Também</h4>';
+        $related_posts_html .= '<div class="row">';
+
+        foreach ($related_posts as $related_post) {
+            $related_post_url = BLOG_URL . '/post/' . htmlspecialchars($related_post['slug']);
+            $image_path = !empty($related_post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($related_post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
+            
+            $related_posts_html .= '<div class="col-md-4 mb-4">';
+            $related_posts_html .= '<a href="' . $related_post_url . '" class="related-post-link">';
+            $related_posts_html .= '<div class="card h-100 related-post-card">';
+            $related_posts_html .= '<img src="' . $image_path . '" class="card-img-top related-post-img" alt="' . htmlspecialchars($related_post['titulo']) . '">';
+            $related_posts_html .= '<div class="card-body d-flex flex-column">';
+            $related_posts_html .= '<div><span class="badge related-post-badge mb-2">' . htmlspecialchars($related_post['categoria_nome']) . '</span></div>';
+            $related_posts_html .= '<h6 class="card-title related-post-title mt-auto">' . htmlspecialchars($related_post['titulo']) . '</h6>';
+            $related_posts_html .= '</div>'; // fim card-body
+            $related_posts_html .= '</div>'; // fim card
+            $related_posts_html .= '</a>';
+            $related_posts_html .= '</div>'; // fim col
+        }
+        $related_posts_html .= '</div>'; // fim row
+        $related_posts_html .= '</section>'; // fim related-posts-block
+
+        array_splice($paragraphs, $injection_point, 0, $related_posts_html);
+
+        return implode('</p>', $paragraphs);
+    }
 
 
 include 'includes/header.php';
@@ -130,13 +196,15 @@ include 'includes/header.php';
 
             <div class="post-content">
                 <?php 
+                $content_to_display = '';
                 if ($post['editor_type'] === 'markdown') {
-                    
-                    echo '<div class="markdown-content">' . (new Parsedown())->text($post['conteudo']) . '</div>';
+                    $parsedown = new Parsedown();
+                    $content_to_display = $parsedown->text($post['conteudo']);
                 } else {
-                    
-                    echo $post['conteudo'];
+                    $content_to_display = $post['conteudo'];
                 }
+                
+                echo injectRelatedPosts($content_to_display, $related_posts);
                 ?>
             </div>
 

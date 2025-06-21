@@ -207,6 +207,57 @@ require_once 'config/config.php';
                 padding: 0.2rem 0.6rem;
             }
         }
+
+        .related-posts-title {
+            font-family: "Merriweather", serif;
+            font-weight: 700;
+            margin-bottom: 1.5rem !important;
+            border-bottom: 3px solid #d92332;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .related-post-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            height: 100%;
+        }
+
+        .related-post-link:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-post-link:hover .related-post-card {
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+
+        .related-post-card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+
+        .related-post-img {
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .related-post-badge {
+            background-color: #d92332 !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .related-post-title {
+            font-family: "Merriweather", serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0;
+            line-height: 1.3;
+        }
     </style>
     
 
