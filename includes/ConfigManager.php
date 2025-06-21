@@ -41,7 +41,7 @@ class ConfigManager {
     
     public function getGroup($grupo) {
         $grupo = $this->conn->real_escape_string($grupo);
-        $sql = "SELECT chave, valor, tipo, descricao FROM configuracoes WHERE grupo = '$grupo' ORDER BY chave";
+        $sql = "SELECT chave, valor, tipo FROM configuracoes WHERE grupo = '$grupo' ORDER BY chave";
         $result = $this->conn->query($sql);
         
         $configs = [];
@@ -49,8 +49,7 @@ class ConfigManager {
             while ($row = $result->fetch_assoc()) {
                 $configs[$row['chave']] = [
                     'valor' => $this->convertValue($row['valor'], $row['tipo']),
-                    'tipo' => $row['tipo'],
-                    'descricao' => $row['descricao']
+                    'tipo' => $row['tipo']
                 ];
             }
         }
@@ -59,7 +58,7 @@ class ConfigManager {
     }
     
     public function getAll() {
-        $sql = "SELECT chave, valor, tipo, grupo, descricao FROM configuracoes ORDER BY grupo, chave";
+        $sql = "SELECT chave, valor, tipo, grupo FROM configuracoes ORDER BY grupo, chave";
         $result = $this->conn->query($sql);
         
         $configs = [];
@@ -68,8 +67,7 @@ class ConfigManager {
                 $configs[$row['chave']] = [
                     'valor' => $this->convertValue($row['valor'], $row['tipo']),
                     'tipo' => $row['tipo'],
-                    'grupo' => $row['grupo'],
-                    'descricao' => $row['descricao']
+                    'grupo' => $row['grupo']
                 ];
             }
         }
