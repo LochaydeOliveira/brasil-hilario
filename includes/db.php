@@ -11,11 +11,9 @@ try {
         throw new Exception("Erro na conexão: " . $conn->connect_error);
     }
     
-    // Configurar charset para UTF-8
     $conn->set_charset("utf8mb4");
     
 } catch (Exception $e) {
     error_log("Erro na conexão com o banco de dados: " . $e->getMessage());
     die("Erro na conexão com o banco de dados. Por favor, tente novamente mais tarde.");
-}
-?>
+} 
