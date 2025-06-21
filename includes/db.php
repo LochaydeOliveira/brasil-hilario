@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 $host = "localhost";
 $db = "paymen58_blog_adsense";
 $user = "paymen58";

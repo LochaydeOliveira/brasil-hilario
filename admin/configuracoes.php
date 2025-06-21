@@ -1,13 +1,15 @@
 <?php
 session_start();
-require_once '../includes/db.php';
-require_once '../includes/ConfigManager.php';
 
-// Verificar se o usuário está logado
+// 1. Verificar login ANTES de qualquer saída
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: login.php');
     exit;
 }
+
+// 2. Incluir arquivos APÓS a verificação
+require_once '../includes/db.php';
+require_once '../includes/ConfigManager.php';
 
 $configManager = new ConfigManager($conn);
 
