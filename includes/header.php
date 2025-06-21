@@ -25,6 +25,18 @@ require_once 'config/config.php';
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M6BPB3MLZ2');
+</script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?></title>
