@@ -428,20 +428,20 @@ include 'includes/header.php';
 .nav-tabs .nav-link {
     color: #495057!important;
     border: none;
-    border-bottom: 2px solid transparent;
+    border-bottom: 6px solid transparent;
     padding: 0.75rem 1rem;
     font-weight: 500;
 }
 
 .nav-tabs .nav-link:hover {
     border-bottom-color: #495057;
-    color: #495057!important;
+    color: #495057;
 }
 
 .nav-tabs .nav-link.active {
-    color: #0d6efd;
-    border-bottom-color: #0d6efd;
+    border-bottom-color:#0b8103;
     background-color: transparent;
+    color: #0b8103;
 }
 
 .nav-tabs .nav-link i {
