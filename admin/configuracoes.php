@@ -426,7 +426,7 @@ include 'includes/header.php';
 
 <style>
 .nav-tabs .nav-link {
-    color: #495057;
+    color: #495057!important;
     border: none;
     border-bottom: 2px solid transparent;
     padding: 0.75rem 1rem;
@@ -434,8 +434,8 @@ include 'includes/header.php';
 }
 
 .nav-tabs .nav-link:hover {
-    color: #0d6efd;
-    border-bottom-color: #dee2e6;
+    border-bottom-color: #495057;
+    color: #495057!important;
 }
 
 .nav-tabs .nav-link.active {
