@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// 1. Verificar login ANTES de qualquer saída
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// 1. Verificar login ANTES de qualquer saída (usando a mesma variável do sistema principal)
+if (!isset($_SESSION['usuario_id'])) {
     header('Location: login.php');
     exit;
 }
