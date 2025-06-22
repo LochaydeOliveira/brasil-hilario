@@ -21,15 +21,6 @@ try {
     $error = "Erro ao carregar categorias: " . $e->getMessage();
 }
 
-// Carregar todas as categorias
-$todas_categorias = [];
-$res = $conn->query("SELECT id, nome FROM categorias ORDER BY nome ASC");
-while ($row = $res->fetch_assoc()) {
-    $todas_categorias[] = $row;
-}
-
-$categorias_do_post = [];
-
 $page_title = getPageTitle();
 include 'includes/header.php';
 ?>
@@ -79,14 +70,14 @@ include 'includes/header.php';
 
                 <div class="mb-3">
                     <label for="category_id" class="form-label titles-form-adm">Categoria</label>
-                    <select name="categorias[]" multiple class="form-control" required>
-                        <?php foreach ($todas_categorias as $cat): ?>
-                            <option value="<?= $cat['id'] ?>" <?= in_array($cat['id'], $categorias_do_post) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($cat['nome']) ?>
+                    <select class="form-select" id="category_id" name="categoria_id" required>
+                        <option value="">Selecione uma categoria</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <small>Segure Ctrl (Windows) ou Command (Mac) para selecionar mais de uma.</small>
                 </div>
 
                 <div class="mb-3">

@@ -59,23 +59,6 @@ try {
     $tags_data = $result->fetch_all(MYSQLI_ASSOC);
     $tags = array_column($tags_data, 'nome');
     $tags_string = implode(', ', $tags);
-
-    // Carregar todas as categorias
-    $todas_categorias = [];
-    $res = $conn->query("SELECT id, nome FROM categorias ORDER BY nome ASC");
-    while ($row = $res->fetch_assoc()) {
-        $todas_categorias[] = $row;
-    }
-
-    // Carregar categorias do post
-    $categorias_do_post = [];
-    $stmt = $conn->prepare("SELECT categoria_id FROM post_categorias WHERE post_id = ?");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    while ($row = $res->fetch_assoc()) {
-        $categorias_do_post[] = $row['categoria_id'];
-    }
 } catch (Exception $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
@@ -139,15 +122,15 @@ include 'includes/header.php';
                 </div>
 
                 <div class="mb-3">
-                    <label>Categorias</label>
-                    <select name="categorias[]" multiple class="form-control" required>
-                        <?php foreach ($todas_categorias as $cat): ?>
-                            <option value="<?= $cat['id'] ?>" <?= in_array($cat['id'], $categorias_do_post) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($cat['nome']) ?>
+                    <label for="category_id" class="form-label titles-form-adm">Categoria</label>
+                    <select class="form-select" id="category_id" name="categoria_id" required>
+                        <option value="">Selecione uma categoria</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>" <?php echo (isset($post['categoria_id']) && $post['categoria_id'] == $category['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['nome']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <small>Segure Ctrl (Windows) ou Command (Mac) para selecionar mais de uma.</small>
                 </div>
 
                 <div class="mb-3">
