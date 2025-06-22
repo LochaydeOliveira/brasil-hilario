@@ -48,7 +48,7 @@
                 JOIN categorias c ON p.categoria_id = c.id
                 WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
                 ORDER BY RAND()
-                LIMIT 3
+                LIMIT 5
             ");
             if($stmt_related) {
                 $stmt_related->bind_param("ii", $post['categoria_id'], $post['id']);
