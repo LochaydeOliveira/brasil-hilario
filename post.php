@@ -39,9 +39,18 @@
             header('Location: ' . BLOG_URL . '/404.php');
         }
 
+        // Carregar categorias do post
+        $categorias_do_post = [];
+        $stmt = $conn->prepare("SELECT categoria_id FROM post_categorias WHERE post_id = ?");
+        $stmt->bind_param("i", $post['id']);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $categorias_do_post[] = $row['categoria_id'];
+        }
 
         $related_posts = [];
-        if (isset($post['categoria_id'])) {
+        if (!empty($categorias_do_post)) {
             $stmt_related = $conn->prepare("
                 SELECT DISTINCT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
                 FROM posts p
@@ -146,16 +155,6 @@
         $res = $conn->query("SELECT id, nome FROM categorias ORDER BY nome ASC");
         while ($row = $res->fetch_assoc()) {
             $todas_categorias[] = $row;
-        }
-
-        // Carregar categorias do post
-        $categorias_do_post = [];
-        $stmt = $conn->prepare("SELECT categoria_id FROM post_categorias WHERE post_id = ?");
-        $stmt->bind_param("i", $post['id']);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        while ($row = $res->fetch_assoc()) {
-            $categorias_do_post[] = $row['categoria_id'];
         }
 
     } catch (Exception $e) {
