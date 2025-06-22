@@ -279,9 +279,9 @@ require_once 'config/config.php';
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo BLOG_URL; ?>">Início</a>
                         </li>
-                        <?php foreach (PAGES as $page): ?>
+                        <?php foreach (PAGES as $page_item): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo $page['url']; ?>"><?php echo $page['title']; ?></a>
+                            <a class="nav-link" href="<?php echo $page_item['url']; ?>"><?php echo $page_item['title']; ?></a>
                         </li>
                         <?php endforeach; ?>
                     </ul>
