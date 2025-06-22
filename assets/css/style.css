@@ -6985,3 +6985,7 @@ footer {
     width: 1.8em;
     height: 1.8em;
 }
+
+.pad-01 {
+    padding: 2rem;
+}
