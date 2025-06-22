@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$categorias_do_post = [];
+
 try {
     // Iniciar transação para garantir atomicidade
     $conn->autocommit(FALSE);
