@@ -5,8 +5,13 @@
     require_once 'includes/db.php';
     require_once 'config/config.php';
 
-    $page = isset($_GET['page']) ? (int)($_GET['page'][0] ?? $_GET['page']) : 1;
-    $page = max(1, $page);
+    // Pega a URL, remove a query string e extrai o número da página
+    $request_uri = strtok($_SERVER["REQUEST_URI"], '?');
+    preg_match('/\/(\d+)$/', $request_uri, $matches);
+    $page_from_url = !empty($matches[1]) ? (int)$matches[1] : 0;
+    $page_from_get = isset($_GET['page']) ? (int)($_GET['page'][0] ?? $_GET['page']) : 0;
+
+    $page = max(1, $page_from_url, $page_from_get);
 
     $offset = ($page - 1) * POSTS_PER_PAGE;
 
