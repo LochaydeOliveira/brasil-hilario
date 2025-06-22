@@ -240,7 +240,7 @@ require_once 'config/config.php';
         }
 
         .related-post-img {
-            height: 150px;
+            height: 120px;
             object-fit: cover;
         }
 
@@ -253,7 +253,7 @@ require_once 'config/config.php';
 
         .related-post-title {
             font-family: "Merriweather", serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 0;
             line-height: 1.3;

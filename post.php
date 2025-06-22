@@ -48,7 +48,7 @@
                 JOIN categorias c ON p.categoria_id = c.id
                 WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
                 ORDER BY RAND()
-                LIMIT 5
+                LIMIT 4
             ");
             if($stmt_related) {
                 $stmt_related->bind_param("ii", $post['categoria_id'], $post['id']);
@@ -57,6 +57,24 @@
                 while ($row = $result_related->fetch_assoc()) {
                     $related_posts[] = $row;
                 }
+            }
+        }
+
+        $latest_posts = [];
+        $stmt_latest = $conn->prepare("
+            SELECT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
+            FROM posts p
+            JOIN categorias c ON p.categoria_id = c.id
+            WHERE p.id != ? AND p.publicado = 1
+            ORDER BY p.data_publicacao DESC
+            LIMIT 4
+        ");
+        if ($stmt_latest) {
+            $stmt_latest->bind_param("i", $post['id']);
+            $stmt_latest->execute();
+            $result_latest = $stmt_latest->get_result();
+            while ($row = $result_latest->fetch_assoc()) {
+                $latest_posts[] = $row;
             }
         }
 
@@ -114,46 +132,61 @@
     }
 
 
-    function injectRelatedPosts($content, $related_posts, $injection_point = 3) {
-        if (empty($related_posts) || count($related_posts) === 0) {
+    function buildPostsSectionHtml($title, $posts) {
+        if (empty($posts)) {
+            return '';
+        }
+
+        $section_html = '<section class="related-posts-block my-5">';
+        $section_html .= '<h4 class="related-posts-title">' . htmlspecialchars($title) . '</h4>';
+        $section_html .= '<div class="row">';
+
+        foreach ($posts as $p) {
+            $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
+            $image_path = !empty($p['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($p['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
+            
+            $section_html .= '<div class="col-lg-3 col-md-6 mb-4">';
+            $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
+            $section_html .= '<div class="card h-100 related-post-card">';
+            $section_html .= '<img src="' . $image_path . '" class="card-img-top related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
+            $section_html .= '<div class="card-body d-flex flex-column">';
+            $section_html .= '<div><span class="badge related-post-badge mb-2">' . htmlspecialchars($p['categoria_nome']) . '</span></div>';
+            $section_html .= '<h6 class="card-title related-post-title mt-auto">' . htmlspecialchars($p['titulo']) . '</h6>';
+            $section_html .= '</div>';
+            $section_html .= '</div>';
+            $section_html .= '</a>';
+            $section_html .= '</div>';
+        }
+        $section_html .= '</div>';
+        $section_html .= '</section>';
+
+        return $section_html;
+    }
+
+    function injectSections($content, $sections) {
+        if (empty($sections)) {
             return $content;
         }
 
         $paragraphs = explode('</p>', $content);
-        $count = count($paragraphs);
         
-        // Para evitar quebrar o layout, injeta no meio do texto, mas não muito no final.
-        $injection_point = min($injection_point, max(1, floor($count * 0.5)));
+        usort($sections, function($a, $b) {
+            return $a['point'] <=> $b['point'];
+        });
 
-        if ($count < $injection_point + 1) { 
-            return $content;
-        }
-        
-        // Constrói o bloco HTML dos posts relacionados
-        $related_posts_html = '<section class="related-posts-block my-5">';
-        $related_posts_html .= '<h4 class="related-posts-title">Leia Também</h4>';
-        $related_posts_html .= '<div class="row">';
-
-        foreach ($related_posts as $related_post) {
-            $related_post_url = BLOG_URL . '/post/' . htmlspecialchars($related_post['slug']);
-            $image_path = !empty($related_post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($related_post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
+        $offset = 0;
+        foreach ($sections as $section) {
+            $injection_point = $section['point'] + $offset;
             
-            $related_posts_html .= '<div class="col-md-4 mb-4">';
-            $related_posts_html .= '<a href="' . $related_post_url . '" class="related-post-link">';
-            $related_posts_html .= '<div class="card h-100 related-post-card">';
-            $related_posts_html .= '<img src="' . $image_path . '" class="card-img-top related-post-img" alt="' . htmlspecialchars($related_post['titulo']) . '">';
-            $related_posts_html .= '<div class="card-body d-flex flex-column">';
-            $related_posts_html .= '<div><span class="badge related-post-badge mb-2">' . htmlspecialchars($related_post['categoria_nome']) . '</span></div>';
-            $related_posts_html .= '<h6 class="card-title related-post-title mt-auto">' . htmlspecialchars($related_post['titulo']) . '</h6>';
-            $related_posts_html .= '</div>'; // fim card-body
-            $related_posts_html .= '</div>'; // fim card
-            $related_posts_html .= '</a>';
-            $related_posts_html .= '</div>'; // fim col
-        }
-        $related_posts_html .= '</div>'; // fim row
-        $related_posts_html .= '</section>'; // fim related-posts-block
+            $section_html = buildPostsSectionHtml($section['title'], $section['posts']);
 
-        array_splice($paragraphs, $injection_point, 0, $related_posts_html);
+            if (empty($section_html) || count($paragraphs) < $injection_point + 1) {
+                continue;
+            }
+
+            array_splice($paragraphs, $injection_point, 0, $section_html);
+            $offset++; 
+        }
 
         return implode('</p>', $paragraphs);
     }
@@ -204,7 +237,28 @@ include 'includes/header.php';
                     $content_to_display = $post['conteudo'];
                 }
                 
-                echo injectRelatedPosts($content_to_display, $related_posts);
+                $sections_to_inject = [];
+
+                $first_injection_point = 5;
+                $second_injection_point = 11;
+
+                if (!empty($related_posts)) {
+                    $sections_to_inject[] = [
+                        'title' => 'Leia Também',
+                        'posts' => $related_posts,
+                        'point' => $first_injection_point
+                    ];
+                }
+
+                if (!empty($latest_posts)) {
+                    $sections_to_inject[] = [
+                        'title' => 'Últimas do Blog',
+                        'posts' => $latest_posts,
+                        'point' => $second_injection_point
+                    ];
+                }
+
+                echo injectSections($content_to_display, $sections_to_inject);
                 ?>
             </div>
 
