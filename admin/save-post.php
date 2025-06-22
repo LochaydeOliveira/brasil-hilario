@@ -62,7 +62,7 @@ try {
     }
 
     // Validar dados
-    if (empty($titulo) || empty($slug) || empty($conteudo) || empty($resumo) || empty($categoria_id)) {
+    if (empty($titulo) || empty($slug) || empty($conteudo) || empty($categoria_id)) {
         throw new Exception("Todos os campos obrigatórios devem ser preenchidos.");
     }
 

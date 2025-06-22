@@ -168,6 +168,11 @@
             return $content;
         }
 
+        // Só tenta injetar se houver pelo menos um <p>
+        if (stripos($content, '</p>') === false) {
+            return $content;
+        }
+
         $paragraphs = explode('</p>', $content);
         
         usort($sections, function($a, $b) {
@@ -177,13 +182,10 @@
         $offset = 0;
         foreach ($sections as $section) {
             $injection_point = $section['point'] + $offset;
-            
             $section_html = buildPostsSectionHtml($section['title'], $section['posts']);
-
             if (empty($section_html) || count($paragraphs) < $injection_point + 1) {
                 continue;
             }
-
             array_splice($paragraphs, $injection_point, 0, $section_html);
             $offset++; 
         }
