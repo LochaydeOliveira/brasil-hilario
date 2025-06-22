@@ -5,7 +5,14 @@
     require_once 'includes/db.php';
     require_once 'config/config.php';
 
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    if (is_array($page)) {
+        $page = (int)reset($page);
+    } else {
+        $page = (int)$page;
+    }
+    $page = max(1, $page);
+
     $offset = ($page - 1) * POSTS_PER_PAGE;
 
 
