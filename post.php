@@ -141,6 +141,23 @@
             $categorias[] = $row;
         }
 
+        // Carregar todas as categorias
+        $todas_categorias = [];
+        $res = $conn->query("SELECT id, nome FROM categorias ORDER BY nome ASC");
+        while ($row = $res->fetch_assoc()) {
+            $todas_categorias[] = $row;
+        }
+
+        // Carregar categorias do post
+        $categorias_do_post = [];
+        $stmt = $conn->prepare("SELECT categoria_id FROM post_categorias WHERE post_id = ?");
+        $stmt->bind_param("i", $post['id']);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $categorias_do_post[] = $row['categoria_id'];
+        }
+
     } catch (Exception $e) {
         die("Erro: " . $e->getMessage());
     }
