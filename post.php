@@ -43,15 +43,19 @@
         $related_posts = [];
         if (isset($post['categoria_id'])) {
             $stmt_related = $conn->prepare("
-                SELECT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
+                SELECT DISTINCT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
                 FROM posts p
-                JOIN categorias c ON p.categoria_id = c.id
-                WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
+                JOIN post_categorias pc ON p.id = pc.post_id
+                JOIN categorias c ON pc.categoria_id = c.id
+                WHERE pc.categoria_id IN (" . implode(',', array_fill(0, count($categorias_do_post), '?')) . ")
+                  AND p.id != ?
+                  AND p.publicado = 1
                 ORDER BY RAND()
                 LIMIT 4
             ");
             if($stmt_related) {
-                $stmt_related->bind_param("ii", $post['categoria_id'], $post['id']);
+                $params = array_merge($categorias_do_post, [$post['id']]);
+                $stmt_related->bind_param(str_repeat('i', count($params)), ...$params);
                 $stmt_related->execute();
                 $result_related = $stmt_related->get_result();
                 while ($row = $result_related->fetch_assoc()) {
@@ -126,6 +130,16 @@
         $og_image = !empty($post['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($post['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-quadrada-svg.svg';
         $meta_description = $og_description;
         $meta_keywords = implode(', ', array_column($post['tags'], 'nome')) . ', ' . META_KEYWORDS;
+
+        // Busque as categorias do post
+        $stmt = $conn->prepare("SELECT c.* FROM categorias c JOIN post_categorias pc ON c.id = pc.categoria_id WHERE pc.post_id = ?");
+        $stmt->bind_param("i", $post['id']);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $categorias = [];
+        while ($row = $res->fetch_assoc()) {
+            $categorias[] = $row;
+        }
 
     } catch (Exception $e) {
         die("Erro: " . $e->getMessage());
