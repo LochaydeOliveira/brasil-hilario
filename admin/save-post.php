@@ -26,6 +26,7 @@ try {
     $categoria_id = (int)$_POST['categoria_id'];
     $publicado = isset($_POST['publicado']) ? 1 : 0;
     $tags = isset($_POST['tags']) ? array_map('trim', explode(',', $_POST['tags'])) : [];
+    $categorias = $_POST['categorias'] ?? [];
 
     // Processar imagem destacada
     $imagem_destacada = null;
@@ -151,6 +152,19 @@ try {
         $stmt = $conn->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
         $stmt->bind_param("ii", $id, $tag_id);
         $stmt->execute();
+    }
+
+    // Após inserir ou atualizar o post
+    $post_id = $id;
+    // Remove antigas
+    $conn->query("DELETE FROM post_categorias WHERE post_id = $post_id");
+    // Adiciona novas
+    if (!empty($categorias)) {
+        $stmt = $conn->prepare("INSERT INTO post_categorias (post_id, categoria_id) VALUES (?, ?)");
+        foreach ($categorias as $cat_id) {
+            $stmt->bind_param("ii", $post_id, $cat_id);
+            $stmt->execute();
+        }
     }
 
     $conn->commit();
