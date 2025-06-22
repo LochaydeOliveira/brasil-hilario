@@ -149,7 +149,7 @@
             $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
             $section_html .= '<div class="card h-100 related-post-card">';
             $section_html .= '<img src="' . $image_path . '" class="card-img-top related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
-            $section_html .= '<div class="card-body d-flex flex-column">';
+            $section_html .= '<div class="d-flex flex-column ">';
             $section_html .= '<div><span class="badge related-post-badge mb-2">' . htmlspecialchars($p['categoria_nome']) . '</span></div>';
             $section_html .= '<h6 class="card-title related-post-title mt-auto">' . htmlspecialchars($p['titulo']) . '</h6>';
             $section_html .= '</div>';
