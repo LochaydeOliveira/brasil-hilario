@@ -265,6 +265,197 @@ require_once 'config/config.php';
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v18.0"></script>
 </head>
 <body>
+
+    <div id="cookie-banner" class="cookie-banner" style="display: none;">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h5><i class="fas fa-cookie-bite me-2"></i>Política de Cookies</h5>
+                <p>Utilizamos cookies para melhorar sua experiência em nosso site, analisar o tráfego e personalizar conteúdo. Ao continuar navegando, você concorda com nossa <a href="<?php echo BLOG_URL; ?>/politica-de-privacidade" target="_blank">Política de Privacidade</a> e uso de cookies.</p>
+            </div>
+            <div class="cookie-buttons">
+                <button id="accept-cookies" class="btn btn-success btn-sm">
+                    <i class="fas fa-check me-1"></i>Aceitar Todos
+                </button>
+                <button id="reject-cookies" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-times me-1"></i>Recusar
+                </button>
+                <button id="customize-cookies" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-cog me-1"></i>Personalizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="cookieModal" tabindex="-1" aria-labelledby="cookieModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cookieModalLabel">
+                        <i class="fas fa-cog me-2"></i>Configurações de Cookies
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-4">Escolha quais tipos de cookies você permite que utilizemos:</p>
+                    
+                    <div class="cookie-option mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="essential-cookies" checked disabled>
+                            <label class="form-check-label" for="essential-cookies">
+                                <strong>Cookies Essenciais</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Necessários para o funcionamento básico do site. Não podem ser desativados.</small>
+                    </div>
+
+                    <div class="cookie-option mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="analytics-cookies">
+                            <label class="form-check-label" for="analytics-cookies">
+                                <strong>Cookies de Análise</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Nos ajudam a entender como os visitantes interagem com o site, coletando e relatando informações anonimamente.</small>
+                    </div>
+
+                    <div class="cookie-option mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="marketing-cookies">
+                            <label class="form-check-label" for="marketing-cookies">
+                                <strong>Cookies de Marketing</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Usados para rastrear visitantes em sites para exibir anúncios relevantes e envolventes.</small>
+                    </div>
+
+                    <div class="cookie-option mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="preference-cookies">
+                            <label class="form-check-label" for="preference-cookies">
+                                <strong>Cookies de Preferências</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Permitem que o site lembre informações que mudam a forma como o site se comporta ou se parece.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="save-cookie-preferences">
+                        <i class="fas fa-save me-1"></i>Salvar Preferências
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #0b8103 0%, #0a6b02 100%);
+            color: white;
+            z-index: 9999;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .cookie-text {
+            flex: 1;
+        }
+
+        .cookie-text h5 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .cookie-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .cookie-text a {
+            color: #ffc107;
+            text-decoration: underline;
+        }
+
+        .cookie-text a:hover {
+            color: #fff;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-option {
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+        }
+
+        .cookie-option .form-check-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .cookie-option small {
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cookie-buttons {
+                justify-content: center;
+            }
+
+            .cookie-text h5 {
+                font-size: 1rem;
+            }
+
+            .cookie-text p {
+                font-size: 0.85rem;
+            }
+        }
+
+        .cookie-banner.hidden {
+            display: none !important;
+        }
+    </style>
+
     <header class="bg-light shadow-sm">
         <nav class="navbar navbar-expand-lg navbar-light ht-custom">
             <div class="container bg-nav-custom">
@@ -363,4 +554,55 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializa as setas
     updateArrows();
 });
+</script>
+
+<!-- Google Analytics - Carregado apenas após consentimento -->
+<script>
+  // Função para carregar Google Analytics
+  function loadGoogleAnalytics() {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
+    document.head.appendChild(script);
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-M6BPB3MLZ2', {
+      'consent_mode': 'default',
+      'analytics_storage': 'denied'
+    });
+    
+    // Verificar consentimento existente
+    const consent = getCookieConsent();
+    if (consent && consent.analytics) {
+      gtag('consent', 'update', {
+        'analytics_storage': 'granted'
+      });
+    }
+  }
+  
+  // Função para verificar consentimento (definida aqui para uso imediato)
+  function getCookieConsent() {
+    const nameEQ = 'brasil_hilario_cookie_consent' + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) {
+        try {
+          return JSON.parse(c.substring(nameEQ.length, c.length));
+        } catch (e) {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+  
+  // Carregar GA apenas se já houver consentimento
+  const existingConsent = getCookieConsent();
+  if (existingConsent && existingConsent.analytics) {
+    loadGoogleAnalytics();
+  }
 </script>

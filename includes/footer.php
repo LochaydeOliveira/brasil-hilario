@@ -96,7 +96,201 @@
         });
     </script>
     
-    <!-- Custom JS -->
+
     <script src="<?php echo BLOG_PATH; ?>/assets/js/main.js"></script>
+
+
+    <script>
+        class CookieConsent {
+            constructor() {
+                this.cookieName = 'brasil_hilario_cookie_consent';
+                this.cookieExpiry = 365; // dias
+                this.banner = document.getElementById('cookie-banner');
+                this.modal = new bootstrap.Modal(document.getElementById('cookieModal'));
+                
+                this.init();
+            }
+
+            init() {
+                // Verificar se já existe consentimento
+                if (!this.getCookieConsent()) {
+                    this.showBanner();
+                } else {
+                    this.loadGoogleAnalytics();
+                }
+
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                // Botões do banner
+                document.getElementById('accept-cookies').addEventListener('click', () => {
+                    this.acceptAllCookies();
+                });
+
+                document.getElementById('reject-cookies').addEventListener('click', () => {
+                    this.rejectAllCookies();
+                });
+
+                document.getElementById('customize-cookies').addEventListener('click', () => {
+                    this.showCustomizeModal();
+                });
+
+                // Botão salvar do modal
+                document.getElementById('save-cookie-preferences').addEventListener('click', () => {
+                    this.saveCustomPreferences();
+                });
+            }
+
+            showBanner() {
+                if (this.banner) {
+                    this.banner.style.display = 'block';
+                }
+            }
+
+            hideBanner() {
+                if (this.banner) {
+                    this.banner.classList.add('hidden');
+                }
+            }
+
+            acceptAllCookies() {
+                const consent = {
+                    essential: true,
+                    analytics: true,
+                    marketing: true,
+                    preferences: true,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.setCookieConsent(consent);
+                this.hideBanner();
+                this.loadGoogleAnalytics();
+                this.showSuccessMessage('Cookies aceitos com sucesso!');
+            }
+
+            rejectAllCookies() {
+                const consent = {
+                    essential: true,
+                    analytics: false,
+                    marketing: false,
+                    preferences: false,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.setCookieConsent(consent);
+                this.hideBanner();
+                this.showSuccessMessage('Cookies não essenciais recusados.');
+            }
+
+            showCustomizeModal() {
+                const consent = this.getCookieConsent();
+                if (consent) {
+                    // Preencher checkboxes com valores salvos
+                    document.getElementById('analytics-cookies').checked = consent.analytics || false;
+                    document.getElementById('marketing-cookies').checked = consent.marketing || false;
+                    document.getElementById('preference-cookies').checked = consent.preferences || false;
+                }
+                
+                this.modal.show();
+            }
+
+            saveCustomPreferences() {
+                const consent = {
+                    essential: true,
+                    analytics: document.getElementById('analytics-cookies').checked,
+                    marketing: document.getElementById('marketing-cookies').checked,
+                    preferences: document.getElementById('preference-cookies').checked,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.setCookieConsent(consent);
+                this.hideBanner();
+                this.modal.hide();
+                
+                if (consent.analytics) {
+                    this.loadGoogleAnalytics();
+                }
+                
+                this.showSuccessMessage('Preferências de cookies salvas!');
+            }
+
+            getCookieConsent() {
+                const cookie = this.getCookie(this.cookieName);
+                if (cookie) {
+                    try {
+                        return JSON.parse(cookie);
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+
+            setCookieConsent(consent) {
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + this.cookieExpiry);
+                
+                const cookieValue = JSON.stringify(consent);
+                document.cookie = `${this.cookieName}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+            }
+
+            getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            loadGoogleAnalytics() {
+                const consent = this.getCookieConsent();
+                if (consent && consent.analytics) {
+                    // Google Analytics já está carregado no header, mas só será ativo se consentimento for dado
+                    if (typeof gtag !== 'undefined') {
+                        gtag('consent', 'update', {
+                            'analytics_storage': 'granted'
+                        });
+                    }
+                }
+            }
+
+            showSuccessMessage(message) {
+                // Criar toast de sucesso
+                const toastContainer = document.createElement('div');
+                toastContainer.className = 'position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '10000';
+                
+                toastContainer.innerHTML = `
+                    <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="fas fa-check-circle me-2"></i>${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(toastContainer);
+                
+                const toast = new bootstrap.Toast(toastContainer.querySelector('.toast'));
+                toast.show();
+                
+                // Remover toast após ser fechado
+                toastContainer.addEventListener('hidden.bs.toast', () => {
+                    document.body.removeChild(toastContainer);
+                });
+            }
+        }
+
+        // Inicializar quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            new CookieConsent();
+        });
+    </script>
 </body>
 </html>
