@@ -394,18 +394,15 @@ require_once 'config/config.php';
     <style>
         .cookie-banner {
             position: fixed;
-            bottom: 1.5rem;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             color: #222;
             z-index: 9999;
             box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1.5px 6px rgba(0,0,0,0.08);
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
             animation: fadeInCookie 0.5s ease-out;
-            max-width: 420px;
-            width: 95vw;
+            width: 100%;
             padding: 1.2rem 1.2rem 1rem 1.2rem;
         }
 
@@ -423,7 +420,7 @@ require_once 'config/config.php';
         .cookie-content {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.7rem;
         }
 
@@ -459,12 +456,13 @@ require_once 'config/config.php';
             gap: 0.5rem;
             flex-wrap: wrap;
             width: 100%;
+            justify-content: center;
         }
 
         .cookie-buttons .btn {
             font-size: 0.92rem;
             padding: 0.35rem 1.1rem;
-            border-radius: 0.5rem;
+            border-radius: 0
         }
 
         .cookie-buttons .btn-success {
