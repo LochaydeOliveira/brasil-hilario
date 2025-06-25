@@ -46,6 +46,7 @@
                         <li><a href="<?php echo BLOG_PATH; ?>/contato">Fale Conosco</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/privacidade">Política de Privacidade</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/termos">Termos de Uso</a></li>
+                        <li><a href="#" onclick="showCookieSettings(); return false;">Configurações de Cookies</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
@@ -249,11 +250,9 @@
             loadGoogleAnalytics() {
                 const consent = this.getCookieConsent();
                 if (consent && consent.analytics) {
-                    // Google Analytics já está carregado no header, mas só será ativo se consentimento for dado
-                    if (typeof gtag !== 'undefined') {
-                        gtag('consent', 'update', {
-                            'analytics_storage': 'granted'
-                        });
+                    // Usar a função global definida no header
+                    if (typeof loadGoogleAnalytics === 'function') {
+                        loadGoogleAnalytics();
                     }
                 }
             }
@@ -291,6 +290,39 @@
         document.addEventListener('DOMContentLoaded', () => {
             new CookieConsent();
         });
+
+        // Função global para mostrar configurações de cookies
+        function showCookieSettings() {
+            const modal = new bootstrap.Modal(document.getElementById('cookieModal'));
+            const consent = getCookieConsent();
+            
+            if (consent) {
+                // Preencher checkboxes com valores salvos
+                document.getElementById('analytics-cookies').checked = consent.analytics || false;
+                document.getElementById('marketing-cookies').checked = consent.marketing || false;
+                document.getElementById('preference-cookies').checked = consent.preferences || false;
+            }
+            
+            modal.show();
+        }
+
+        // Função global para verificar consentimento
+        function getCookieConsent() {
+            const nameEQ = 'brasil_hilario_cookie_consent' + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) {
+                    try {
+                        return JSON.parse(c.substring(nameEQ.length, c.length));
+                    } catch (e) {
+                        return null;
+                    }
+                }
+            }
+            return null;
+        }
     </script>
 </body>
 </html>

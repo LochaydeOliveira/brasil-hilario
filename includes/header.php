@@ -26,16 +26,56 @@ require_once 'config/config.php';
 <html lang="pt-BR">
 <head>
 
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2"></script>
+<!-- Google Analytics - Carregado apenas após consentimento -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-M6BPB3MLZ2');
+  // Função para carregar Google Analytics
+  function loadGoogleAnalytics() {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
+    document.head.appendChild(script);
+    
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-M6BPB3MLZ2', {
+      'consent_mode': 'default',
+      'analytics_storage': 'denied'
+    });
+    
+    // Verificar consentimento existente
+    const consent = getCookieConsent();
+    if (consent && consent.analytics) {
+      gtag('consent', 'update', {
+        'analytics_storage': 'granted'
+      });
+    }
+  }
+  
+  // Função para verificar consentimento (definida aqui para uso imediato)
+  function getCookieConsent() {
+    const nameEQ = 'brasil_hilario_cookie_consent' + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) {
+        try {
+          return JSON.parse(c.substring(nameEQ.length, c.length));
+        } catch (e) {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+  
+  // Carregar GA apenas se já houver consentimento
+  const existingConsent = getCookieConsent();
+  if (existingConsent && existingConsent.analytics) {
+    loadGoogleAnalytics();
+  }
 </script>
-
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,6 +303,7 @@ require_once 'config/config.php';
 
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v18.0"></script>
+
 </head>
 <body>
 
@@ -353,35 +394,37 @@ require_once 'config/config.php';
     <style>
         .cookie-banner {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #0b8103 0%, #0a6b02 100%);
-            color: white;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #222;
             z-index: 9999;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1.5px 6px rgba(0,0,0,0.08);
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+            animation: fadeInCookie 0.5s ease-out;
+            max-width: 420px;
+            width: 95vw;
+            padding: 1.2rem 1.2rem 1rem 1.2rem;
         }
 
-        @keyframes slideUp {
+        @keyframes fadeInCookie {
             from {
-                transform: translateY(100%);
                 opacity: 0;
+                transform: translateX(-50%) translateY(30px);
             }
             to {
-                transform: translateY(0);
                 opacity: 1;
+                transform: translateX(-50%) translateY(0);
             }
         }
 
         .cookie-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.7rem;
         }
 
         .cookie-text {
@@ -389,30 +432,63 @@ require_once 'config/config.php';
         }
 
         .cookie-text h5 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.1rem;
+            margin: 0 0 0.3rem 0;
+            font-size: 1rem;
             font-weight: 600;
+            color: #222;
         }
 
         .cookie-text p {
             margin: 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #444;
         }
 
         .cookie-text a {
-            color: #ffc107;
+            color: #0b8103;
             text-decoration: underline;
         }
 
         .cookie-text a:hover {
-            color: #fff;
+            color: #0a6b02;
         }
 
         .cookie-buttons {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .cookie-buttons .btn {
+            font-size: 0.92rem;
+            padding: 0.35rem 1.1rem;
+            border-radius: 0.5rem;
+        }
+
+        .cookie-buttons .btn-success {
+            background: #0b8103;
+            border: none;
+        }
+        .cookie-buttons .btn-success:hover {
+            background: #0a6b02;
+        }
+        .cookie-buttons .btn-outline-secondary {
+            border-color: #bbb;
+            color: #444;
+        }
+        .cookie-buttons .btn-outline-secondary:hover {
+            background: #f3f3f3;
+            color: #222;
+        }
+        .cookie-buttons .btn-outline-primary {
+            border-color: #0b8103;
+            color: #0b8103;
+        }
+        .cookie-buttons .btn-outline-primary:hover {
+            background: #e8f5e9;
+            color: #0a6b02;
         }
 
         .cookie-option {
@@ -432,22 +508,25 @@ require_once 'config/config.php';
             margin-top: 0.25rem;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
+            .cookie-banner {
+                bottom: 0.5rem;
+                padding: 0.8rem 0.7rem 0.7rem 0.7rem;
+                border-radius: 0.7rem;
+                max-width: 98vw;
+            }
             .cookie-content {
-                flex-direction: column;
-                text-align: center;
+                gap: 0.5rem;
             }
-
-            .cookie-buttons {
-                justify-content: center;
-            }
-
             .cookie-text h5 {
-                font-size: 1rem;
+                font-size: 0.98rem;
             }
-
             .cookie-text p {
-                font-size: 0.85rem;
+                font-size: 0.87rem;
+            }
+            .cookie-buttons .btn {
+                font-size: 0.87rem;
+                padding: 0.32rem 0.7rem;
             }
         }
 
@@ -554,55 +633,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializa as setas
     updateArrows();
 });
-</script>
-
-<!-- Google Analytics - Carregado apenas após consentimento -->
-<script>
-  // Função para carregar Google Analytics
-  function loadGoogleAnalytics() {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
-    document.head.appendChild(script);
-    
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-M6BPB3MLZ2', {
-      'consent_mode': 'default',
-      'analytics_storage': 'denied'
-    });
-    
-    // Verificar consentimento existente
-    const consent = getCookieConsent();
-    if (consent && consent.analytics) {
-      gtag('consent', 'update', {
-        'analytics_storage': 'granted'
-      });
-    }
-  }
-  
-  // Função para verificar consentimento (definida aqui para uso imediato)
-  function getCookieConsent() {
-    const nameEQ = 'brasil_hilario_cookie_consent' + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) {
-        try {
-          return JSON.parse(c.substring(nameEQ.length, c.length));
-        } catch (e) {
-          return null;
-        }
-      }
-    }
-    return null;
-  }
-  
-  // Carregar GA apenas se já houver consentimento
-  const existingConsent = getCookieConsent();
-  if (existingConsent && existingConsent.analytics) {
-    loadGoogleAnalytics();
-  }
 </script>
