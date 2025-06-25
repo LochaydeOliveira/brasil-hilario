@@ -507,11 +507,27 @@ require_once 'config/config.php';
         }
 
         @media (max-width: 600px) {
+            .cookie-buttons {
+                margin: 0 0 0 20px;
+            }
             .cookie-banner {
-                bottom: 0.5rem;
+                position: fixed;
+                bottom: 0;
+                left: 44%;
+                transform: translateX(-50%);
+                background: #fff;
+                color: #222;
+                z-index: 9999;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1.5px 6px rgba(0,0,0,0.08);
+                animation: fadeInCookie 0.5s ease-out;
+                width: 100%;
+                padding: 1.2rem 1.2rem 1rem 1.2rem;
+                max-width: 27rem;
+            }
+            .cookie-banner {
+                bottom: 0;
                 padding: 0.8rem 0.7rem 0.7rem 0.7rem;
-                border-radius: 0.7rem;
-                max-width: 98vw;
+                border-radius: 0;
             }
             .cookie-content {
                 gap: 0.5rem;
@@ -521,6 +537,7 @@ require_once 'config/config.php';
             }
             .cookie-text p {
                 font-size: 0.87rem;
+                max-width: 20rem;
             }
             .cookie-buttons .btn {
                 font-size: 0.87rem;
