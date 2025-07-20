@@ -218,7 +218,7 @@ include 'includes/header.php';
             <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
             <p class="lead">
-                por <a href="#">Hilário Brasileiro</a>
+                por <a href="#">Victor Hugo</a>
             </p>
 
             <hr>

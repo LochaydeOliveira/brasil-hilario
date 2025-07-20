@@ -1,7 +1,7 @@
 <?php
 // Configurações do Banco de Dados
 define('DB_HOST', 'localhost'); // Tentando com localhost primeiro
-define('DB_NAME', 'paymen58_blog_adsense');
+define('DB_NAME', 'paymen58_brasil_hilario');
 define('DB_USER', 'paymen58');
 define('DB_PASS', 'u4q7+B6ly)obP_gxN9sNe');
 

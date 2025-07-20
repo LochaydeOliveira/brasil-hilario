@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$db = "paymen58_blog_adsense";
+$db = "paymen58_brasil_hilario";
 $user = "paymen58";
 $pass = "u4q7+B6ly)obP_gxN9sNe";
 
