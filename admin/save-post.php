@@ -77,10 +77,26 @@ try {
     }
 
     if ($id) {
+        // Buscar post atual para dados antigos (autor e imagem)
+        $stmt_post = $conn->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
+        $stmt_post->bind_param("i", $id);
+        $stmt_post->execute();
+        $result_post = $stmt_post->get_result();
+        $post = $result_post->fetch_assoc();
+
+        if (!$post) {
+            throw new Exception("Post não encontrado para edição.");
+        }
+
         // Verifica se o usuário tem permissão para editar o post
+        if (!can_edit_post($post['autor_id'])) {
+            throw new Exception("Você não tem permissão para editar este post.");
+        }
+
         if ($_SESSION['usuario_tipo'] === 'admin') {
+            // Se admin, pode mudar o autor, senão mantém o autor atual
             $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $post['autor_id'];
-        
+
             // Valida o autor
             $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
             $stmt->bind_param("i", $autor_id);
@@ -89,7 +105,7 @@ try {
             if (!$result->fetch_assoc()) {
                 throw new Exception("O autor selecionado é inválido.");
             }
-        
+
             $stmt = $conn->prepare("
                 UPDATE posts 
                 SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
@@ -98,6 +114,7 @@ try {
             ");
             $stmt->bind_param("ssssiisii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id);
         } else {
+            // Se não for admin, mantém autor atual
             $stmt = $conn->prepare("
                 UPDATE posts 
                 SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
@@ -106,12 +123,22 @@ try {
             ");
             $stmt->bind_param("ssssiisi", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
         }
-        
+
+        $stmt->execute();
+
+        // Se uma nova imagem foi enviada, remover a antiga
+        if ($imagem_destacada && $post['imagem_destacada']) {
+            $old_image_path = '../uploads/images/' . $post['imagem_destacada'];
+            if (file_exists($old_image_path)) {
+                unlink($old_image_path);
+            }
+        }
 
         // Remover tags antigas
         $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
+
     } else {
         // Inserir novo post
         $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $_SESSION['usuario_id'];
@@ -131,7 +158,8 @@ try {
         ");
         $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $autor_id);
         $stmt->execute();
-        
+
+        $id = $conn->insert_id;
     }
 
     // Processar tags
