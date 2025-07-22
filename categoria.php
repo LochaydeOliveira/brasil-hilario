@@ -41,13 +41,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $posts = $result->fetch_all(MYSQLI_ASSOC);
 
-// Se não houver posts, redirecionar para a página inicial
+
 if (empty($posts)) {
     header('Location: ' . BLOG_URL);
     exit;
 }
 
-// Definir meta tags para SEO
+
 $og_title = "Categoria: " . $categoria['nome'] . " - " . BLOG_TITLE;
 $meta_description = "Posts sobre " . $categoria['nome'] . " no " . BLOG_TITLE;
 $og_url = BLOG_URL . "/categoria/" . $categoria_slug;
@@ -100,7 +100,7 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <!-- Sidebar -->
+
         <div class="col-lg-4">
             <?php include 'includes/sidebar.php'; ?>
         </div>
@@ -108,9 +108,9 @@ include 'includes/header.php';
 </div>
 
 <?php
-// Incluir o rodapé
+
 include 'includes/footer.php';
 
-// Enviar o buffer de saída
+
 ob_end_flush();
 ?> 

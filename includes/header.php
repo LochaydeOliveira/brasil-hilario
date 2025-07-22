@@ -616,20 +616,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const rightArrow = document.querySelector('.arrow.right');
 
     function updateArrows() {
-        // Só mostra as setas se houver overflow (scroll possível)
+
         const canScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth + 2;
         if (!canScroll) {
             leftArrow.style.display = 'none';
             rightArrow.style.display = 'none';
             return;
         }
-        // Seta esquerda só aparece se já deslizou
+
         leftArrow.style.display = (scrollContainer.scrollLeft > 2) ? '' : 'none';
-        // Seta direita só aparece se ainda há mais para deslizar
+
         rightArrow.style.display = (scrollContainer.scrollLeft < scrollContainer.scrollWidth - scrollContainer.clientWidth - 2) ? '' : 'none';
     }
 
-    // Atualiza as setas ao rolar, redimensionar e ao carregar fontes
+
     scrollContainer.addEventListener('scroll', updateArrows);
     window.addEventListener('resize', updateArrows);
 

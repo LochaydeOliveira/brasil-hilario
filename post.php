@@ -39,6 +39,18 @@
             header('Location: ' . BLOG_URL . '/404.php');
         }
 
+        // Buscar nome do autor
+        $autor_nome = 'Autor desconhecido';
+        if (!empty($post['autor_id'])) {
+            $stmt_autor = $conn->prepare("SELECT nome FROM usuarios WHERE id = ? LIMIT 1");
+            $stmt_autor->bind_param("i", $post['autor_id']);
+            $stmt_autor->execute();
+            $result_autor = $stmt_autor->get_result();
+            if ($row_autor = $result_autor->fetch_assoc()) {
+                $autor_nome = $row_autor['nome'];
+            }
+        }
+
 
         $related_posts = [];
         if (isset($post['categoria_id'])) {
@@ -218,7 +230,7 @@ include 'includes/header.php';
             <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
             <p class="lead">
-                por <a href="#">Victor Hugo</a>
+                por <a href="#"><?php echo htmlspecialchars($autor_nome); ?></a>
             </p>
 
             <hr>
