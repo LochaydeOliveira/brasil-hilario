@@ -21,6 +21,8 @@ if (!isset($_GET['id'])) {
 
 $post_id = (int)$_GET['id'];
 
+
+
 try {
     // Busca o post
     $stmt = $conn->prepare("SELECT * FROM posts WHERE id = ?");
@@ -34,17 +36,26 @@ try {
         exit;
     }
 
-    // Verifica se o usuário tem permissão para editar o post
+    // Verifica permissão de edição
     if (!can_edit_post($post['autor_id'])) {
         showError('Você não tem permissão para editar este post.');
         exit;
     }
 
-    // Busca as categorias
+    // Busca categorias
     $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
     $stmt->execute();
     $result = $stmt->get_result();
     $categories = $result->fetch_all(MYSQLI_ASSOC);
+
+    // Busca usuários ativos (somente se admin)
+    $usuarios = [];
+    if ($_SESSION['usuario_tipo'] === 'admin') {
+        $stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+    }
 
     // Busca tags do post
     $stmt = $conn->prepare("
@@ -59,9 +70,12 @@ try {
     $tags_data = $result->fetch_all(MYSQLI_ASSOC);
     $tags = array_column($tags_data, 'nome');
     $tags_string = implode(', ', $tags);
+
 } catch (Exception $e) {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
+
+
 
 $page_title = getPageTitle();
 include 'includes/header.php';
@@ -132,6 +146,23 @@ include 'includes/header.php';
                         <?php endforeach; ?>
                     </select>
                 </div>
+
+                <?php if ($_SESSION['usuario_tipo'] === 'admin'): ?>
+                    <div class="mb-3">
+                        <label for="autor_id" class="form-label titles-form-adm">Autor do Post</label>
+                        <select class="form-select" id="autor_id" name="autor_id" required>
+                            <option value="">Selecione o autor</option>
+                            <?php foreach ($usuarios as $usuario): ?>
+                                <option value="<?php echo $usuario['id']; ?>" <?php echo ($post['autor_id'] == $usuario['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($usuario['nome']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                <?php else: ?>
+                    <input type="hidden" name="autor_id" value="<?php echo $post['autor_id']; ?>">
+                <?php endif; ?>
+
 
                 <div class="mb-3">
                     <label for="content" class="form-label titles-form-adm">Conteúdo</label>

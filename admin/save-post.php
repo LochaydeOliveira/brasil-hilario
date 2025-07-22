@@ -78,33 +78,35 @@ try {
 
     if ($id) {
         // Verifica se o usuário tem permissão para editar o post
-        $stmt = $conn->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $post = $result->fetch_assoc();
+        if ($_SESSION['usuario_tipo'] === 'admin') {
+            $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $post['autor_id'];
         
-        if (!$post || !can_edit_post($post['autor_id'])) {
-            throw new Exception("Você não tem permissão para editar este post.");
-        }
-
-        // Se uma nova imagem foi enviada, remover a antiga
-        if ($imagem_destacada && $post['imagem_destacada']) {
-            $old_image_path = '../uploads/images/' . $post['imagem_destacada'];
-            if (file_exists($old_image_path)) {
-                unlink($old_image_path);
+            // Valida o autor
+            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
+            $stmt->bind_param("i", $autor_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if (!$result->fetch_assoc()) {
+                throw new Exception("O autor selecionado é inválido.");
             }
+        
+            $stmt = $conn->prepare("
+                UPDATE posts 
+                SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
+                    imagem_destacada = COALESCE(?, imagem_destacada), autor_id = ?, atualizado_em = NOW()
+                WHERE id = ?
+            ");
+            $stmt->bind_param("ssssiisii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id);
+        } else {
+            $stmt = $conn->prepare("
+                UPDATE posts 
+                SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
+                    imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
+                WHERE id = ?
+            ");
+            $stmt->bind_param("ssssiisi", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
         }
-
-        // Atualizar post existente
-        $stmt = $conn->prepare("
-            UPDATE posts 
-            SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
-                imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
-            WHERE id = ?
-        ");
-        $stmt->bind_param("ssssiisi", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
-        $stmt->execute();
+        
 
         // Remover tags antigas
         $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
@@ -112,14 +114,24 @@ try {
         $stmt->execute();
     } else {
         // Inserir novo post
-        $autor_id = $_SESSION['usuario_id'];
+        $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $_SESSION['usuario_id'];
+
+        // Verifica se o ID do autor é válido
+        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
+        $stmt->bind_param("i", $autor_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (!$result->fetch_assoc()) {
+            throw new Exception("O autor selecionado é inválido.");
+        }
+        
         $stmt = $conn->prepare("
             INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
         $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $autor_id);
         $stmt->execute();
-        $id = $conn->insert_id;
+        
     }
 
     // Processar tags

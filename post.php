@@ -229,9 +229,16 @@ include 'includes/header.php';
 
             <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
-            <p class="lead">
-                por <a href="#"><?php echo htmlspecialchars($autor_nome); ?></a>
-            </p>
+            <?php if (!empty($post['autor_id'])): ?>
+                <p class="lead">
+                    por <a href="<?php echo BLOG_URL; ?>/autor/<?php echo $post['autor_id']; ?>">
+                        <?php echo htmlspecialchars($autor_nome); ?>
+                    </a>
+                </p>
+            <?php else: ?>
+                <p class="lead">por <?php echo htmlspecialchars($autor_nome); ?></p>
+            <?php endif; ?>
+
 
             <hr>
 

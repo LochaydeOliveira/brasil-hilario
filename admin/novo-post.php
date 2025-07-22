@@ -80,6 +80,34 @@ include 'includes/header.php';
                     </select>
                 </div>
 
+
+
+                <?php
+                // Buscar usuários do tipo 'admin', 'editor' ou 'autor'
+                $usuarios = [];
+                try {
+                    $stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+                } catch (Exception $e) {
+                    echo "<div class='alert alert-danger'>Erro ao carregar usuários: " . $e->getMessage() . "</div>";
+                }
+                ?>
+
+                <div class="mb-3">
+                    <label for="autor_id" class="form-label titles-form-adm">Autor do Post</label>
+                    <select class="form-select" id="autor_id" name="autor_id" required>
+                        <option value="">Selecione o autor</option>
+                        <?php foreach ($usuarios as $usuario): ?>
+                            <option value="<?php echo $usuario['id']; ?>">
+                                <?php echo htmlspecialchars($usuario['nome']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+
                 <div class="mb-3">
                     <label for="content" class="form-label titles-form-adm">Conteúdo</label>
                     <textarea id="editor" name="conteudo"></textarea>
