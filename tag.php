@@ -1,87 +1,84 @@
 <?php
-    require_once 'config/config.php';
-    require_once 'includes/db.php';
-    require_once 'includes/functions.php';
+require_once 'config/config.php';
+require_once 'includes/db.php'; // Deve inicializar $pdo
+require_once 'includes/functions.php';
 
-    // Verificar se o slug da tag foi fornecido
-    $tag_slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+// Verificar se o slug da tag foi fornecido
+$tag_slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 
-    if (empty($tag_slug)) {
-        header('Location: ' . BLOG_URL);
-        exit;
-    }
+if (empty($tag_slug)) {
+    header('Location: ' . BLOG_URL);
+    exit;
+}
 
-    // Buscar a tag
-    $stmt = $conn->prepare("SELECT * FROM tags WHERE slug = ?");
-    $stmt->bind_param("s", $tag_slug);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $tag = $result->fetch_assoc();
-    $stmt->close();
+// Buscar a tag
+$stmt = $pdo->prepare("SELECT * FROM tags WHERE slug = ?");
+$stmt->execute([$tag_slug]);
+$tag = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$tag) {
-        header('Location: ' . BLOG_URL . '/404.php');
-        exit;
-    }
+if (!$tag) {
+    header('Location: ' . BLOG_URL . '/404.php');
+    exit;
+}
 
-    // Configuração da paginação
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    $posts_per_page = POSTS_PER_PAGE;
-    $offset = ($page - 1) * $posts_per_page;
+// Configuração da paginação
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$posts_per_page = POSTS_PER_PAGE;
+$offset = ($page - 1) * $posts_per_page;
 
-    // Buscar total de posts da tag
-    $stmt = $conn->prepare("
-        SELECT COUNT(DISTINCT p.id) as total
-        FROM posts p
-        JOIN post_tags pt ON p.id = pt.post_id
-        WHERE pt.tag_id = ? AND p.publicado = 1
-    ");
-    $stmt->bind_param("i", $tag['id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_posts = $result->fetch_assoc()['total'];
-    $total_pages = ceil($total_posts / $posts_per_page);
-    $stmt->close();
+// Buscar total de posts da tag
+$stmt = $pdo->prepare("
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM posts p
+    JOIN post_tags pt ON p.id = pt.post_id
+    WHERE pt.tag_id = ? AND p.publicado = 1
+");
+$stmt->execute([$tag['id']]);
+$total_posts = $stmt->fetchColumn();
+$total_pages = ceil($total_posts / $posts_per_page);
 
-    // Buscar posts da tag
-    $stmt = $conn->prepare("
-        SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
-            GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) SEPARATOR ',') as tags_data
-        FROM posts p
-        JOIN categorias c ON p.categoria_id = c.id
-        JOIN post_tags pt ON p.id = pt.post_id
-        LEFT JOIN post_tags pt2 ON p.id = pt2.post_id
-        LEFT JOIN tags t ON pt2.tag_id = t.id
-        WHERE pt.tag_id = ? AND p.publicado = 1
-        GROUP BY p.id
-        ORDER BY p.criado_em DESC
-        LIMIT ? OFFSET ?
-    ");
-    $stmt->bind_param("iii", $tag['id'], $posts_per_page, $offset);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $posts = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
+// Buscar posts da tag
+$stmt = $pdo->prepare("
+    SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
+        GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug) SEPARATOR ',') as tags_data
+    FROM posts p
+    JOIN categorias c ON p.categoria_id = c.id
+    JOIN post_tags pt ON p.id = pt.post_id
+    LEFT JOIN post_tags pt2 ON p.id = pt2.post_id
+    LEFT JOIN tags t ON pt2.tag_id = t.id
+    WHERE pt.tag_id = ? AND p.publicado = 1
+    GROUP BY p.id
+    ORDER BY p.criado_em DESC
+    LIMIT :limit OFFSET :offset
+");
 
-    // Processar tags para cada post
-    foreach ($posts as &$post) {
-        $post['tags'] = [];
-        if (!empty($post['tags_data'])) {
-            $tags_array = explode(',', $post['tags_data']);
-            foreach ($tags_array as $tag_data) {
-                list($id, $nome, $tag_slug) = explode(':', $tag_data);
-                $post['tags'][] = [
-                    'id' => $id,
-                    'nome' => $nome,
-                    'slug' => $tag_slug
-                ];
-            }
+// Bind dos parâmetros numéricos requer bindValue com tipo PDO::PARAM_INT
+$stmt->bindValue(':limit', $posts_per_page, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->bindValue(1, $tag['id'], PDO::PARAM_INT); // O primeiro parâmetro posicional
+
+$stmt->execute();
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Processar tags para cada post
+foreach ($posts as &$post) {
+    $post['tags'] = [];
+    if (!empty($post['tags_data'])) {
+        $tags_array = explode(',', $post['tags_data']);
+        foreach ($tags_array as $tag_data) {
+            list($id, $nome, $tag_slug) = explode(':', $tag_data);
+            $post['tags'][] = [
+                'id' => $id,
+                'nome' => $nome,
+                'slug' => $tag_slug
+            ];
         }
-        unset($post['tags_data']);
     }
+    unset($post['tags_data']);
+}
 
-    // Incluir o cabeçalho
-    include 'includes/header.php';
+// Incluir o cabeçalho
+include 'includes/header.php';
 ?>
 
 <div class="container mt-4">
@@ -140,7 +137,7 @@
                         <ul class="pagination justify-content-center">
                             <?php if ($page > 1): ?>
                                 <li class="page-item">
-                                    <a class="page-link" href="?slug=<?php echo $tag_slug; ?>&page=<?php echo $page - 1; ?>">
+                                    <a class="page-link" href="?slug=<?php echo urlencode($tag_slug); ?>&page=<?php echo $page - 1; ?>">
                                         Anterior
                                     </a>
                                 </li>
@@ -148,7 +145,7 @@
                             
                             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                 <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?slug=<?php echo $tag_slug; ?>&page=<?php echo $i; ?>">
+                                    <a class="page-link" href="?slug=<?php echo urlencode($tag_slug); ?>&page=<?php echo $i; ?>">
                                         <?php echo $i; ?>
                                     </a>
                                 </li>
@@ -156,7 +153,7 @@
                             
                             <?php if ($page < $total_pages): ?>
                                 <li class="page-item">
-                                    <a class="page-link" href="?slug=<?php echo $tag_slug; ?>&page=<?php echo $page + 1; ?>">
+                                    <a class="page-link" href="?slug=<?php echo urlencode($tag_slug); ?>&page=<?php echo $page + 1; ?>">
                                         Próxima
                                     </a>
                                 </li>
