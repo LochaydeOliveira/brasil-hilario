@@ -6,7 +6,7 @@ ob_start();
 session_start();
 
 require_once 'config/config.php';
-require_once 'config/database.php';
+require_once 'config/database.php'; // Aqui sua conexão PDO deve estar disponível na variável $pdo
 require_once 'config/search.php';
 require_once 'includes/header.php';
 
@@ -27,54 +27,49 @@ $current_page = max(1, $current_page);
 
 // Função para buscar posts
 function search_posts($term, $page = 1) {
-    global $conn;
-    
+    global $pdo;
+
     try {
-        // Verifica se a conexão está ativa
-        if (!$conn) {
+        if (!$pdo) {
             throw new Exception("Erro: Conexão com o banco de dados não está disponível");
         }
 
-        // Verifica se a conexão está funcionando
-        if (!$conn->ping()) {
-            throw new Exception("Erro: Conexão com o banco de dados perdida");
-        }
-
-        $term = '%' . $term . '%';
+        $term_wildcard = '%' . $term . '%';
         $offset = ($page - 1) * SEARCH_RESULTS_PER_PAGE;
         $limit = SEARCH_RESULTS_PER_PAGE;
-        
-        // Primeiro, conta o total de resultados
+
+        // Contar total de resultados
         $count_sql = "SELECT COUNT(*) as total 
-                     FROM posts p 
-                     WHERE p.publicado = 1 
-                     AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)";
-                     
-        $count_stmt = $conn->prepare($count_sql);
-        $count_stmt->bind_param('sss', $term, $term, $term);
-        $count_stmt->execute();
-        $total_results = $count_stmt->get_result()->fetch_assoc()['total'];
-        
-        // Depois, busca os resultados da página atual
+                      FROM posts p 
+                      WHERE p.publicado = 1 
+                        AND (p.titulo LIKE :term OR p.conteudo LIKE :term OR p.resumo LIKE :term)";
+        $count_stmt = $pdo->prepare($count_sql);
+        $count_stmt->execute([':term' => $term_wildcard]);
+        $total_results = $count_stmt->fetchColumn();
+
+        // Buscar resultados da página atual
         $sql = "SELECT p.*, c.nome as categoria_nome, u.nome as autor_nome 
                 FROM posts p 
                 LEFT JOIN categorias c ON p.categoria_id = c.id 
                 LEFT JOIN usuarios u ON p.autor_id = u.id 
                 WHERE p.publicado = 1 
-                AND (p.titulo LIKE ? OR p.conteudo LIKE ? OR p.resumo LIKE ?)
+                  AND (p.titulo LIKE :term OR p.conteudo LIKE :term OR p.resumo LIKE :term)
                 ORDER BY p.data_publicacao DESC
-                LIMIT ? OFFSET ?";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssii', $term, $term, $term, $limit, $offset);
+                LIMIT :limit OFFSET :offset";
+
+        $stmt = $pdo->prepare($sql);
+        // Bind dos parâmetros, PDO não permite bind direto em LIMIT e OFFSET, então bindValue com tipo INT é usado
+        $stmt->bindValue(':term', $term_wildcard, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $posts = $result->fetch_all(MYSQLI_ASSOC);
-        
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return [
             'posts' => $posts,
             'total' => $total_results
         ];
+
     } catch (Exception $e) {
         error_log("Erro na busca: " . $e->getMessage());
         echo "<div class='alert alert-danger'>";
@@ -185,4 +180,4 @@ $suggestions = get_search_suggestions($search_term);
     <?php endif; ?>
 </div>
 
-<?php require_once 'includes/footer.php'; ?> 
+<?php require_once 'includes/footer.php'; ?>

@@ -1,36 +1,31 @@
 <?php
 
-    ob_start();
+ob_start();
 
-    require_once 'includes/db.php';
-    require_once 'config/config.php';
+require_once 'includes/db.php';  // Deve definir $pdo
+require_once 'config/config.php';
 
+$request_uri = strtok($_SERVER["REQUEST_URI"], '?');
+preg_match('/\/(\d+)$/', $request_uri, $matches);
+$page_from_url = !empty($matches[1]) ? (int)$matches[1] : 0;
+$page_from_get = isset($_GET['page']) ? (int)($_GET['page'][0] ?? $_GET['page']) : 0;
 
-    $request_uri = strtok($_SERVER["REQUEST_URI"], '?');
-    preg_match('/\/(\d+)$/', $request_uri, $matches);
-    $page_from_url = !empty($matches[1]) ? (int)$matches[1] : 0;
-    $page_from_get = isset($_GET['page']) ? (int)($_GET['page'][0] ?? $_GET['page']) : 0;
+$page = max(1, $page_from_url, $page_from_get);
+$offset = ($page - 1) * POSTS_PER_PAGE;
 
-    $page = max(1, $page_from_url, $page_from_get);
-
-    $offset = ($page - 1) * POSTS_PER_PAGE;
-
-
-    include 'includes/header.php';
-
+include 'includes/header.php';
 
 ?>
-
-
 
 <div class="row">
 
     <div class="col-lg-8">
         <?php
         try {
-
             $limit = POSTS_PER_PAGE;
-            $stmt = $conn->prepare("
+
+            // Consulta principal
+            $sql = "
                 SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, t_grouped.tags_data
                 FROM posts p 
                 JOIN categorias c ON p.categoria_id = c.id 
@@ -42,14 +37,16 @@
                 ) as t_grouped ON p.id = t_grouped.post_id
                 WHERE p.publicado = 1
                 ORDER BY p.data_publicacao DESC 
-                LIMIT ? OFFSET ?
-            ");
-            $stmt->bind_param("ii", $limit, $offset);
+                LIMIT :limit OFFSET :offset
+            ";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $posts = $result->fetch_all(MYSQLI_ASSOC);
+            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+            // Tratamento das tags
             foreach ($posts as $key => $post_item) {
                 $posts[$key]['tags'] = [];
                 if (!empty($post_item['tags_data'])) {
@@ -66,12 +63,10 @@
                 unset($posts[$key]['tags_data']);
             }
 
-
-            $stmt = $conn->prepare("SELECT COUNT(id) as total FROM posts WHERE publicado = 1");
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            $total_posts = $row['total'];
+            // Contar total de posts para paginação
+            $count_stmt = $pdo->prepare("SELECT COUNT(id) as total FROM posts WHERE publicado = 1");
+            $count_stmt->execute();
+            $total_posts = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
             $total_pages = ceil($total_posts / POSTS_PER_PAGE);
 
             if (empty($posts)) {
@@ -81,7 +76,7 @@
                     <article class="blog-post mb-4" data-aos="fade-up">
                         <?php if (!empty($post['imagem_destacada'])): ?>
                             <div class="post-image mb-3">
-                                <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
+                                <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>">
                                     <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                          class="img-fluid" 
                                          alt="<?php echo htmlspecialchars($post['titulo']); ?>"
@@ -91,7 +86,7 @@
                         <?php endif; ?>
 
                         <h2 class="display-6 fw-bold mb-3">
-                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none text-dark">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="text-decoration-none text-dark">
                                 <?php echo htmlspecialchars($post['titulo']); ?>
                             </a>
                         </h2>
@@ -118,10 +113,10 @@
                         <?php endif; ?>
                         
                         <div class="post-excerpt mb-3">
-                            <?php echo $post['resumo']; ?>
+                            <?php echo htmlspecialchars($post['resumo']); ?>
                         </div>
                         
-                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="lead">
+                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="lead">
                             Ler mais
                         </a>
                     </article>
