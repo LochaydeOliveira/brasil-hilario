@@ -29,6 +29,10 @@ require_once 'config/config.php';
 <html lang="pt-BR">
 <head>
 
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-<?php echo $adsense_client_id; ?>"
+     crossorigin="anonymous">
+</script>
+
 
 <script>
 
