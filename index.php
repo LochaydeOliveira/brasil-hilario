@@ -168,7 +168,6 @@
         ?>
     </div>
 
-
     <div class="col-lg-4">
         <?php include 'includes/sidebar.php'; ?>
     </div>

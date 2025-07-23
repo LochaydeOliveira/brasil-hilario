@@ -1,34 +1,34 @@
 <?php
-// Buscar últimas postagens
-$stmt = $conn->prepare("
-    SELECT id, titulo, slug, data_publicacao, imagem_destacada 
-    FROM posts 
-    WHERE publicado = 1 
-    ORDER BY data_publicacao DESC 
-    LIMIT 5
-");
-$stmt->execute();
-$ultimas_postagens = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-// Buscar categorias
-$stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
-$stmt->execute();
-$categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt = $conn->prepare("
+        SELECT id, titulo, slug, data_publicacao, imagem_destacada 
+        FROM posts 
+        WHERE publicado = 1 
+        ORDER BY data_publicacao DESC 
+        LIMIT 5
+    ");
+    $stmt->execute();
+    $ultimas_postagens = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-// Buscar posts mais lidos
-$stmt = $conn->prepare("
-    SELECT id, titulo, slug, visualizacoes 
-    FROM posts 
-    WHERE publicado = 1 
-    ORDER BY visualizacoes DESC 
-    LIMIT 5
-");
-$stmt->execute();
-$posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+    $stmt->execute();
+    $categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+
+    $stmt = $conn->prepare("
+        SELECT id, titulo, slug, visualizacoes 
+        FROM posts 
+        WHERE publicado = 1 
+        ORDER BY visualizacoes DESC 
+        LIMIT 5
+    ");
+    $stmt->execute();
+    $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <div class="sidebar">
-    <!-- Widget de Últimas Postagens -->
+
     <div class="card mb-4" data-aos="fade-left">
         <div class="card-header">
             <h3 class="mb-0">Últimas Postagens</h3>
@@ -59,7 +59,6 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
-    <!-- Widget de Categorias -->
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="100">
         <div class="card-header">
             <h3 class="mb-0">Categorias</h3>
@@ -76,7 +75,6 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             </ul>
         </div>
     </div>
-
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
@@ -108,19 +106,21 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
-
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="300">
         <div class="card-body">
-            <ins class="adsbygoogle"
-                style="display:block; text-align:center;"
-                data-ad-layout="in-article"
-                data-ad-format="fluid"
-                data-ad-client="ca-pub-8313157699231074"
-                data-ad-slot="4177902168">
-            </ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+
+        <ins class="adsbygoogle"
+            style="display:block; text-align:center;"
+            data-ad-layout="in-article"
+            data-ad-format="fluid"
+            data-ad-client="ca-pub-8313157699231074"
+            data-ad-slot="4177902168">
+        </ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
         </div>
     </div>
+
 </div> 

@@ -333,8 +333,19 @@ include 'includes/header.php';
         <div class="col-lg-4">
             <?php include 'includes/sidebar.php'; ?>
         </div>
-        
+
     </div>
+
+    <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-layout="in-article"
+        data-ad-format="fluid"
+        data-ad-client="ca-pub-8313157699231074"
+        data-ad-slot="7748469758">
+    </ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 </div>
 
 <?php include 'includes/footer.php'; ?>
