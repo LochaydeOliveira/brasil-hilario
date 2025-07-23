@@ -190,7 +190,7 @@
     HTML;
     
         return $section_html;
-}
+    }
     
 
     function injectSections($content, $sections) {
