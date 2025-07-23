@@ -329,9 +329,11 @@ include 'includes/header.php';
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4">
-        <?php include 'includes/sidebar.php'; ?>
+
+        <div class="col-lg-4">
+            <?php include 'includes/sidebar.php'; ?>
+        </div>
+        
     </div>
 </div>
 
