@@ -5,7 +5,7 @@
     require_once 'includes/db.php';
     require_once 'config/config.php';
 
-    // Pega a URL, remove a query string e extrai o número da página
+
     $request_uri = strtok($_SERVER["REQUEST_URI"], '?');
     preg_match('/\/(\d+)$/', $request_uri, $matches);
     $page_from_url = !empty($matches[1]) ? (int)$matches[1] : 0;

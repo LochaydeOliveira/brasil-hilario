@@ -26,9 +26,9 @@ require_once 'config/config.php';
 <html lang="pt-BR">
 <head>
 
-<!-- Google Analytics - Carregado apenas após consentimento -->
+
 <script>
-  // Função para carregar Google Analytics
+
   function loadGoogleAnalytics() {
     const script = document.createElement('script');
     script.async = true;
@@ -43,7 +43,7 @@ require_once 'config/config.php';
       'analytics_storage': 'denied'
     });
     
-    // Verificar consentimento existente
+
     const consent = getCookieConsent();
     if (consent && consent.analytics) {
       gtag('consent', 'update', {
@@ -52,7 +52,7 @@ require_once 'config/config.php';
     }
   }
   
-  // Função para verificar consentimento (definida aqui para uso imediato)
+
   function getCookieConsent() {
     const nameEQ = 'brasil_hilario_cookie_consent' + "=";
     const ca = document.cookie.split(';');
@@ -70,7 +70,6 @@ require_once 'config/config.php';
     return null;
   }
   
-  // Carregar GA apenas se já houver consentimento
   const existingConsent = getCookieConsent();
   if (existingConsent && existingConsent.analytics) {
     loadGoogleAnalytics();
@@ -113,39 +112,39 @@ require_once 'config/config.php';
     
 
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "<?php echo isset($is_post) && $is_post ? 'Article' : 'Blog'; ?>",
-        "name": "<?php echo $page_title; ?>",
-        "description": "<?php echo $page_description; ?>",
-        "url": "<?php echo $page_url; ?>"
-        <?php if (isset($is_post) && $is_post): ?>
-        ,
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "<?php echo $page_url; ?>"
-        },
-        "headline": "<?php echo $page_title; ?>",
-        "image": [
-            "<?php echo $page_image; ?>"
-        ],
-        "datePublished": "<?php echo date('c', strtotime($post['data_publicacao'])); ?>",
-        "dateModified": "<?php echo date('c', strtotime($post['data_atualizacao'] ?? $post['data_publicacao'])); ?>",
-        "author": {
-            "@type": "Person",
-            "name": "<?php echo htmlspecialchars($post['autor_nome']); ?>"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "<?php echo BLOG_TITLE; ?>",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg"
-            }
-        },
-        "description": "<?php echo $page_description; ?>"
-        <?php endif; ?>
-    }
+        {
+            "@context": "https://schema.org",
+            "@type": "<?php echo isset($is_post) && $is_post ? 'Article' : 'Blog'; ?>",
+            "name": "<?php echo $page_title; ?>",
+            "description": "<?php echo $page_description; ?>",
+            "url": "<?php echo $page_url; ?>"
+            <?php if (isset($is_post) && $is_post): ?>
+            ,
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "<?php echo $page_url; ?>"
+            },
+            "headline": "<?php echo $page_title; ?>",
+            "image": [
+                "<?php echo $page_image; ?>"
+            ],
+            "datePublished": "<?php echo date('c', strtotime($post['data_publicacao'])); ?>",
+            "dateModified": "<?php echo date('c', strtotime($post['data_atualizacao'] ?? $post['data_publicacao'])); ?>",
+            "author": {
+                "@type": "Person",
+                "name": "<?php echo htmlspecialchars($post['autor_nome']); ?>"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "<?php echo BLOG_TITLE; ?>",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg"
+                }
+            },
+            "description": "<?php echo $page_description; ?>"
+            <?php endif; ?>
+        }
     </script>
 
     <style>
@@ -583,29 +582,29 @@ require_once 'config/config.php';
         </nav>
     </header>
 
-<nav class="category-navbar">
-    <button class="arrow left" aria-label="Categorias anteriores">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="25" height="25" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-        </svg>
-    </button>
-    <div class="category-scroll-container">
-        <ul class="nav">
-            <?php foreach ($categories as $category): ?>
-                <li class="nav-item">
-                    <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
-                        <?php echo htmlspecialchars($category['nome']); ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-    <button class="arrow right" aria-label="Próximas categorias">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  width="25" height="25" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-        </svg>
-    </button>
-</nav>
+    <nav class="category-navbar">
+        <button class="arrow left" aria-label="Categorias anteriores">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="25" height="25" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+        </button>
+        <div class="category-scroll-container">
+            <ul class="nav">
+                <?php foreach ($categories as $category): ?>
+                    <li class="nav-item">
+                        <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                            <?php echo htmlspecialchars($category['nome']); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <button class="arrow right" aria-label="Próximas categorias">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  width="25" height="25" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+        </button>
+    </nav>
 
     <main class="container mg-custom">
 
