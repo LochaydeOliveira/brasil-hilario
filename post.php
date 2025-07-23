@@ -148,11 +148,11 @@
         if (empty($posts)) {
             return '';
         }
-
+    
         $section_html = '<section class="related-posts-block my-5">';
         $section_html .= '<h4 class="related-posts-title">' . htmlspecialchars($title) . '</h4>';
         $section_html .= '<div class="row">';
-
+    
         foreach ($posts as $p) {
             $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
             $image_path = !empty($p['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($p['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
@@ -169,11 +169,29 @@
             $section_html .= '</a>';
             $section_html .= '</div>';
         }
+    
         $section_html .= '</div>';
         $section_html .= '</section>';
+    
+        // 🔽 Bloco do Google AdSense logo após a seção
+        $section_html .= <<<HTML
+    <div class="adsense-block my-4 text-center">
 
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-8313157699231074"
+             data-ad-slot="2883155880">
+        </ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    HTML;
+    
         return $section_html;
-    }
+}
+    
 
     function injectSections($content, $sections) {
         if (empty($sections)) {
