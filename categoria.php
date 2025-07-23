@@ -10,7 +10,7 @@ if (!isset($_GET['slug'])) {
     exit;
 }
 
-$categoria_slug = $_GET['slug'];
+$categoria_slug = 'economia';
 
 // Buscar categoria pelo slug
 $stmt = $pdo->prepare("SELECT * FROM categorias WHERE slug = ?");
@@ -51,7 +51,7 @@ include 'includes/header.php';
     <div class="row">
 
         <div class="col-lg-8">
-            <h1 class="mb-4">Categoria: <?php echo htmlspecialchars($categoria['nome']); ?></h1>
+            <h1 style="font-size: 25px;" class="mb-4">Categoria: <?php echo htmlspecialchars($categoria['nome']); ?></h1>
             
             <div class="row">
                 <?php foreach ($posts as $post): ?>
