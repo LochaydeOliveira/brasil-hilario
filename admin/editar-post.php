@@ -1,6 +1,6 @@
 <?php
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php'; // deve definir $pdo
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 require_once 'includes/functions.php';
@@ -21,15 +21,11 @@ if (!isset($_GET['id'])) {
 
 $post_id = (int)$_GET['id'];
 
-
-
 try {
     // Busca o post
-    $stmt = $conn->prepare("SELECT * FROM posts WHERE id = ?");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $post = $result->fetch_assoc();
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
+    $stmt->execute([$post_id]);
+    $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$post) {
         header('Location: posts.php');
@@ -43,31 +39,25 @@ try {
     }
 
     // Busca categorias
-    $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $categories = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nome");
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Busca usuários ativos (somente se admin)
     $usuarios = [];
     if ($_SESSION['usuario_tipo'] === 'admin') {
-        $stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt = $pdo->query("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Busca tags do post
-    $stmt = $conn->prepare("
+    $stmt = $pdo->prepare("
         SELECT t.nome 
         FROM tags t 
         JOIN post_tags pt ON t.id = pt.tag_id 
         WHERE pt.post_id = ?
     ");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $tags_data = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->execute([$post_id]);
+    $tags_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $tags = array_column($tags_data, 'nome');
     $tags_string = implode(', ', $tags);
 
@@ -75,11 +65,10 @@ try {
     $error = "Erro ao carregar dados: " . $e->getMessage();
 }
 
-
-
 $page_title = getPageTitle();
 include 'includes/header.php';
 ?>
+
 
 <div class="container-fluid">
     <div class="row">

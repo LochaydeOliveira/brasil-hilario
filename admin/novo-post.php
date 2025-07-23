@@ -1,6 +1,6 @@
 <?php
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php'; // aqui espera-se que defina a variável $pdo
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 require_once 'includes/functions.php';
@@ -13,10 +13,9 @@ $categories = [];
 
 try {
     // Busca as categorias
-    $stmt = $conn->prepare("SELECT * FROM categorias ORDER BY nome");
+    $stmt = $pdo->prepare("SELECT * FROM categorias ORDER BY nome");
     $stmt->execute();
-    $result = $stmt->get_result();
-    $categories = $result->fetch_all(MYSQLI_ASSOC);
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     $error = "Erro ao carregar categorias: " . $e->getMessage();
 }
@@ -24,6 +23,7 @@ try {
 $page_title = getPageTitle();
 include 'includes/header.php';
 ?>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -83,17 +83,17 @@ include 'includes/header.php';
 
 
                 <?php
-                // Buscar usuários do tipo 'admin', 'editor' ou 'autor'
-                $usuarios = [];
-                try {
-                    $stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
-                } catch (Exception $e) {
-                    echo "<div class='alert alert-danger'>Erro ao carregar usuários: " . $e->getMessage() . "</div>";
-                }
+                    // Buscar usuários do tipo 'admin', 'editor' ou 'autor'
+                    $usuarios = [];
+                    try {
+                        $stmt = $pdo->prepare("SELECT id, nome FROM usuarios WHERE status = 'ativo' ORDER BY nome");
+                        $stmt->execute();
+                        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    } catch (Exception $e) {
+                        echo "<div class='alert alert-danger'>Erro ao carregar usuários: " . $e->getMessage() . "</div>";
+                    }
                 ?>
+
 
                 <div class="mb-3">
                     <label for="autor_id" class="form-label titles-form-adm">Autor do Post</label>

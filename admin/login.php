@@ -14,17 +14,16 @@ function log_error($message) {
 try {
     session_start();
     log_error("Iniciando processo de login");
-    
+
     require_once '../config/config.php';
     log_error("Config carregada");
-    
-    require_once '../includes/db.php';
+
+    require_once '../includes/db.php'; // aqui deve conter a variável $pdo
     log_error("DB carregada");
-    
+
     require_once 'includes/auth.php';
     log_error("Auth carregada");
 
-    // Se já estiver logado, redireciona para o painel
     if (isset($_SESSION['usuario_id'])) {
         log_error("Usuário já logado, redirecionando");
         header('Location: index.php');
@@ -34,80 +33,74 @@ try {
     $erro = '';
     $msg = '';
 
-    // Verificar mensagem de timeout
     if (isset($_GET['msg']) && $_GET['msg'] === 'timeout') {
         $msg = 'Sua sessão expirou. Por favor, faça login novamente.';
         log_error("Mensagem de timeout detectada");
     }
 
-    // Função para limpar input
     function clean_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
+        return htmlspecialchars(stripslashes(trim($data)));
     }
 
-    // Processar login
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_error("Processando formulário POST");
-        
+
         $email = clean_input($_POST['email']);
         $senha = $_POST['senha'];
-        
-        log_error("Tentativa de login para email: " . $email);
-        
+
+        log_error("Tentativa de login para email: $email");
+
         if (empty($email) || empty($senha)) {
             $erro = 'Por favor, preencha todos os campos.';
             log_error("Campos vazios detectados");
         } else {
             try {
-                $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND status = 'ativo' LIMIT 1");
-                $stmt->bind_param("s", $email);
+                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email AND status = 'ativo' LIMIT 1");
+                $stmt->bindParam(':email', $email);
                 $stmt->execute();
-                $result = $stmt->get_result();
-                $usuario = $result->fetch_assoc();
-                
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
                 log_error("Usuário encontrado: " . ($usuario ? "Sim" : "Não"));
-                
+
                 if ($usuario) {
                     log_error("Verificando senha...");
                     $senha_verificada = password_verify($senha, $usuario['senha']);
                     log_error("Senha verificada: " . ($senha_verificada ? "Correta" : "Incorreta"));
-                    
+
                     if ($senha_verificada) {
-                        // Login bem sucedido
                         $_SESSION['usuario_id'] = $usuario['id'];
                         $_SESSION['usuario_nome'] = $usuario['nome'];
                         $_SESSION['usuario_email'] = $usuario['email'];
                         $_SESSION['usuario_tipo'] = $usuario['tipo'];
                         $_SESSION['ultimo_acesso'] = time();
 
-                        // Atualizar último login
-                        $stmt = $conn->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?");
-                        $stmt->bind_param("i", $usuario['id']);
-                        $stmt->execute();
+                        $updateStmt = $pdo->prepare("UPDATE usuarios SET ultimo_login = NOW() WHERE id = :id");
+                        $updateStmt->bindParam(':id', $usuario['id'], PDO::PARAM_INT);
+                        $updateStmt->execute();
 
                         log_error("Login bem sucedido para: $email");
                         header('Location: index.php');
                         exit;
                     }
                 }
-                
+
                 $erro = 'Email ou senha inválidos.';
                 log_error("Tentativa de login falhou para: $email");
-                
+
             } catch (Exception $e) {
                 $erro = 'Erro ao tentar fazer login. Por favor, tente novamente.';
                 log_error("Erro de login: " . $e->getMessage());
             }
         }
     }
+
 } catch (Exception $e) {
     log_error("Erro crítico: " . $e->getMessage());
     $erro = "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.";
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -115,10 +108,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Painel Administrativo</title>
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>

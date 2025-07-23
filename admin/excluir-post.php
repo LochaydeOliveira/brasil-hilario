@@ -1,6 +1,6 @@
 <?php
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php'; // deve conter $pdo
 require_once 'includes/auth.php';
 
 // Garante que o usuário esteja logado e seja admin
@@ -21,28 +21,26 @@ if (empty($post_id)) {
 }
 
 try {
-    $conn->autocommit(FALSE);
+    $pdo->beginTransaction();
 
     // Excluir registros relacionados na tabela post_tags
-    $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
+    $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
+    $stmt->execute([$post_id]);
 
     // Excluir o post da tabela posts
-    $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
+    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+    $stmt->execute([$post_id]);
 
-    $conn->commit();
+    $pdo->commit();
 
     $_SESSION['success_message'] = "Post excluído com sucesso!";
     header('Location: ' . ADMIN_URL . '/posts.php');
     exit;
 
 } catch (Exception $e) {
-    $conn->rollback();
+    $pdo->rollBack();
     $_SESSION['error_message'] = "Erro ao excluir o post: " . $e->getMessage();
     header('Location: ' . ADMIN_URL . '/posts.php');
     exit;
 }
-?> 
+?>

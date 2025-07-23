@@ -4,15 +4,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php'; // aqui o $pdo deve estar disponível
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
 check_login();
 
 include 'includes/header.php';
 
-// Verificar se o usuário é admin
 if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
     $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
     header('Location: index.php');
@@ -26,40 +24,35 @@ $total_usuarios = 0;
 $posts_recentes = [];
 $error = null;
 
-// Obter estatísticas
 try {
     // Total de posts
-    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM posts");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_posts = $result->fetch_assoc()['total'];
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts");
+    $total_posts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
     // Posts publicados
-    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM posts WHERE publicado = 1");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $posts_publicados = $result->fetch_assoc()['total'];
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts WHERE publicado = 1");
+    $posts_publicados = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
     // Total de usuários
-    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM usuarios");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_usuarios = $result->fetch_assoc()['total'];
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM usuarios");
+    $total_usuarios = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
     // Posts recentes
-    $stmt = $conn->prepare("SELECT p.id, p.titulo, p.data_publicacao, p.publicado, p.visualizacoes, u.nome as autor 
-                        FROM posts p 
-                        LEFT JOIN usuarios u ON p.autor_id = u.id 
-                        ORDER BY p.data_publicacao DESC 
-                        LIMIT 5");
-    $stmt->execute();
-    $posts_recentes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt = $pdo->query("
+        SELECT p.id, p.titulo, p.data_publicacao, p.publicado, p.visualizacoes, u.nome as autor 
+        FROM posts p 
+        LEFT JOIN usuarios u ON p.autor_id = u.id 
+        ORDER BY p.data_publicacao DESC 
+        LIMIT 5
+    ");
+    $posts_recentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {
     error_log("Erro ao obter estatísticas: " . $e->getMessage());
     $error = "Erro ao carregar estatísticas. Por favor, tente novamente mais tarde.";
 }
 ?>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -104,7 +97,7 @@ try {
                 </div>
             </div>
             
-            <!-- Posts Recentes -->
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">

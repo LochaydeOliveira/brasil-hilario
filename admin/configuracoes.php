@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php'; // deve fornecer a variável $pdo
 require_once '../includes/ConfigManager.php';
 require_once 'includes/auth.php';
 
@@ -19,28 +19,30 @@ if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') 
     exit;
 }
 
-$configManager = new ConfigManager($conn);
+// Use PDO na instância do ConfigManager
+$configManager = new ConfigManager($pdo);
 $mensagem = '';
 $tipo_mensagem = 'success';
 
 // Processar formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $grupo = $_POST['grupo'] ?? 'geral';
-    
+
     try {
         foreach ($_POST as $chave => $valor) {
             if ($chave !== 'submit' && $chave !== 'grupo') {
                 $tipo = 'string';
+
                 if (in_array($chave, ['posts_per_page'])) {
                     $tipo = 'integer';
                 } elseif (in_array($chave, ['comments_active', 'newsletter_active'])) {
                     $tipo = 'boolean';
                 }
-                
+
                 $configManager->set($chave, $valor, $tipo, $grupo);
             }
         }
-        
+
         $mensagem = 'Configurações salvas com sucesso!';
         $tipo_mensagem = 'success';
     } catch (Exception $e) {
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $tipo_mensagem = 'danger';
     }
 }
+
 
 // Obter configurações por grupo
 $grupos = ['geral', 'seo', 'redes_sociais', 'integracao', 'paginas'];
