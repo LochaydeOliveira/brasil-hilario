@@ -67,7 +67,7 @@
                     </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="usuariosMenu">
                         <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Entrar na Conta</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/criar-conta">Criar conta</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/admin/login.php">Criar conta</a></li>
                     </ul>
                 </div> 
 
