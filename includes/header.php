@@ -24,57 +24,57 @@ require_once 'config/config.php';
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
+    <script>
 
-<script>
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-M6BPB3MLZ2', {
+        'consent_mode': 'default',
+        'analytics_storage': 'denied'
+        });
+        
 
-  function loadGoogleAnalytics() {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
-    document.head.appendChild(script);
-    
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-M6BPB3MLZ2', {
-      'consent_mode': 'default',
-      'analytics_storage': 'denied'
-    });
-    
-
-    const consent = getCookieConsent();
-    if (consent && consent.analytics) {
-      gtag('consent', 'update', {
-        'analytics_storage': 'granted'
-      });
-    }
-  }
-  
-
-  function getCookieConsent() {
-    const nameEQ = 'brasil_hilario_cookie_consent' + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) {
-        try {
-          return JSON.parse(c.substring(nameEQ.length, c.length));
-        } catch (e) {
-          return null;
+        const consent = getCookieConsent();
+        if (consent && consent.analytics) {
+        gtag('consent', 'update', {
+            'analytics_storage': 'granted'
+        });
         }
-      }
     }
-    return null;
-  }
-  
-  const existingConsent = getCookieConsent();
-  if (existingConsent && existingConsent.analytics) {
-    loadGoogleAnalytics();
-  }
-</script>
+    
+
+    function getCookieConsent() {
+        const nameEQ = 'brasil_hilario_cookie_consent' + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) {
+            try {
+            return JSON.parse(c.substring(nameEQ.length, c.length));
+            } catch (e) {
+            return null;
+            }
+        }
+        }
+        return null;
+    }
+    
+    const existingConsent = getCookieConsent();
+    if (existingConsent && existingConsent.analytics) {
+        loadGoogleAnalytics();
+    }
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -304,8 +304,11 @@ require_once 'config/config.php';
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v18.0"></script>
 
-
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
+        crossorigin="anonymous">
+    </script>
 </head>
+
 <body>
 
     <div id="cookie-banner" class="cookie-banner" style="display: none;">
