@@ -1,7 +1,7 @@
 <?php
 // Configurações do Blog
 define('BLOG_TITLE', 'Brasil Hilário');
-define('BLOG_DESCRIPTION', 'Conteúdo diário sobre política, futebol, tecnologia, culinária, mundo animal e muito mais.');
+define('BLOG_DESCRIPTION', 'culinária, mundo animal e muito mais.');
 define('BLOG_URL', 'https://www.brasilhilario.com.br');
 define('BLOG_PATH', ''); // Caminho relativo vazio para a raiz
 
