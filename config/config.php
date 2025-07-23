@@ -1,7 +1,7 @@
 <?php
 // Configurações do Blog
 define('BLOG_TITLE', 'Brasil Hilário');
-define('BLOG_DESCRIPTION', 'culinária, mundo animal e muito mais.');
+define('BLOG_DESCRIPTION', 'Conteúdo diário sobre política, futebol, tecnologia, culinária, mundo animal e muito mais.');
 define('BLOG_URL', 'https://www.brasilhilario.com.br');
 define('BLOG_PATH', ''); // Caminho relativo vazio para a raiz
 
@@ -26,10 +26,6 @@ define('UPLOAD_URL', BLOG_URL . '/uploads');
 // Configurações de Segurança
 define('ADMIN_EMAIL', 'admin@brasilhilario.com.br');
 define('SECURE_AUTH_KEY', bin2hex(random_bytes(32)));
-
-// Configurações de Cache do AdSense
-define('ADSENSE_CLIENT_ID', 'ca-pub-8313157699231074');
-define('ADSENSE_SLOT_ID', 'XXXXXXXXXX');
 
 // Configurações de URLs
 define('ADMIN_URL', BLOG_URL . '/admin');
