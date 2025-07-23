@@ -10,7 +10,7 @@ if (!isset($_GET['slug'])) {
     exit;
 }
 
-$categoria_slug = 'economia';
+$categoria_slug = $_GET['slug'];
 
 // Buscar categoria pelo slug
 $stmt = $pdo->prepare("SELECT * FROM categorias WHERE slug = ?");
