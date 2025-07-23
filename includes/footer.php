@@ -45,7 +45,7 @@
                         <li><a href="<?php echo BLOG_PATH; ?>/contato">Fale Conosco</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/privacidade">Política de Privacidade</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/termos">Termos de Uso</a></li>
-                        <li><a href="#" onclick="showCookieSettings(); return false;">Configurações de Cookies</a></li>
+                        <li><a href="#" onclick="showCookieSettings(); return false;">Gerenciar Cookies</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
