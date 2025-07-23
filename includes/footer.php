@@ -41,8 +41,7 @@
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="institucionalMenu">
-                        <li><a href="<?php echo BLOG_PATH; ?>/equipe">Sobre Nós</a></li>
-                        <li><a href="<?php echo BLOG_PATH; ?>/equipe">Nossos Editores Web</a></li>
+                        <li><a href="<?php echo BLOG_PATH; ?>/sobre">Sobre Nós</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/contato">Fale Conosco</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/privacidade">Política de Privacidade</a></li>
                         <li><a href="<?php echo BLOG_PATH; ?>/termos">Termos de Uso</a></li>
@@ -79,16 +78,16 @@
                     <p class="mb-0 footer-copyright-text">&copy; <?php echo date('Y'); ?> <?php echo BLOG_TITLE; ?>. Todos os direitos reservados.</p>
                 </div>
                 <div class="col-md-3 text-md-end text-center">
-                    <!-- Removido o botão "Ir para o topo" duplicado do HTML -->
+
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- AOS - Animate On Scroll -->
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
