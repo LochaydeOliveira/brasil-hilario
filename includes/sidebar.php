@@ -77,7 +77,7 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
-    <!-- Widget de Posts Populares -->
+
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
             <h3 class="mb-0">Posts Mais Lidos</h3>
@@ -108,17 +108,18 @@ $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
-    <!-- Widget do AdSense -->
+
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="300">
         <div class="card-body">
             <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="<?php echo ADSENSE_CLIENT_ID; ?>"
-                 data-ad-slot="<?php echo ADSENSE_SLOT_ID; ?>"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+                style="display:block; text-align:center;"
+                data-ad-layout="in-article"
+                data-ad-format="fluid"
+                data-ad-client="ca-pub-8313157699231074"
+                data-ad-slot="4177902168">
+            </ins>
             <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
+                (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
     </div>

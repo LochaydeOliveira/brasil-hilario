@@ -180,7 +180,7 @@
             return $content;
         }
 
-        // Só tenta injetar se houver pelo menos um <p>
+
         if (stripos($content, '</p>') === false) {
             return $content;
         }
@@ -208,6 +208,7 @@
 
 include 'includes/header.php';
 ?>
+
 
 <div class="container">
     <div class="row">
@@ -328,9 +329,9 @@ include 'includes/header.php';
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="col-lg-4">
         <?php include 'includes/sidebar.php'; ?>
-
     </div>
 </div>
 
