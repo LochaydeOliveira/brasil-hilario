@@ -1,205 +1,158 @@
 <?php
 require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once '../includes/db.php';  // Aqui seu $pdo deve estar configurado como PDO
 require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 
-// Verifica se o usuário está autenticado
 check_login();
 
-// Verifica se é uma requisição POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: posts.php');
     exit;
 }
 
 try {
-    // Iniciar transação para garantir atomicidade
-    $conn->autocommit(FALSE);
+    $pdo->beginTransaction();
 
-    // Processar dados do formulário
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
     $titulo = trim($_POST['titulo']);
-    $slug = trim($_POST['slug']);
+    $slug = strtolower(trim(preg_replace('/[^a-z0-9\-]+/', '-', $_POST['slug'])));
+    $slug = trim($slug, '-');
     $conteudo = trim($_POST['conteudo']);
     $resumo = trim($_POST['resumo']);
     $categoria_id = (int)$_POST['categoria_id'];
     $publicado = isset($_POST['publicado']) ? 1 : 0;
-    $tags = isset($_POST['tags']) ? array_map('trim', explode(',', $_POST['tags'])) : [];
+    $tags = isset($_POST['tags']) ? array_filter(array_map('trim', explode(',', $_POST['tags']))) : [];
 
-    // Processar imagem destacada
     $imagem_destacada = null;
     if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['featured_image'];
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $max_size = 5 * 1024 * 1024; // 5MB
+        $max_size = 5 * 1024 * 1024;
 
         if (!in_array($file['type'], $allowed_types)) {
-            throw new Exception("Tipo de arquivo não permitido. Apenas imagens JPG, PNG, GIF e WebP são aceitas.");
+            throw new Exception("Tipo de arquivo não permitido.");
         }
 
         if ($file['size'] > $max_size) {
-            throw new Exception("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+            throw new Exception("Arquivo muito grande.");
         }
 
-        // Criar diretório de uploads se não existir
         $upload_dir = '../uploads/images/';
         if (!file_exists($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
 
-        // Gerar nome único para o arquivo
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '.' . $extension;
         $filepath = $upload_dir . $filename;
 
-        // Mover o arquivo
         if (!move_uploaded_file($file['tmp_name'], $filepath)) {
-            throw new Exception("Erro ao salvar a imagem destacada.");
+            throw new Exception("Erro ao salvar imagem.");
         }
 
         $imagem_destacada = $filename;
     }
 
-    // Validar dados
     if (empty($titulo) || empty($slug) || empty($conteudo) || empty($categoria_id)) {
-        throw new Exception("Todos os campos obrigatórios devem ser preenchidos.");
+        throw new Exception("Campos obrigatórios faltando.");
     }
 
-    // Verificar se o slug já existe (exceto para o próprio post)
-    $id_para_verificacao = $id ?? 0;
-    $stmt = $conn->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
-    $stmt->bind_param("si", $slug, $id_para_verificacao);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->fetch_assoc()) {
-        throw new Exception("Este slug já está em uso. Por favor, escolha outro.");
+    // Verificar slug duplicado
+    $id_check = $id ?? 0;
+    $stmt = $pdo->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
+    $stmt->execute([$slug, $id_check]);
+    if ($stmt->fetch()) {
+        throw new Exception("Slug já usado.");
     }
 
     if ($id) {
-        // Buscar post atual para dados antigos (autor e imagem)
-        $stmt_post = $conn->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
-        $stmt_post->bind_param("i", $id);
-        $stmt_post->execute();
-        $result_post = $stmt_post->get_result();
-        $post = $result_post->fetch_assoc();
+        // Editar post existente
+        $stmt_post = $pdo->prepare("SELECT autor_id, imagem_destacada FROM posts WHERE id = ?");
+        $stmt_post->execute([$id]);
+        $post = $stmt_post->fetch(PDO::FETCH_ASSOC);
 
-        if (!$post) {
-            throw new Exception("Post não encontrado para edição.");
-        }
-
-        // Verifica se o usuário tem permissão para editar o post
-        if (!can_edit_post($post['autor_id'])) {
-            throw new Exception("Você não tem permissão para editar este post.");
-        }
+        if (!$post) throw new Exception("Post não encontrado.");
+        if (!can_edit_post($post['autor_id'])) throw new Exception("Sem permissão.");
 
         if ($_SESSION['usuario_tipo'] === 'admin') {
-            // Se admin, pode mudar o autor, senão mantém o autor atual
             $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $post['autor_id'];
 
-            // Valida o autor
-            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
-            $stmt->bind_param("i", $autor_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if (!$result->fetch_assoc()) {
-                throw new Exception("O autor selecionado é inválido.");
-            }
+            $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
+            $stmt->execute([$autor_id]);
+            if (!$stmt->fetch()) throw new Exception("Autor inválido.");
 
-            $stmt = $conn->prepare("
+            $stmt = $pdo->prepare("
                 UPDATE posts 
                 SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
                     imagem_destacada = COALESCE(?, imagem_destacada), autor_id = ?, atualizado_em = NOW()
                 WHERE id = ?
             ");
-            $stmt->bind_param("ssssiisii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id);
+            $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id]);
         } else {
-            // Se não for admin, mantém autor atual
-            $stmt = $conn->prepare("
+            $stmt = $pdo->prepare("
                 UPDATE posts 
                 SET titulo = ?, slug = ?, conteudo = ?, resumo = ?, categoria_id = ?, publicado = ?, 
                     imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
                 WHERE id = ?
             ");
-            $stmt->bind_param("ssssiisi", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id);
+            $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id]);
         }
 
-        $stmt->execute();
-
-        // Se uma nova imagem foi enviada, remover a antiga
         if ($imagem_destacada && $post['imagem_destacada']) {
-            $old_image_path = '../uploads/images/' . $post['imagem_destacada'];
-            if (file_exists($old_image_path)) {
-                unlink($old_image_path);
-            }
+            $old_image = '../uploads/images/' . $post['imagem_destacada'];
+            if (file_exists($old_image)) unlink($old_image);
         }
 
-        // Remover tags antigas
-        $stmt = $conn->prepare("DELETE FROM post_tags WHERE post_id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
+        $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
+        $stmt->execute([$id]);
 
     } else {
-        // Inserir novo post
+        // Novo post
         $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $_SESSION['usuario_id'];
 
-        // Verifica se o ID do autor é válido
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
-        $stmt->bind_param("i", $autor_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if (!$result->fetch_assoc()) {
-            throw new Exception("O autor selecionado é inválido.");
-        }
-        
-        $stmt = $conn->prepare("
+        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE id = ? AND status = 'ativo'");
+        $stmt->execute([$autor_id]);
+        if (!$stmt->fetch()) throw new Exception("Autor inválido.");
+
+        $stmt = $pdo->prepare("
             INSERT INTO posts (titulo, slug, conteudo, resumo, categoria_id, publicado, autor_id, criado_em, atualizado_em)
             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        $stmt->bind_param("ssssiii", $titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $autor_id);
-        $stmt->execute();
+        $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $autor_id]);
 
-        $id = $conn->insert_id;
+        $id = $pdo->lastInsertId();
     }
 
-    // Processar tags
     foreach ($tags as $tag_nome) {
         if (empty($tag_nome)) continue;
 
-        // Criar slug da tag
-        $tag_slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9-]/', '-', $tag_nome)));
+        $tag_slug = strtolower(trim(preg_replace('/[^a-z0-9-]/', '-', $tag_nome)));
         $tag_slug = preg_replace('/-+/', '-', $tag_slug);
         $tag_slug = trim($tag_slug, '-');
 
-        // Verificar se a tag já existe
-        $stmt = $conn->prepare("SELECT id FROM tags WHERE slug = ?");
-        $stmt->bind_param("s", $tag_slug);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $tag = $result->fetch_assoc();
+        $stmt = $pdo->prepare("SELECT id FROM tags WHERE slug = ?");
+        $stmt->execute([$tag_slug]);
+        $tag = $stmt->fetch(PDO::FETCH_ASSOC);
         $tag_id = $tag['id'] ?? null;
 
         if (!$tag_id) {
-            // Inserir nova tag
-            $stmt = $conn->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
-            $stmt->bind_param("ss", $tag_nome, $tag_slug);
-            $stmt->execute();
-            $tag_id = $conn->insert_id;
+            $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
+            $stmt->execute([$tag_nome, $tag_slug]);
+            $tag_id = $pdo->lastInsertId();
         }
 
-        // Relacionar tag com o post
-        $stmt = $conn->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
-        $stmt->bind_param("ii", $id, $tag_id);
-        $stmt->execute();
+        $stmt = $pdo->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+        $stmt->execute([$id, $tag_id]);
     }
 
-    $conn->commit();
+    $pdo->commit();
     $_SESSION['success'] = "Post salvo com sucesso!";
     header('Location: posts.php');
     exit;
 
 } catch (Exception $e) {
-    $conn->rollback();
+    $pdo->rollBack();
     $_SESSION['error'] = $e->getMessage();
     header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
     exit;

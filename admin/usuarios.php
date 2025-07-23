@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $senha = $_POST['senha'] ?? '';
     $confirmar_senha = $_POST['confirmar_senha'] ?? '';
-    
+
     if (empty($nome) || empty($email) || empty($senha)) {
         $error = "Todos os campos são obrigatórios";
     } elseif ($senha !== $confirmar_senha) {
@@ -24,19 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Verificar se o email já existe
-            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->fetch_assoc()) {
+            $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
                 $error = "Este email já está em uso";
             } else {
                 // Criar novo usuário
                 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, status) VALUES (?, ?, ?, 'ativo')");
-                $stmt->bind_param("sss", $nome, $email, $senha_hash);
-                $stmt->execute();
-                
+                $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, status) VALUES (?, ?, ?, 'ativo')");
+                $stmt->execute([$nome, $email, $senha_hash]);
+
                 $success = "Usuário criado com sucesso!";
             }
         } catch (Exception $e) {
@@ -46,11 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Buscar todos os usuários
-$stmt = $conn->prepare("SELECT * FROM usuarios ORDER BY nome");
+$stmt = $pdo->prepare("SELECT * FROM usuarios ORDER BY nome");
 $stmt->execute();
-$usuarios = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 include 'includes/header.php';
+
 ?>
 
 <div class="container-fluid">
@@ -112,7 +110,7 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Modal Novo Usuário -->
+
 <div class="modal fade" id="novoUsuarioModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
