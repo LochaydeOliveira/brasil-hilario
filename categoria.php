@@ -41,7 +41,7 @@ $posts = $result->fetch_all(MYSQLI_ASSOC);
 
 // 4. Depuração: exibe os posts encontrados
 // REMOVA isso após o teste
-// echo '<pre>'; var_dump($posts); echo '</pre>'; exit;
+echo '<pre>'; var_dump($posts); echo '</pre>'; exit;
 
 $og_title = "Categoria: " . $categoria['nome'] . " - " . BLOG_TITLE;
 $meta_description = "Posts sobre " . $categoria['nome'] . " no " . BLOG_TITLE;
