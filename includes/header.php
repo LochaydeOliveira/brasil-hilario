@@ -29,10 +29,6 @@ require_once 'config/config.php';
 <html lang="pt-BR">
 <head>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-<?php echo $adsense_client_id; ?>"
-     crossorigin="anonymous">
-</script>
-
 
 <script>
 
@@ -88,6 +84,7 @@ require_once 'config/config.php';
     <title><?php echo $page_title; ?></title>
     <meta name="description" content="<?php echo $page_description; ?>">
     <meta name="keywords" content="<?php echo $page_keywords; ?>">
+    <meta name="google-adsense-account" content="ca-pub-<?php echo $adsense_client_id; ?>">
 
     <meta property="og:type" content="<?php echo $page_og_type; ?>">
     <meta property="og:url" content="<?php echo $page_url; ?>">
