@@ -7,6 +7,9 @@ require_once 'config/config.php';
     $page_url = isset($og_url) ? $og_url : BLOG_URL;
     $page_image = isset($og_image) ? $og_image : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
     $page_og_type = isset($og_type) ? $og_type : 'website';
+    $adsense_client_id = defined('ADSENSE_CLIENT_ID') ? ADSENSE_CLIENT_ID : '';
+    $adsense_slot_id = defined('ADSENSE_SLOT_ID') ? ADSENSE_SLOT_ID : '';
+
 
 
     $categories = [];

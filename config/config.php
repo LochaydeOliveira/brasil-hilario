@@ -28,7 +28,7 @@ define('ADMIN_EMAIL', 'admin@brasilhilario.com.br');
 define('SECURE_AUTH_KEY', bin2hex(random_bytes(32)));
 
 // Configurações de Cache do AdSense
-define('ADSENSE_CLIENT_ID', 'ca-pub-XXXXXXXXXXXXXXXX');
+define('ADSENSE_CLIENT_ID', 'ca-pub-8313157699231074');
 define('ADSENSE_SLOT_ID', 'XXXXXXXXXX');
 
 // Configurações de URLs
