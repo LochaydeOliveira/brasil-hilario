@@ -17,23 +17,20 @@ include 'includes/header.php';
                 <h1 class="display-5 fw-bold mb-3">Sobre Nós</h1>
                 
                 <div class="post-content">
-                    <p>O <strong>Seu Blog</strong> nasceu com a missão de informar, entreter e conectar pessoas com os mais diversos interesses. Nosso conteúdo é produzido com seriedade, responsabilidade e atenção à diversidade de temas que impactam o dia a dia dos leitores.</p>
+                    <p>O portal <strong>Brasil Hilário</strong> nasceu com a missão de informar, entreter e conectar pessoas com os mais diversos interesses. Nosso conteúdo é produzido com seriedade, responsabilidade e atenção à diversidade de temas que impactam o dia a dia dos leitores.</p>
 
-                    <h2>O que você encontra aqui</h2>
-                    <ul>
-                        <li>Notícias e atualidades</li>
-                        <li>Cobertura dos principais acontecimentos do futebol</li>
-                        <li>Tecnologia, inovação e curiosidades do mundo digital</li>
-                        <li>Dicas e receitas práticas de culinária</li>
-                        <li>Curiosidades e informações sobre o reino animal</li>
-                        <li>E muito mais conteúdo útil e atualizado diariamente!</li>
+                    <h2 style="font-size: 20px">O que você encontra aqui</h2>
+                    <ul style="padding: 0!important">
+                        <li>Notícias e atualidades;</li>
+                        <li>Cobertura dos principais acontecimentos do futebol;</li>
+                        <li>Tecnologia, inovação e curiosidades do mundo digital;</li>
+                        <li>Dicas e receitas práticas de culinária;</li>
+                        <li>Curiosidades e informações sobre o reino animal;</li>
+                        <li>E muito mais conteúdo útil e atualizado diariamente!;</li>
                     </ul>
 
-                    <h2>Nosso compromisso</h2>
+                    <h2 style="font-size: 20px">Nosso compromisso</h2>
                     <p>Prezamos por conteúdo original, acessível e de qualidade. Trabalhamos para manter o site seguro, rápido e responsivo, garantindo a melhor experiência para todos os usuários.</p>
-
-                    <h2>Monetização</h2>
-                    <p>Este blog é mantido através de publicidade exibida por plataformas como o Google AdSense. Ao interagir com nosso conteúdo, você contribui para manter o projeto ativo e gratuito para todos.</p>
 
                     <p class="mt-4">Obrigado por fazer parte da nossa comunidade! Para dúvidas ou sugestões, entre em <a href="contato.php">contato conosco</a>.</p>
                 </div>

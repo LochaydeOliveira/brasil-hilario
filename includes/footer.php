@@ -12,7 +12,7 @@
                     <a class="footer-logo-link d-flex align-items-center mb-3" href="<?php echo BLOG_PATH; ?>">
                         <img src="<?php echo BLOG_PATH; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="footer-logo-img me-2">
                     </a>
-                    <p class="footer-description mb-3"><?php echo BLOG_DESCRIPTION; ?></p>
+                    
                     <div class="social-links d-flex mg-sociais-footer">
 
                         <a href="https://www.facebook.com/profile.php?id=61577306277011" target="_blank" class="social-icon me-2" aria-label="Facebook">
