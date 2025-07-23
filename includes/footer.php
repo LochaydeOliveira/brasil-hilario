@@ -1,10 +1,15 @@
     </main>
     <?php
-    // Buscar categorias para o rodapé
-    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+try {
+    $stmt = $pdo->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
     $stmt->execute();
-    $footer_categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    ?>
+    $footer_categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Erro ao buscar categorias para o rodapé: " . $e->getMessage());
+    $footer_categorias = [];
+}
+?>
+
     <footer class="bg-white py-5 mt-5">
         <div class="container pd-cst-ftr">
             <div class="row">

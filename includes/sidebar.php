@@ -1,6 +1,8 @@
 <?php
 
-    $stmt = $conn->prepare("
+try {
+    // Últimas postagens
+    $stmt = $pdo->prepare("
         SELECT id, titulo, slug, data_publicacao, imagem_destacada 
         FROM posts 
         WHERE publicado = 1 
@@ -8,15 +10,15 @@
         LIMIT 5
     ");
     $stmt->execute();
-    $ultimas_postagens = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $ultimas_postagens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-    $stmt = $conn->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
+    // Categorias
+    $stmt = $pdo->prepare("SELECT id, nome, slug FROM categorias ORDER BY nome ASC");
     $stmt->execute();
-    $categorias = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-    $stmt = $conn->prepare("
+    // Posts populares
+    $stmt = $pdo->prepare("
         SELECT id, titulo, slug, visualizacoes 
         FROM posts 
         WHERE publicado = 1 
@@ -24,8 +26,17 @@
         LIMIT 5
     ");
     $stmt->execute();
-    $posts_populares = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $posts_populares = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    error_log("Erro ao buscar dados no banco: " . $e->getMessage());
+    // Definir variáveis vazias para evitar erros no frontend
+    $ultimas_postagens = [];
+    $categorias = [];
+    $posts_populares = [];
+}
 ?>
+
 
 <div class="sidebar">
 
