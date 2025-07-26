@@ -267,7 +267,7 @@ include 'includes/header.php';
 
                 if (!empty($latest_posts)) {
                     $sections_to_inject[] = [
-                        'title' => 'Últimas do Blog',
+                        'title' => 'Últimas do Portal',
                         'posts' => $latest_posts,
                         'point' => $second_injection_point
                     ];

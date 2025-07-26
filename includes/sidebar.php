@@ -89,7 +89,7 @@ try {
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
-            <h3 class="mb-0">Posts Mais Lidos</h3>
+            <h3 class="mb-0">Mais Lidos</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
