@@ -284,9 +284,9 @@ include 'includes/header.php';
             <div class="post-tags mb-3">
                 <i class="fas fa-tags"></i>
                 <?php foreach ($post['tags'] as $tag): ?>
-                <a href="<?php echo BLOG_URL; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" class="badge bg-secondary text-decoration-none me-1">
+                <span class="badge bg-secondary text-decoration-none me-1">
                     <?php echo htmlspecialchars($tag['nome']); ?>
-                </a>
+                </span>
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>

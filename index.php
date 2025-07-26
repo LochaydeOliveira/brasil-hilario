@@ -104,10 +104,9 @@ include 'includes/header.php';
                         <?php if (!empty($post['tags'])): ?>
                             <div class="post-tags mb-3">
                                 <?php foreach ($post['tags'] as $tag): ?>
-                                    <a href="<?php echo BLOG_PATH; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" 
-                                       class="badge bg-info text-dark me-1">
+                                    <span class="badge bg-info text-dark me-1">
                                         <i class="fas fa-tag"></i> <?php echo htmlspecialchars($tag['nome']); ?>
-                                    </a>
+                                    </span>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
