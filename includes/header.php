@@ -105,6 +105,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=02" rel="stylesheet">
+    <link href="<?php echo BLOG_URL; ?>/assets/css/container-max-width.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -613,42 +614,42 @@ try {
     <main class="container mg-custom">
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const scrollContainer = document.querySelector('.category-scroll-container');
-    const leftArrow = document.querySelector('.arrow.left');
-    const rightArrow = document.querySelector('.arrow.right');
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollContainer = document.querySelector('.category-scroll-container');
+        const leftArrow = document.querySelector('.arrow.left');
+        const rightArrow = document.querySelector('.arrow.right');
 
-    function updateArrows() {
+        function updateArrows() {
 
-        const canScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth + 2;
-        if (!canScroll) {
-            leftArrow.style.display = 'none';
-            rightArrow.style.display = 'none';
-            return;
+            const canScroll = scrollContainer.scrollWidth > scrollContainer.clientWidth + 2;
+            if (!canScroll) {
+                leftArrow.style.display = 'none';
+                rightArrow.style.display = 'none';
+                return;
+            }
+
+            leftArrow.style.display = (scrollContainer.scrollLeft > 2) ? '' : 'none';
+
+            rightArrow.style.display = (scrollContainer.scrollLeft < scrollContainer.scrollWidth - scrollContainer.clientWidth - 2) ? '' : 'none';
         }
 
-        leftArrow.style.display = (scrollContainer.scrollLeft > 2) ? '' : 'none';
 
-        rightArrow.style.display = (scrollContainer.scrollLeft < scrollContainer.scrollWidth - scrollContainer.clientWidth - 2) ? '' : 'none';
-    }
+        scrollContainer.addEventListener('scroll', updateArrows);
+        window.addEventListener('resize', updateArrows);
 
+        if (document.fonts) {
+            document.fonts.ready.then(updateArrows);
+        }
+        window.addEventListener('load', updateArrows);
 
-    scrollContainer.addEventListener('scroll', updateArrows);
-    window.addEventListener('resize', updateArrows);
+        leftArrow.addEventListener('click', function() {
+            scrollContainer.scrollBy({ left: -120, behavior: 'smooth' });
+        });
+        rightArrow.addEventListener('click', function() {
+            scrollContainer.scrollBy({ left: 120, behavior: 'smooth' });
+        });
 
-    if (document.fonts) {
-        document.fonts.ready.then(updateArrows);
-    }
-    window.addEventListener('load', updateArrows);
-
-    leftArrow.addEventListener('click', function() {
-        scrollContainer.scrollBy({ left: -120, behavior: 'smooth' });
+        // Inicializa as setas
+        updateArrows();
     });
-    rightArrow.addEventListener('click', function() {
-        scrollContainer.scrollBy({ left: 120, behavior: 'smooth' });
-    });
-
-    // Inicializa as setas
-    updateArrows();
-});
 </script>
