@@ -798,6 +798,7 @@ footer {
     flex-wrap: nowrap;
     margin: 0;
     padding: 0;
+    justify-content: center;
 }
 
 .arrow {
