@@ -1,115 +1,53 @@
 <?php
-error_reporting(E_ALL); 
-ini_set('display_errors', 1); 
-
-ob_start();
 session_start();
-
+require_once 'includes/db.php';
 require_once 'config/config.php';
-require_once 'includes/db.php';  // aqui deve instanciar $pdo
-require_once 'config/search.php';
-require_once 'vendor/autoload.php';
-
-$post_slug = filter_input(INPUT_GET, 'slug', FILTER_SANITIZE_URL);
-
-if (empty($post_slug)) {
-    header('Location: ' . BLOG_URL);
-    exit;
-}
+require_once 'config/admin_ips.php';
 
 try {
-    // Buscar post principal com tags e categoria
-    $stmt = $pdo->prepare("
-        SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug,
-               GROUP_CONCAT(DISTINCT CONCAT(t.id, ':', t.nome, ':', t.slug)) as tags_data
-        FROM posts p
-        JOIN categorias c ON p.categoria_id = c.id
-        LEFT JOIN post_tags pt ON p.id = pt.post_id
-        LEFT JOIN tags t ON pt.tag_id = t.id
-        WHERE p.slug = ? AND p.publicado = 1
-        GROUP BY p.id
-    ");
-    $stmt->execute([$post_slug]);
-    $post = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$post) {
-        header('Location: ' . BLOG_URL . '/404.php');
+    $slug = $_GET['slug'] ?? '';
+    
+    if (empty($slug)) {
+        header('Location: ' . BLOG_URL);
         exit;
     }
 
-    // Buscar nome do autor
-    $autor_nome = 'Autor desconhecido';
-    if (!empty($post['autor_id'])) {
-        $stmt_autor = $pdo->prepare("SELECT nome FROM usuarios WHERE id = ? LIMIT 1");
-        $stmt_autor->execute([$post['autor_id']]);
-        $autor = $stmt_autor->fetch(PDO::FETCH_ASSOC);
-        if ($autor) {
-            $autor_nome = $autor['nome'];
-        }
-    }
-
-    // Posts relacionados (mesma categoria, diferente post)
-    $related_posts = [];
-    if (isset($post['categoria_id'])) {
-        $stmt_related = $pdo->prepare("
-            SELECT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
-            FROM posts p
-            JOIN categorias c ON p.categoria_id = c.id
-            WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
-            ORDER BY RAND()
-            LIMIT 4
-        ");
-        $stmt_related->execute([$post['categoria_id'], $post['id']]);
-        $related_posts = $stmt_related->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Últimos posts (exceto o atual)
-    $latest_posts = [];
-    $stmt_latest = $pdo->prepare("
-        SELECT p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome, c.slug as categoria_slug
-        FROM posts p
-        JOIN categorias c ON p.categoria_id = c.id
-        WHERE p.id != ? AND p.publicado = 1
-        ORDER BY p.data_publicacao DESC
-        LIMIT 4
+    // Buscar o post
+    $stmt = $pdo->prepare("
+        SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
+        FROM posts p 
+        JOIN categorias c ON p.categoria_id = c.id 
+        LEFT JOIN usuarios u ON p.autor_id = u.id 
+        WHERE p.slug = ? AND p.publicado = 1
     ");
-    $stmt_latest->execute([$post['id']]);
-    $latest_posts = $stmt_latest->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute([$slug]);
+    $post = $stmt->fetch();
 
-    // Processar tags para array
-    $post['tags'] = [];
-    if (!empty($post['tags_data'])) {
-        $tags_array = explode(',', $post['tags_data']);
-        foreach ($tags_array as $tag_data) {
-            list($id, $nome, $tag_slug) = explode(':', $tag_data);
-            $post['tags'][] = [
-                'id' => $id,
-                'nome' => $nome,
-                'slug' => $tag_slug
-            ];
-        }
+    if (!$post) {
+        header('HTTP/1.0 404 Not Found');
+        include '404.php';
+        exit;
     }
-    unset($post['tags_data']);
 
-    $post['publicado'] = $post['publicado'] ?? 0;
-    $post['editor_type'] = $post['editor_type'] ?? 'tinymce';
+    // Buscar tags do post
+    $stmt_tags = $pdo->prepare("
+        SELECT t.id, t.nome, t.slug 
+        FROM post_tags pt 
+        JOIN tags t ON pt.tag_id = t.id 
+        WHERE pt.post_id = ?
+        ORDER BY t.nome ASC
+    ");
+    $stmt_tags->execute([$post['id']]);
+    $post['tags'] = $stmt_tags->fetchAll();
 
-    function getUserIP() {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            return $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
-        }
-    }
-    $visitor_ip = getUserIP();
-
-    define('ADMIN_IP', '179.48.2.57');
-
-    if ($visitor_ip !== ADMIN_IP) {
+    // Verificar se deve contar a visualização
+    if (shouldCountView($post['id'])) {
+        // Incrementar visualizações
         $stmt_update = $pdo->prepare("UPDATE posts SET visualizacoes = visualizacoes + 1 WHERE id = ?");
         $stmt_update->execute([$post['id']]);
+        
+        // Definir cookie para evitar contagem duplicada
+        setViewCookie($slug);
     }
 
     $og_title = htmlspecialchars($post['titulo']);
@@ -226,11 +164,11 @@ include 'includes/header.php';
             <?php if (!empty($post['autor_id'])): ?>
                 <p class="lead">
                     por <a href="<?php echo BLOG_URL; ?>/autor/<?php echo $post['autor_id']; ?>">
-                        <?php echo htmlspecialchars($autor_nome); ?>
+                        <?php echo htmlspecialchars($post['autor_nome']); ?>
                     </a>
                 </p>
             <?php else: ?>
-                <p class="lead">por <?php echo htmlspecialchars($autor_nome); ?></p>
+                <p class="lead">por <?php echo htmlspecialchars($post['autor_nome']); ?></p>
             <?php endif; ?>
 
 
