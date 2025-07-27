@@ -6,7 +6,7 @@
     --text-color: rgba(51, 51, 51, 0.85);
     --light-gray: #f8f9fa;
     --border-color: #dee2e6;
-    --bg-header-color: #dee2e6;
+    --bg-header-color: #f8f9fa;
     --font-primary: "Merriweather", serif;
     --font-secondary: "Inter", sans-serif;
     --logo-green-color: #0b8103;
@@ -24,12 +24,14 @@ body {
 
 .ht-custom {
     height: 60px;
+    background-color: var(--bg-header-color);
 }
 
 @media (max-width: 768px) { 
 
     .ht-custom {
         height: 80px;
+        background-color: var(--bg-header-color);
     }
 
 }
@@ -862,7 +864,7 @@ footer {
 /* Estilos adicionais para mobile */
 @media (max-width: 767.98px) {
     .bg-nav-custom {
-        background-color: var(--logo-green-color);
+        background-color: var(--bg-header-color);
     }
     .mg-bt-search {
         margin-bottom: 1rem;
@@ -870,11 +872,11 @@ footer {
 }
 
 .bg-nav-custom {
-    background-color: var(--terceary-color);
+    background-color: var(--bg-header-color);
 }
 
 .mg-bt-search {
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .navbar-toggler {
