@@ -872,7 +872,7 @@ footer {
         z-index: 9;
     }
     .mg-bt-search {
-        margin-bottom: 1rem;
+        margin-bottom: 1rem!important;
     }
 }
 
