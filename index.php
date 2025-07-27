@@ -79,8 +79,7 @@ include 'includes/header.php';
                                 <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>">
                                     <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
                                          class="img-fluid" 
-                                         alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                                         style="width: 100%; height: 450px; object-fit: cover;">
+                                         alt="<?php echo htmlspecialchars($post['titulo']); ?>">
                                 </a>
                             </div>
                         <?php endif; ?>

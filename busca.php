@@ -135,8 +135,7 @@ $suggestions = get_search_suggestions($search_term);
                         <?php if (!empty($post['imagem_destacada'])): ?>
                             <img src="<?php echo BLOG_URL . '/uploads/images/' . $post['imagem_destacada']; ?>" 
                                  class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($post['titulo']); ?>"
-                                 style="height: 200px; object-fit: cover;">
+                                 alt="<?php echo htmlspecialchars($post['titulo']); ?>">
                         <?php endif; ?>
                         <div class="card-body">
                             <h5 class="card-title">
