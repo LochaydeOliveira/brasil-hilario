@@ -841,9 +841,10 @@ footer {
     .category-navbar .nav {
         flex-wrap: nowrap;
         padding: 0;
+        justify-content: flex-start;
     }
     .category-navbar .nav-item:first-child {
-        margin-left: 8px;
+        margin-left: 0;
     }
     .category-navbar .nav-item:last-child {
         margin-right: 8px;
