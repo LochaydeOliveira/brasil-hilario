@@ -174,16 +174,6 @@ try {
             border: none!important;
         }
 
-        .category-navbar {
-            display: flex;
-            align-items: center;
-            position: relative;
-            background-color: var(--logo-green-color);
-            width: 100%;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-
         .category-scroll-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;

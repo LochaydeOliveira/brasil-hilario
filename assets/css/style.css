@@ -776,7 +776,10 @@ footer {
     width: 100%;
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin: 0 auto;
+    justify-content: center;
 }
+
 
 .category-scroll-container {
     overflow-x: auto;
