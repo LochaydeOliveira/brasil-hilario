@@ -870,7 +870,7 @@ footer {
 }
 
 .bg-nav-custom {
-    background-color: var(--bg-header-color);
+    background-color: var(--terceary-color);
 }
 
 .mg-bt-search {
