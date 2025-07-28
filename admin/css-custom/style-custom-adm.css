@@ -9,3 +9,47 @@
 .titles-form-adm {
     font-weight: 700!important;
 }
+
+/* CSS específico para paginação no admin */
+.pagination {
+    margin: 2rem 0;
+}
+
+.page-link {
+    color: #007bff !important;
+    border: 1px solid #007bff !important;
+    background-color: #ffffff !important;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0.1rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #007bff !important;
+    text-decoration: none;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #007bff !important;
+    font-weight: 600;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+    background-color: #ffffff !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.page-item:not(.disabled):not(.active) .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}

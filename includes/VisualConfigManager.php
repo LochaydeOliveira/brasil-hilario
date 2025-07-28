@@ -195,16 +195,24 @@ class VisualConfigManager {
         if (isset($configs['fontes']['site'])) {
             $fontes = $configs['fontes']['site'];
             $css .= "body {\n";
-            if (isset($fontes['fonte_principal'])) $css .= "  font-family: {$fontes['fonte_principal']};\n";
+            if (isset($fontes['fonte'])) $css .= "  font-family: {$fontes['fonte']};\n";
             $css .= "}\n\n";
-            
-            $css .= "h1, h2, h3, h4, h5, h6 {\n";
-            if (isset($fontes['fonte_titulos'])) $css .= "  font-family: {$fontes['fonte_titulos']};\n";
-            $css .= "}\n\n";
-            
-            $css .= "p, div {\n";
-            if (isset($fontes['fonte_texto'])) $css .= "  font-family: {$fontes['fonte_texto']};\n";
-            $css .= "}\n\n";
+        }
+        
+        // Fontes específicas para elementos
+        if (isset($configs['fontes'])) {
+            foreach ($configs['fontes'] as $elemento => $props) {
+                if ($elemento !== 'site' && isset($props['fonte'])) {
+                    $css .= "h1, h2, h3, h4, h5, h6 {\n";
+                    $css .= "  font-family: {$props['fonte']};\n";
+                    $css .= "}\n\n";
+                    
+                    $css .= "p, div {\n";
+                    $css .= "  font-family: {$props['fonte']};\n";
+                    $css .= "}\n\n";
+                    break; // Aplicar apenas uma vez
+                }
+            }
         }
         
         // Tamanhos de fonte

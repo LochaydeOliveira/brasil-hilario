@@ -235,32 +235,6 @@ include 'includes/header.php';
                             </div>
                             
                             <div class="col-md-6">
-                                <h4>Cores da Paginação</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor de Fundo</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_fundo" 
-                                           value="<?= $configs['cores']['paginacao']['cor_fundo'] ?? '#ffffff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor do Texto</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_texto" 
-                                           value="<?= $configs['cores']['paginacao']['cor_texto'] ?? '#007bff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor dos Links</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_link" 
-                                           value="<?= $configs['cores']['paginacao']['cor_link'] ?? '#007bff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor Ativa</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_ativa" 
-                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#007bff' ?>">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-6">
                                 <h4>Cores dos Botões</h4>
                                 <div class="mb-3">
                                     <label class="form-label">Cor Primária</label>
@@ -298,6 +272,58 @@ include 'includes/header.php';
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h4>Cores da Paginação</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor de Fundo</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_fundo" 
+                                           value="<?= $configs['cores']['paginacao']['cor_fundo'] ?? '#ffffff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor do Texto</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_texto" 
+                                           value="<?= $configs['cores']['paginacao']['cor_texto'] ?? '#007bff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor dos Links</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_link" 
+                                           value="<?= $configs['cores']['paginacao']['cor_link'] ?? '#007bff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor Ativa</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_ativa" 
+                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#007bff' ?>">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h4>Preview da Paginação</h4>
+                                <div class="border rounded p-3 bg-light">
+                                    <p class="text-muted small mb-2">Como a paginação aparecerá:</p>
+                                    <nav aria-label="Preview da paginação">
+                                        <ul class="pagination pagination-sm justify-content-center">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">‹</a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="#">1</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">2</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">3</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">›</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Aba de Fontes -->
@@ -314,6 +340,8 @@ include 'includes/header.php';
                                         <option value="Georgia, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
                                         <option value="Times New Roman, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
                                         <option value="Courier New, monospace" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Courier New, monospace' ? 'selected' : '' ?>>Courier New</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -324,6 +352,8 @@ include 'includes/header.php';
                                         <option value="Helvetica, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
                                         <option value="Georgia, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
                                         <option value="Times New Roman, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -334,6 +364,8 @@ include 'includes/header.php';
                                         <option value="Helvetica, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
                                         <option value="Georgia, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
                                         <option value="Times New Roman, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
                                     </select>
                                 </div>
                             </div>
@@ -401,6 +433,40 @@ include 'includes/header.php';
                                     <p style="font-family: <?= $configs['fontes']['paragrafo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; font-size: <?= $configs['fontes']['paragrafo']['tamanho'] ?? '16px' ?>;">Este é um exemplo de parágrafo com as configurações de fonte aplicadas.</p>
                                     <button class="btn btn-primary" style="background-color: <?= $configs['cores']['site']['cor_primaria'] ?? '#007bff' ?>;">Botão Primário</button>
                                     <button class="btn btn-success" style="background-color: <?= $configs['cores']['site']['cor_sucesso'] ?? '#28a745' ?>;">Botão Sucesso</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Preview da Paginação</h4>
+                                <div class="border rounded p-3">
+                                    <p class="text-muted mb-3">Exemplo de como a paginação aparecerá no site:</p>
+                                    <nav aria-label="Navegação de exemplo">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="#">1</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">2</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">3</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">4</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">5</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">Próximo</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>
