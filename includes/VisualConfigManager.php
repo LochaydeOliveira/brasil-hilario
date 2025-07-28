@@ -135,17 +135,30 @@ class VisualConfigManager {
         if (isset($configs['cores']['paginacao'])) {
             $paginacao = $configs['cores']['paginacao'];
             $css .= ".pagination {\n";
-            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']};\n";
+            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']} !important;\n";
             $css .= "}\n\n";
             
             $css .= ".page-link {\n";
-            if (isset($paginacao['cor_link'])) $css .= "  color: {$paginacao['cor_link']};\n";
-            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']};\n";
+            if (isset($paginacao['cor_link'])) $css .= "  color: {$paginacao['cor_link']} !important;\n";
+            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']} !important;\n";
+            $css .= "  border-color: {$paginacao['cor_link']} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= ".page-link:hover {\n";
+            if (isset($paginacao['cor_link'])) $css .= "  color: #ffffff !important;\n";
+            if (isset($paginacao['cor_link'])) $css .= "  background-color: {$paginacao['cor_link']} !important;\n";
+            $css .= "  border-color: {$paginacao['cor_link']} !important;\n";
             $css .= "}\n\n";
             
             $css .= ".page-item.active .page-link {\n";
-            if (isset($paginacao['cor_ativa'])) $css .= "  background-color: {$paginacao['cor_ativa']};\n";
-            if (isset($paginacao['cor_texto'])) $css .= "  color: {$paginacao['cor_texto']};\n";
+            if (isset($paginacao['cor_ativa'])) $css .= "  background-color: {$paginacao['cor_ativa']} !important;\n";
+            if (isset($paginacao['cor_texto'])) $css .= "  color: {$paginacao['cor_texto']} !important;\n";
+            $css .= "  border-color: {$paginacao['cor_ativa']} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= ".page-item.disabled .page-link {\n";
+            if (isset($paginacao['cor_link'])) $css .= "  color: {$paginacao['cor_link']} !important;\n";
+            $css .= "  opacity: 0.6;\n";
             $css .= "}\n\n";
         }
         

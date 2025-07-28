@@ -105,6 +105,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 // Obter configurações atuais
 $configs = $visualManager->getAllConfigs();
 
+// Aplicar configurações padrão se não existirem
+if (empty($configs['cores']['paginacao'])) {
+    $visualManager->setCor('paginacao', 'cor_fundo', '#ffffff');
+    $visualManager->setCor('paginacao', 'cor_texto', '#007bff');
+    $visualManager->setCor('paginacao', 'cor_link', '#007bff');
+    $visualManager->setCor('paginacao', 'cor_ativa', '#007bff');
+    $configs = $visualManager->getAllConfigs(); // Recarregar configurações
+    
+    // Forçar regeneração do CSS
+    $visualManager->saveCSS();
+}
+
 $page_title = 'Configurações Visuais';
 include 'includes/header.php';
 ?>
@@ -242,7 +254,7 @@ include 'includes/header.php';
                                 <div class="mb-3">
                                     <label class="form-label">Cor Ativa</label>
                                     <input type="color" class="form-control form-control-color" name="cor_paginacao_ativa" 
-                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#ffffff' ?>">
+                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#007bff' ?>">
                                 </div>
                             </div>
                         </div>

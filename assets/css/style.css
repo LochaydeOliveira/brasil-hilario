@@ -369,8 +369,9 @@ body {
 }
 
 .page-link {
-    color: var(--text-color);
-    border: none;
+    color: #007bff !important;
+    border: 1px solid #007bff !important;
+    background-color: #ffffff !important;
     padding: 0.8rem 1.2rem;
     margin: 0 0.2rem;
     font-size: 0.9rem;
@@ -379,8 +380,21 @@ body {
 }
 
 .page-link:hover {
-    background-color: var(--secondary-color);
-    color: #fff;
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #007bff !important;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #007bff !important;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+    opacity: 0.6;
 }
 
 /* Breadcrumb */
