@@ -670,7 +670,7 @@ footer {
     position: relative;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    border-radius: 8px;
+    border-radius: 0;
 }
 
 .post-image img {
