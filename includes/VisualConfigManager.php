@@ -20,12 +20,23 @@ class VisualConfigManager {
     }
     
     public function setCor($elemento, $propriedade, $valor) {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
-            VALUES ('cores', ?, ?, ?, 'cor')
-            ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
-        ");
-        return $stmt->execute([$elemento, $propriedade, $valor]);
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('cores', ?, ?, ?, 'cor')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            $resultado = $stmt->execute([$elemento, $propriedade, $valor]);
+            
+            if (!$resultado) {
+                error_log("Erro ao salvar cor: {$elemento}.{$propriedade} = {$valor}");
+            }
+            
+            return $resultado;
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar cor: " . $e->getMessage());
+            return false;
+        }
     }
     
     // Gerenciar fontes
@@ -40,12 +51,23 @@ class VisualConfigManager {
     }
     
     public function setFonte($elemento, $propriedade, $valor) {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
-            VALUES ('fontes', ?, ?, ?, 'fonte')
-            ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
-        ");
-        return $stmt->execute([$elemento, $propriedade, $valor]);
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', ?, ?, ?, 'fonte')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            $resultado = $stmt->execute([$elemento, $propriedade, $valor]);
+            
+            if (!$resultado) {
+                error_log("Erro ao salvar fonte: {$elemento}.{$propriedade} = {$valor}");
+            }
+            
+            return $resultado;
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar fonte: " . $e->getMessage());
+            return false;
+        }
     }
     
     // Obter todas as configurações visuais
@@ -141,11 +163,29 @@ class VisualConfigManager {
     
     // Salvar CSS em arquivo
     public function saveCSS($filepath = null) {
-        if (!$filepath) {
-            $filepath = __DIR__ . '/../assets/css/dynamic.css';
+        try {
+            if (!$filepath) {
+                $filepath = __DIR__ . '/../assets/css/dynamic.css';
+            }
+            
+            // Garantir que o diretório existe
+            $dir = dirname($filepath);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            
+            $css = $this->generateCSS();
+            $resultado = file_put_contents($filepath, $css);
+            
+            if ($resultado === false) {
+                error_log("Erro ao salvar CSS em: {$filepath}");
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar CSS: " . $e->getMessage());
+            return false;
         }
-        
-        $css = $this->generateCSS();
-        return file_put_contents($filepath, $css);
     }
 } 

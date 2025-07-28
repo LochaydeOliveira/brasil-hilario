@@ -26,43 +26,76 @@ $tipo_mensagem = 'success';
 // Processar formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     try {
-        $categoria = $_POST['categoria'] ?? 'cores';
+        $salvas = 0;
+        $debug_info = [];
         
-        if ($categoria === 'cores') {
-            // Processar cores
-            $elementos = ['site', 'header', 'footer', 'navbar', 'botao', 'link'];
-            foreach ($elementos as $elemento) {
-                if (isset($_POST["cor_{$elemento}_primaria"])) {
-                    $visualManager->setCor($elemento, 'cor_primaria', $_POST["cor_{$elemento}_primaria"]);
-                }
-                if (isset($_POST["cor_{$elemento}_secundaria"])) {
-                    $visualManager->setCor($elemento, 'cor_secundaria', $_POST["cor_{$elemento}_secundaria"]);
-                }
-                if (isset($_POST["cor_{$elemento}_texto"])) {
-                    $visualManager->setCor($elemento, 'cor_texto', $_POST["cor_{$elemento}_texto"]);
-                }
-                if (isset($_POST["cor_{$elemento}_fundo"])) {
-                    $visualManager->setCor($elemento, 'cor_fundo', $_POST["cor_{$elemento}_fundo"]);
+        // Processar todas as configurações de cores
+        foreach ($_POST as $chave => $valor) {
+            if (strpos($chave, 'cor_') === 0 && !empty($valor)) {
+                // Extrair elemento e propriedade do nome do campo
+                // Exemplo: cor_header_link -> elemento: header, propriedade: cor_link
+                $partes = explode('_', $chave, 3);
+                if (count($partes) >= 3) {
+                    $elemento = $partes[1];
+                    $propriedade = 'cor_' . $partes[2];
+                    
+                    $resultado = $visualManager->setCor($elemento, $propriedade, $valor);
+                    if ($resultado) {
+                        $salvas++;
+                        $debug_info[] = "✅ {$chave} -> {$elemento}.{$propriedade} = {$valor}";
+                    } else {
+                        $debug_info[] = "❌ Falha ao salvar {$chave}";
+                    }
                 }
             }
-        } elseif ($categoria === 'fontes') {
-            // Processar fontes
-            $elementos = ['site', 'titulo', 'subtitulo', 'paragrafo', 'menu'];
-            foreach ($elementos as $elemento) {
-                if (isset($_POST["fonte_{$elemento}"])) {
-                    $visualManager->setFonte($elemento, 'fonte', $_POST["fonte_{$elemento}"]);
+        }
+        
+        // Processar todas as configurações de fontes
+        foreach ($_POST as $chave => $valor) {
+            if (strpos($chave, 'fonte_') === 0 && !empty($valor)) {
+                // Exemplo: fonte_site -> elemento: site, propriedade: fonte
+                $elemento = substr($chave, 6); // Remove 'fonte_'
+                
+                $resultado = $visualManager->setFonte($elemento, 'fonte', $valor);
+                if ($resultado) {
+                    $salvas++;
+                    $debug_info[] = "✅ {$chave} -> {$elemento}.fonte = {$valor}";
+                } else {
+                    $debug_info[] = "❌ Falha ao salvar {$chave}";
                 }
-                if (isset($_POST["tamanho_{$elemento}"])) {
-                    $visualManager->setFonte($elemento, 'tamanho', $_POST["tamanho_{$elemento}"]);
+            }
+        }
+        
+        // Processar todos os tamanhos de fonte
+        foreach ($_POST as $chave => $valor) {
+            if (strpos($chave, 'tamanho_') === 0 && !empty($valor)) {
+                // Exemplo: tamanho_titulo -> elemento: titulo, propriedade: tamanho
+                $elemento = substr($chave, 8); // Remove 'tamanho_'
+                
+                $resultado = $visualManager->setFonte($elemento, 'tamanho', $valor);
+                if ($resultado) {
+                    $salvas++;
+                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho = {$valor}";
+                } else {
+                    $debug_info[] = "❌ Falha ao salvar {$chave}";
                 }
             }
         }
         
         // Gerar CSS dinâmico
-        $visualManager->saveCSS();
+        $css_salvo = $visualManager->saveCSS();
         
-        $mensagem = 'Configurações visuais salvas com sucesso!';
+        $mensagem = "Configurações visuais salvas com sucesso! ({$salvas} configurações atualizadas)";
+        if (!$css_salvo) {
+            $mensagem .= " ⚠️ CSS não foi atualizado";
+        }
         $tipo_mensagem = 'success';
+        
+        // Debug temporário (remover depois)
+        if (!empty($debug_info)) {
+            $mensagem .= "\n\nDebug:\n" . implode("\n", $debug_info);
+        }
+        
     } catch (Exception $e) {
         $mensagem = 'Erro ao salvar configurações: ' . $e->getMessage();
         $tipo_mensagem = 'danger';
@@ -89,7 +122,7 @@ include 'includes/header.php';
             
             <?php if ($mensagem): ?>
                 <div class="alert alert-<?= $tipo_mensagem ?> alert-dismissible fade show" role="alert">
-                    <?= $mensagem ?>
+                    <pre style="white-space: pre-wrap; margin: 0;"><?= htmlspecialchars($mensagem) ?></pre>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
