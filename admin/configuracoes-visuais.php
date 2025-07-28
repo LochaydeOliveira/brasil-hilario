@@ -133,13 +133,10 @@ include 'includes/header.php';
 ?>
 
     <style>
-        /* CSS específico para paginação na página de configurações visuais */
-        .pagination {
-            margin: 2rem 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-        }
-        
+        /* CSS específico para paginação na página de configurações visuais - FORÇADO */
+        .pagination,
+        .pagination *,
+        .page-item,
         .page-link {
             color: #007bff !important;
             border: 1px solid #007bff !important;
@@ -152,6 +149,21 @@ include 'includes/header.php';
             transition: all 0.2s ease !important;
             display: block !important;
             position: relative !important;
+            min-width: 40px !important;
+            text-align: center !important;
+        }
+        
+        .pagination {
+            margin: 2rem 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            list-style: none !important;
+            padding: 0 !important;
+        }
+        
+        .page-item {
+            display: inline-block !important;
+            margin: 0 0.1rem !important;
         }
         
         .page-link:hover {
@@ -178,40 +190,63 @@ include 'includes/header.php';
             cursor: not-allowed !important;
         }
         
-        .page-item {
-            display: inline-block !important;
-            margin: 0 0.1rem !important;
-        }
-        
-        .page-item .page-link {
+        /* CSS específico para paginação dentro das abas - SUPER FORÇADO */
+        #visualTabs .pagination,
+        #visualTabs .pagination *,
+        #visualTabs .page-item,
+        #visualTabs .page-link,
+        .tab-pane .pagination,
+        .tab-pane .pagination *,
+        .tab-pane .page-item,
+        .tab-pane .page-link,
+        .tab-content .pagination,
+        .tab-content .pagination *,
+        .tab-content .page-item,
+        .tab-content .page-link,
+        .container-fluid .pagination,
+        .container-fluid .pagination *,
+        .container-fluid .page-item,
+        .container-fluid .page-link,
+        .col-12 .pagination,
+        .col-12 .pagination *,
+        .col-12 .page-item,
+        .col-12 .page-link {
+            color: #007bff !important;
+            border: 1px solid #007bff !important;
+            background-color: #ffffff !important;
+            font-size: 0.875rem !important;
+            text-decoration: none !important;
+            display: block !important;
+            position: relative !important;
             min-width: 40px !important;
             text-align: center !important;
         }
         
-        /* CSS específico para paginação dentro das abas */
-        #visualTabs .pagination .page-link {
+        /* Forçar visibilidade em todos os contextos possíveis */
+        .pagination-sm .page-link,
+        .pagination-sm .page-item .page-link {
             color: #007bff !important;
             border: 1px solid #007bff !important;
             background-color: #ffffff !important;
+            font-size: 0.875rem !important;
+            text-decoration: none !important;
+            display: block !important;
+            position: relative !important;
+            min-width: 40px !important;
+            text-align: center !important;
         }
         
-        #visualTabs .pagination .page-link:hover {
-            background-color: #007bff !important;
-            color: #ffffff !important;
-        }
-        
-        #visualTabs .pagination .page-item.active .page-link {
-            background-color: #007bff !important;
-            color: #ffffff !important;
-        }
-        
-        /* Forçar cores em todos os contextos */
-        .tab-pane .pagination .page-link,
-        .tab-content .pagination .page-link,
-        .container-fluid .pagination .page-link {
+        /* Override de qualquer CSS que possa estar interferindo */
+        *[class*="pagination"] *[class*="page-link"] {
             color: #007bff !important;
             border: 1px solid #007bff !important;
             background-color: #ffffff !important;
+            font-size: 0.875rem !important;
+            text-decoration: none !important;
+            display: block !important;
+            position: relative !important;
+            min-width: 40px !important;
+            text-align: center !important;
         }
     </style>
 </head>
@@ -587,6 +622,41 @@ document.querySelectorAll('input[type="color"], select').forEach(input => {
     input.addEventListener('change', function() {
         // Aqui você pode adicionar JavaScript para atualizar o preview em tempo real
         console.log('Configuração alterada:', this.name, this.value);
+    });
+});
+
+// Forçar aplicação do CSS da paginação
+function forcarCSSPaginacao() {
+    const paginacoes = document.querySelectorAll('.pagination .page-link');
+    paginacoes.forEach(link => {
+        link.style.color = '#007bff';
+        link.style.border = '1px solid #007bff';
+        link.style.backgroundColor = '#ffffff';
+        link.style.fontSize = '0.875rem';
+        link.style.textDecoration = 'none';
+        link.style.display = 'block';
+        link.style.position = 'relative';
+        link.style.minWidth = '40px';
+        link.style.textAlign = 'center';
+    });
+    
+    const pageItems = document.querySelectorAll('.page-item');
+    pageItems.forEach(item => {
+        item.style.display = 'inline-block';
+        item.style.margin = '0 0.1rem';
+    });
+}
+
+// Aplicar CSS quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    forcarCSSPaginacao();
+    
+    // Aplicar CSS quando as abas mudarem
+    const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+    tabs.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function() {
+            setTimeout(forcarCSSPaginacao, 100);
+        });
     });
 });
 
