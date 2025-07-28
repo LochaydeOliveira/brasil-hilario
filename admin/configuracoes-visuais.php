@@ -158,8 +158,10 @@ include 'includes/header.php';
         }
 
         .form-control-color {
-            width: 100%;
-            height: 38px;
+            width: 6%;
+            height: 40px;
+            border-radius: 0;
+            border: none!important;
         }
 
         .card-header {
