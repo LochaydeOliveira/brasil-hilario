@@ -105,18 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 // Obter configurações atuais
 $configs = $visualManager->getAllConfigs();
 
-// Aplicar configurações padrão se não existirem
-if (empty($configs['cores']['paginacao'])) {
-    $visualManager->setCor('paginacao', 'cor_fundo', '#ffffff');
-    $visualManager->setCor('paginacao', 'cor_texto', '#007bff');
-    $visualManager->setCor('paginacao', 'cor_link', '#007bff');
-    $visualManager->setCor('paginacao', 'cor_ativa', '#007bff');
-    $configs = $visualManager->getAllConfigs(); // Recarregar configurações
-    
-    // Forçar regeneração do CSS
-    $visualManager->saveCSS();
-}
-
 // Aplicar configurações padrão de fontes se não existirem
 if (empty($configs['fontes']['site'])) {
     $visualManager->setFonte('site', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
@@ -192,46 +180,6 @@ include 'includes/header.php';
         .btn-primary:hover {
             background-color: #0b5ed7;
             border-color: #0a58ca;
-        }
-        
-        /* CSS específico para paginação - usando o mesmo padrão da página de configurações */
-        .pagination {
-            margin: 2rem 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .page-link {
-            color: #0d6efd;
-            border: 1px solid #dee2e6;
-            background-color: #fff;
-            padding: 0.5rem 0.75rem;
-            margin: 0 0.1rem;
-            font-size: 0.875rem;
-            text-decoration: none;
-            border-radius: 0.25rem;
-            transition: all 0.2s ease;
-        }
-
-        .page-link:hover {
-            background-color: #e9ecef;
-            color: #0d6efd;
-            border-color: #dee2e6;
-        }
-
-        .page-item.active .page-link {
-            background-color: #0d6efd;
-            color: #fff;
-            border-color: #0d6efd;
-            font-weight: 600;
-        }
-
-        .page-item.disabled .page-link {
-            color: #6c757d;
-            border-color: #dee2e6;
-            background-color: #fff;
-            opacity: 0.6;
-            cursor: not-allowed;
         }
     </style>
 </head>
@@ -389,55 +337,6 @@ include 'includes/header.php';
                         </div>
                         
                         <div class="row mt-4">
-                            <div class="col-md-6">
-                                <h4>Cores da Paginação</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor de Fundo</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_fundo" 
-                                           value="<?= $configs['cores']['paginacao']['cor_fundo'] ?? '#ffffff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor do Texto</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_texto" 
-                                           value="<?= $configs['cores']['paginacao']['cor_texto'] ?? '#007bff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor dos Links</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_link" 
-                                           value="<?= $configs['cores']['paginacao']['cor_link'] ?? '#007bff' ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Cor Ativa</label>
-                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_ativa" 
-                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#007bff' ?>">
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h4>Preview da Paginação</h4>
-                                <div class="border rounded p-3 bg-light">
-                                    <p class="text-muted small mb-2">Como a paginação aparecerá:</p>
-                                    <nav aria-label="Preview da paginação">
-                                        <ul class="pagination pagination-sm justify-content-center">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1">‹</a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">›</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     
@@ -552,39 +451,6 @@ include 'includes/header.php';
                             </div>
                         </div>
                         
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h4>Preview da Paginação</h4>
-                                <div class="border rounded p-3">
-                                    <p class="text-muted mb-3">Exemplo de como a paginação aparecerá no site:</p>
-                                    <nav aria-label="Navegação de exemplo">
-                                        <ul class="pagination justify-content-center">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">4</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">5</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">Próximo</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
