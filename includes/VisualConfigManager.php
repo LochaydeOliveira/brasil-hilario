@@ -192,37 +192,39 @@ class VisualConfigManager {
         }
         
         // Fontes
-        if (isset($configs['fontes']['site'])) {
-            $fontes = $configs['fontes']['site'];
-            $css .= "body {\n";
-            if (isset($fontes['fonte'])) $css .= "  font-family: {$fontes['fonte']};\n";
-            $css .= "}\n\n";
-        }
-        
-        // Fontes específicas para elementos
         if (isset($configs['fontes'])) {
-            foreach ($configs['fontes'] as $elemento => $props) {
-                if ($elemento !== 'site' && isset($props['fonte'])) {
-                    $css .= "h1, h2, h3, h4, h5, h6 {\n";
-                    $css .= "  font-family: {$props['fonte']};\n";
-                    $css .= "}\n\n";
-                    
-                    $css .= "p, div {\n";
-                    $css .= "  font-family: {$props['fonte']};\n";
-                    $css .= "}\n\n";
-                    break; // Aplicar apenas uma vez
-                }
+            // Fonte principal do site
+            if (isset($configs['fontes']['site']['fonte'])) {
+                $css .= "body {\n";
+                $css .= "  font-family: {$configs['fontes']['site']['fonte']};\n";
+                $css .= "}\n\n";
             }
-        }
-        
-        // Tamanhos de fonte
-        if (isset($configs['fontes'])) {
-            foreach ($configs['fontes'] as $elemento => $props) {
-                if ($elemento !== 'site' && isset($props['tamanho'])) {
-                    $css .= ".{$elemento} {\n";
-                    $css .= "  font-size: {$props['tamanho']};\n";
-                    $css .= "}\n\n";
-                }
+            
+            // Fonte dos títulos
+            if (isset($configs['fontes']['titulo']['fonte'])) {
+                $css .= "h1, h2, h3, h4, h5, h6 {\n";
+                $css .= "  font-family: {$configs['fontes']['titulo']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
+            // Fonte dos parágrafos
+            if (isset($configs['fontes']['paragrafo']['fonte'])) {
+                $css .= "p {\n";
+                $css .= "  font-family: {$configs['fontes']['paragrafo']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
+            // Tamanhos de fonte
+            if (isset($configs['fontes']['titulo']['tamanho'])) {
+                $css .= "h1, h2, h3, h4, h5, h6 {\n";
+                $css .= "  font-size: {$configs['fontes']['titulo']['tamanho']};\n";
+                $css .= "}\n\n";
+            }
+            
+            if (isset($configs['fontes']['paragrafo']['tamanho'])) {
+                $css .= "p {\n";
+                $css .= "  font-size: {$configs['fontes']['paragrafo']['tamanho']};\n";
+                $css .= "}\n\n";
             }
         }
         

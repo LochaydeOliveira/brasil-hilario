@@ -705,7 +705,7 @@ footer {
 .post-thumbnail {
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 0;
 }
 
 .post-thumbnail img {

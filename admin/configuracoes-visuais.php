@@ -117,6 +117,17 @@ if (empty($configs['cores']['paginacao'])) {
     $visualManager->saveCSS();
 }
 
+// Aplicar configurações padrão de fontes se não existirem
+if (empty($configs['fontes']['site'])) {
+    $visualManager->setFonte('site', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
+    $visualManager->setFonte('titulo', 'fonte', 'Merriweather, serif');
+    $visualManager->setFonte('paragrafo', 'fonte', 'Inter, sans-serif');
+    $configs = $visualManager->getAllConfigs(); // Recarregar configurações
+    
+    // Forçar regeneração do CSS
+    $visualManager->saveCSS();
+}
+
 $page_title = 'Configurações Visuais';
 include 'includes/header.php';
 ?>
@@ -175,6 +186,32 @@ include 'includes/header.php';
         .page-item .page-link {
             min-width: 40px !important;
             text-align: center !important;
+        }
+        
+        /* CSS específico para paginação dentro das abas */
+        #visualTabs .pagination .page-link {
+            color: #007bff !important;
+            border: 1px solid #007bff !important;
+            background-color: #ffffff !important;
+        }
+        
+        #visualTabs .pagination .page-link:hover {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+        }
+        
+        #visualTabs .pagination .page-item.active .page-link {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+        }
+        
+        /* Forçar cores em todos os contextos */
+        .tab-pane .pagination .page-link,
+        .tab-content .pagination .page-link,
+        .container-fluid .pagination .page-link {
+            color: #007bff !important;
+            border: 1px solid #007bff !important;
+            background-color: #ffffff !important;
         }
     </style>
 </head>
