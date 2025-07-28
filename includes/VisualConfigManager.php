@@ -131,6 +131,53 @@ class VisualConfigManager {
             $css .= "}\n\n";
         }
         
+        // Cores da paginação
+        if (isset($configs['cores']['paginacao'])) {
+            $paginacao = $configs['cores']['paginacao'];
+            $css .= ".pagination {\n";
+            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']};\n";
+            $css .= "}\n\n";
+            
+            $css .= ".page-link {\n";
+            if (isset($paginacao['cor_link'])) $css .= "  color: {$paginacao['cor_link']};\n";
+            if (isset($paginacao['cor_fundo'])) $css .= "  background-color: {$paginacao['cor_fundo']};\n";
+            $css .= "}\n\n";
+            
+            $css .= ".page-item.active .page-link {\n";
+            if (isset($paginacao['cor_ativa'])) $css .= "  background-color: {$paginacao['cor_ativa']};\n";
+            if (isset($paginacao['cor_texto'])) $css .= "  color: {$paginacao['cor_texto']};\n";
+            $css .= "}\n\n";
+        }
+        
+        // Cores dos botões
+        if (isset($configs['cores']['botao'])) {
+            $botao = $configs['cores']['botao'];
+            $css .= ".btn-primary {\n";
+            if (isset($botao['cor_primario'])) $css .= "  background-color: {$botao['cor_primario']};\n";
+            $css .= "}\n\n";
+            
+            $css .= ".btn-secondary {\n";
+            if (isset($botao['cor_secundario'])) $css .= "  background-color: {$botao['cor_secundario']};\n";
+            $css .= "}\n\n";
+            
+            $css .= ".btn-success {\n";
+            if (isset($botao['cor_sucesso'])) $css .= "  background-color: {$botao['cor_sucesso']};\n";
+            $css .= "}\n\n";
+        }
+        
+        // Cores dos cards
+        if (isset($configs['cores']['card'])) {
+            $card = $configs['cores']['card'];
+            $css .= ".card {\n";
+            if (isset($card['cor_fundo'])) $css .= "  background-color: {$card['cor_fundo']};\n";
+            if (isset($card['cor_borda'])) $css .= "  border-color: {$card['cor_borda']};\n";
+            $css .= "}\n\n";
+            
+            $css .= ".card-body {\n";
+            if (isset($card['cor_texto'])) $css .= "  color: {$card['cor_texto']};\n";
+            $css .= "}\n\n";
+        }
+        
         // Fontes
         if (isset($configs['fontes']['site'])) {
             $fontes = $configs['fontes']['site'];

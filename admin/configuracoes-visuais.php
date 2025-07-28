@@ -221,6 +221,70 @@ include 'includes/header.php';
                                            value="<?= $configs['cores']['footer']['cor_link'] ?? '#007bff' ?>">
                                 </div>
                             </div>
+                            
+                            <div class="col-md-6">
+                                <h4>Cores da Paginação</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor de Fundo</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_fundo" 
+                                           value="<?= $configs['cores']['paginacao']['cor_fundo'] ?? '#ffffff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor do Texto</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_texto" 
+                                           value="<?= $configs['cores']['paginacao']['cor_texto'] ?? '#007bff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor dos Links</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_link" 
+                                           value="<?= $configs['cores']['paginacao']['cor_link'] ?? '#007bff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor Ativa</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_paginacao_ativa" 
+                                           value="<?= $configs['cores']['paginacao']['cor_ativa'] ?? '#ffffff' ?>">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h4>Cores dos Botões</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor Primária</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_botao_primario" 
+                                           value="<?= $configs['cores']['botao']['cor_primario'] ?? '#007bff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor Secundária</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_botao_secundario" 
+                                           value="<?= $configs['cores']['botao']['cor_secundario'] ?? '#6c757d' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor de Sucesso</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_botao_sucesso" 
+                                           value="<?= $configs['cores']['botao']['cor_sucesso'] ?? '#28a745' ?>">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h4>Cores dos Cards</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor de Fundo</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_card_fundo" 
+                                           value="<?= $configs['cores']['card']['cor_fundo'] ?? '#ffffff' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor da Borda</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_card_borda" 
+                                           value="<?= $configs['cores']['card']['cor_borda'] ?? '#dee2e6' ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cor do Texto</label>
+                                    <input type="color" class="form-control form-control-color" name="cor_card_texto" 
+                                           value="<?= $configs['cores']['card']['cor_texto'] ?? '#212529' ?>">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -351,6 +415,66 @@ document.querySelectorAll('input[type="color"], select').forEach(input => {
         // Aqui você pode adicionar JavaScript para atualizar o preview em tempo real
         console.log('Configuração alterada:', this.name, this.value);
     });
+});
+
+// Atalho de teclado CTRL+S para salvar
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault(); // Previne o comportamento padrão do navegador
+        
+        // Mostrar feedback visual
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            submitBtn.disabled = true;
+            
+            // Simular clique no botão
+            submitBtn.click();
+            
+            // Restaurar botão após 2 segundos
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+        
+        // Mostrar notificação
+        showNotification('Salvando configurações...', 'info');
+    }
+});
+
+// Função para mostrar notificações
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover automaticamente após 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
+// Mostrar dica sobre o atalho
+document.addEventListener('DOMContentLoaded', function() {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.title = 'Pressione CTRL+S para salvar rapidamente';
+    }
+    
+    // Mostrar dica inicial
+    setTimeout(() => {
+        showNotification('💡 Dica: Use CTRL+S para salvar rapidamente!', 'info');
+    }, 1000);
 });
 </script>
 
