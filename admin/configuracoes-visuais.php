@@ -133,120 +133,103 @@ include 'includes/header.php';
 ?>
 
     <style>
-        /* CSS específico para paginação na página de configurações visuais - FORÇADO */
-        .pagination,
-        .pagination *,
-        .page-item,
-        .page-link {
-            color: #007bff !important;
-            border: 1px solid #007bff !important;
-            background-color: #ffffff !important;
-            padding: 0.5rem 0.75rem !important;
-            margin: 0 0.1rem !important;
-            font-size: 0.875rem !important;
-            text-decoration: none !important;
-            border-radius: 0.25rem !important;
-            transition: all 0.2s ease !important;
-            display: block !important;
-            position: relative !important;
-            min-width: 40px !important;
-            text-align: center !important;
+        /* CSS copiado da página de configurações que funciona */
+        .nav-tabs .nav-link {
+            color: #495057!important;
+            border: none;
+            border-bottom: 6px solid transparent;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: #495057;
+            color: #495057;
+        }
+
+        .nav-tabs .nav-link.active {
+            border-bottom-color:#0b8103;
+            background-color: transparent;
+            color: #0b8103;
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 0.5rem;
+        }
+
+        .form-control-color {
+            width: 100%;
+            height: 38px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card-header .card-title {
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .card-header .card-title i {
+            margin-right: 0.5rem;
+            color: #0d6efd;
+        }
+
+        .form-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
         }
         
+        /* CSS específico para paginação - usando o mesmo padrão da página de configurações */
         .pagination {
-            margin: 2rem 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            list-style: none !important;
-            padding: 0 !important;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
         }
-        
-        .page-item {
-            display: inline-block !important;
-            margin: 0 0.1rem !important;
+
+        .page-link {
+            color: #0d6efd;
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.1rem;
+            font-size: 0.875rem;
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
         }
-        
+
         .page-link:hover {
-            background-color: #007bff !important;
-            color: #ffffff !important;
-            border-color: #007bff !important;
-            text-decoration: none !important;
-            z-index: 2 !important;
+            background-color: #e9ecef;
+            color: #0d6efd;
+            border-color: #dee2e6;
         }
-        
+
         .page-item.active .page-link {
-            background-color: #007bff !important;
-            color: #ffffff !important;
-            border-color: #007bff !important;
-            font-weight: 600 !important;
-            z-index: 3 !important;
+            background-color: #0d6efd;
+            color: #fff;
+            border-color: #0d6efd;
+            font-weight: 600;
         }
-        
+
         .page-item.disabled .page-link {
-            color: #6c757d !important;
-            border-color: #6c757d !important;
-            background-color: #ffffff !important;
-            opacity: 0.6 !important;
-            cursor: not-allowed !important;
-        }
-        
-        /* CSS específico para paginação dentro das abas - SUPER FORÇADO */
-        #visualTabs .pagination,
-        #visualTabs .pagination *,
-        #visualTabs .page-item,
-        #visualTabs .page-link,
-        .tab-pane .pagination,
-        .tab-pane .pagination *,
-        .tab-pane .page-item,
-        .tab-pane .page-link,
-        .tab-content .pagination,
-        .tab-content .pagination *,
-        .tab-content .page-item,
-        .tab-content .page-link,
-        .container-fluid .pagination,
-        .container-fluid .pagination *,
-        .container-fluid .page-item,
-        .container-fluid .page-link,
-        .col-12 .pagination,
-        .col-12 .pagination *,
-        .col-12 .page-item,
-        .col-12 .page-link {
-            color: #007bff !important;
-            border: 1px solid #007bff !important;
-            background-color: #ffffff !important;
-            font-size: 0.875rem !important;
-            text-decoration: none !important;
-            display: block !important;
-            position: relative !important;
-            min-width: 40px !important;
-            text-align: center !important;
-        }
-        
-        /* Forçar visibilidade em todos os contextos possíveis */
-        .pagination-sm .page-link,
-        .pagination-sm .page-item .page-link {
-            color: #007bff !important;
-            border: 1px solid #007bff !important;
-            background-color: #ffffff !important;
-            font-size: 0.875rem !important;
-            text-decoration: none !important;
-            display: block !important;
-            position: relative !important;
-            min-width: 40px !important;
-            text-align: center !important;
-        }
-        
-        /* Override de qualquer CSS que possa estar interferindo */
-        *[class*="pagination"] *[class*="page-link"] {
-            color: #007bff !important;
-            border: 1px solid #007bff !important;
-            background-color: #ffffff !important;
-            font-size: 0.875rem !important;
-            text-decoration: none !important;
-            display: block !important;
-            position: relative !important;
-            min-width: 40px !important;
-            text-align: center !important;
+            color: #6c757d;
+            border-color: #dee2e6;
+            background-color: #fff;
+            opacity: 0.6;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -622,41 +605,6 @@ document.querySelectorAll('input[type="color"], select').forEach(input => {
     input.addEventListener('change', function() {
         // Aqui você pode adicionar JavaScript para atualizar o preview em tempo real
         console.log('Configuração alterada:', this.name, this.value);
-    });
-});
-
-// Forçar aplicação do CSS da paginação
-function forcarCSSPaginacao() {
-    const paginacoes = document.querySelectorAll('.pagination .page-link');
-    paginacoes.forEach(link => {
-        link.style.color = '#007bff';
-        link.style.border = '1px solid #007bff';
-        link.style.backgroundColor = '#ffffff';
-        link.style.fontSize = '0.875rem';
-        link.style.textDecoration = 'none';
-        link.style.display = 'block';
-        link.style.position = 'relative';
-        link.style.minWidth = '40px';
-        link.style.textAlign = 'center';
-    });
-    
-    const pageItems = document.querySelectorAll('.page-item');
-    pageItems.forEach(item => {
-        item.style.display = 'inline-block';
-        item.style.margin = '0 0.1rem';
-    });
-}
-
-// Aplicar CSS quando a página carregar
-document.addEventListener('DOMContentLoaded', function() {
-    forcarCSSPaginacao();
-    
-    // Aplicar CSS quando as abas mudarem
-    const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
-    tabs.forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function() {
-            setTimeout(forcarCSSPaginacao, 100);
-        });
     });
 });
 
