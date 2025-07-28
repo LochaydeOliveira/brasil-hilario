@@ -105,6 +105,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=05" rel="stylesheet">
+    <link href="<?php echo BLOG_URL; ?>/assets/css/dynamic.css?v=01" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 

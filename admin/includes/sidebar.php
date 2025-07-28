@@ -53,6 +53,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-cog"></i> Configurações
                 </a>
             </li>
+            
+            <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin'): ?>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $current_page === 'configuracoes-visuais.php' ? 'active' : ''; ?>" href="configuracoes-visuais.php">
+                    <i class="fas fa-palette"></i> Configurações Visuais
+                </a>
+            </li>
+            <?php endif; ?>
         </ul>
         
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
