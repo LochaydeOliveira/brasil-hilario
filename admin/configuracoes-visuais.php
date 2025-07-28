@@ -121,6 +121,64 @@ $page_title = 'Configurações Visuais';
 include 'includes/header.php';
 ?>
 
+    <style>
+        /* CSS específico para paginação na página de configurações visuais */
+        .pagination {
+            margin: 2rem 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+        
+        .page-link {
+            color: #007bff !important;
+            border: 1px solid #007bff !important;
+            background-color: #ffffff !important;
+            padding: 0.5rem 0.75rem !important;
+            margin: 0 0.1rem !important;
+            font-size: 0.875rem !important;
+            text-decoration: none !important;
+            border-radius: 0.25rem !important;
+            transition: all 0.2s ease !important;
+            display: block !important;
+            position: relative !important;
+        }
+        
+        .page-link:hover {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+            border-color: #007bff !important;
+            text-decoration: none !important;
+            z-index: 2 !important;
+        }
+        
+        .page-item.active .page-link {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+            border-color: #007bff !important;
+            font-weight: 600 !important;
+            z-index: 3 !important;
+        }
+        
+        .page-item.disabled .page-link {
+            color: #6c757d !important;
+            border-color: #6c757d !important;
+            background-color: #ffffff !important;
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+        
+        .page-item {
+            display: inline-block !important;
+            margin: 0 0.1rem !important;
+        }
+        
+        .page-item .page-link {
+            min-width: 40px !important;
+            text-align: center !important;
+        }
+    </style>
+</head>
+
 <div class="container-fluid">
     <div class="row">
         <?php include 'includes/sidebar.php'; ?>
