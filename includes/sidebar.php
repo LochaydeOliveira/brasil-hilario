@@ -58,7 +58,7 @@ try {
                             </a>
                         </div>
                     <?php endif; ?>
-                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
+                    <a style="line-height: 1.1rem !important;" href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
                         <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
