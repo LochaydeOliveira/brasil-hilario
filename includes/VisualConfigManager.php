@@ -183,6 +183,34 @@ class VisualConfigManager {
                 $css .= "}\n\n";
             }
             
+            // Fonte dos cards/posts
+            if (isset($configs['fontes']['card']['fonte'])) {
+                $css .= ".post-card .card-title, .card-title, .post-title {\n";
+                $css .= "  font-family: {$configs['fontes']['card']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
+            // Fonte da sidebar
+            if (isset($configs['fontes']['sidebar']['fonte'])) {
+                $css .= ".sidebar a, .sidebar .card-title, .sidebar-title {\n";
+                $css .= "  font-family: {$configs['fontes']['sidebar']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
+            // Fonte dos meta textos
+            if (isset($configs['fontes']['meta']['fonte'])) {
+                $css .= ".post-meta, .text-muted, small, .meta-text {\n";
+                $css .= "  font-family: {$configs['fontes']['meta']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
+            // Fonte dos botões
+            if (isset($configs['fontes']['botao']['fonte'])) {
+                $css .= ".btn, button {\n";
+                $css .= "  font-family: {$configs['fontes']['botao']['fonte']};\n";
+                $css .= "}\n\n";
+            }
+            
             // Tamanhos de fonte
             if (isset($configs['fontes']['titulo']['tamanho'])) {
                 $css .= "h1, h2, h3, h4, h5, h6 {\n";

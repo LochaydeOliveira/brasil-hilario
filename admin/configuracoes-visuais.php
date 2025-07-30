@@ -346,7 +346,7 @@ include 'includes/header.php';
                             <div class="col-md-6">
                                 <h4>Fontes Principais</h4>
                                 <div class="mb-3">
-                                    <label class="form-label">Fonte Principal</label>
+                                    <label class="form-label">Fonte Principal (Body)</label>
                                     <select class="form-select" name="fonte_site">
                                         <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
                                         <option value="Arial, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
@@ -380,6 +380,54 @@ include 'includes/header.php';
                                         <option value="Times New Roman, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
                                         <option value="Merriweather, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
                                         <option value="Inter, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Fonte dos Cards/Posts</label>
+                                    <select class="form-select" name="fonte_card">
+                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                        <option value="Georgia, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Fonte da Sidebar</label>
+                                    <select class="form-select" name="fonte_sidebar">
+                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                        <option value="Georgia, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Fonte dos Meta Textos</label>
+                                    <select class="form-select" name="fonte_meta">
+                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                        <option value="Georgia, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Fonte dos Botões</label>
+                                    <select class="form-select" name="fonte_botao">
+                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                        <option value="Georgia, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                        <option value="Merriweather, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
                                     </select>
                                 </div>
                             </div>
@@ -443,10 +491,24 @@ include 'includes/header.php';
                                 <h4>Preview do Conteúdo</h4>
                                 <div class="border rounded p-3">
                                     <h1 style="font-family: <?= $configs['fontes']['titulo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; font-size: <?= $configs['fontes']['titulo']['tamanho'] ?? '28px' ?>; color: <?= $configs['cores']['site']['cor_primaria'] ?? '#007bff' ?>;">Título Principal</h1>
-                                    <h2 style="font-family: <?= $configs['fontes']['subtitulo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; font-size: <?= $configs['fontes']['subtitulo']['tamanho'] ?? '20px' ?>; color: <?= $configs['cores']['site']['cor_secundaria'] ?? '#6c757d' ?>;">Subtítulo</h2>
+                                    <h2 style="font-family: <?= $configs['fontes']['titulo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; font-size: <?= $configs['fontes']['subtitulo']['tamanho'] ?? '20px' ?>; color: <?= $configs['cores']['site']['cor_secundaria'] ?? '#6c757d' ?>;">Subtítulo</h2>
                                     <p style="font-family: <?= $configs['fontes']['paragrafo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; font-size: <?= $configs['fontes']['paragrafo']['tamanho'] ?? '16px' ?>;">Este é um exemplo de parágrafo com as configurações de fonte aplicadas.</p>
-                                    <button class="btn btn-primary" style="background-color: <?= $configs['cores']['site']['cor_primaria'] ?? '#007bff' ?>;">Botão Primário</button>
-                                    <button class="btn btn-success" style="background-color: <?= $configs['cores']['site']['cor_sucesso'] ?? '#28a745' ?>;">Botão Sucesso</button>
+                                    
+                                    <div class="card mb-3" style="font-family: <?= $configs['fontes']['card']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Título do Card</h5>
+                                            <p class="card-text">Texto do card com fonte personalizada.</p>
+                                            <small class="text-muted" style="font-family: <?= $configs['fontes']['meta']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>;">Meta texto - 15/01/2024</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="sidebar-preview" style="font-family: <?= $configs['fontes']['sidebar']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>;">
+                                        <h6>Sidebar Preview</h6>
+                                        <a href="#" class="d-block">Link da sidebar</a>
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" style="font-family: <?= $configs['fontes']['botao']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; background-color: <?= $configs['cores']['site']['cor_primaria'] ?? '#007bff' ?>;">Botão Primário</button>
+                                    <button class="btn btn-success" style="font-family: <?= $configs['fontes']['botao']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ?>; background-color: <?= $configs['cores']['site']['cor_sucesso'] ?? '#28a745' ?>;">Botão Sucesso</button>
                                 </div>
                             </div>
                         </div>
