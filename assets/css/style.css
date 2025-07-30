@@ -568,6 +568,7 @@ footer {
     border-radius: 1px!important;
     background: #fcbd07!important;
     color: #000!important;
+    text-transform: uppercase!important;
 }
 
 .header-pg-ctt {
