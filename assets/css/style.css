@@ -366,84 +366,35 @@ body {
 /* Pagination */
 .pagination {
     margin: 3rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    background: transparent;
-    border: none;
-}
-
-.page-item {
-    margin: 0;
-    border: none;
 }
 
 .page-link {
-    color: #0b8103 !important;
-    border: 2px solid #0b8103 !important;
-    background-color: #ffffff !important;
-    padding: 12px 24px;
-    margin: 0;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.2s ease;
-    position: relative;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0;
+    color: #0b8103;
+    border: 1px solid #0b8103;
+    background-color: #fff;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    font-size: 0.875rem;
     text-decoration: none;
-    min-width: 120px;
 }
 
 .page-link:hover {
-    background-color: #0b8103 !important;
-    color: #ffffff !important;
+    background-color: #fcbd07;
+    color: #000;
+    border-color: #fcbd07;
 }
 
 .page-item.active .page-link {
-    background-color: #0b8103 !important;
-    color: #ffffff !important;
-    font-weight: 600;
+    background-color: #0b8103;
+    color: #fff;
+    border-color: #0b8103;
 }
 
 .page-item.disabled .page-link {
-    color: #6c757d !important;
-    border-color: #6c757d !important;
-    background-color: #f8f9fa !important;
+    color: #6c757d;
+    border-color: #dee2e6;
+    background-color: #fff;
     opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.page-item.disabled .page-link:hover {
-    background-color: #f8f9fa !important;
-    color: #6c757d !important;
-}
-
-/* Responsividade para mobile */
-@media (max-width: 767.98px) {
-    .pagination {
-        margin: 2rem 0;
-        gap: 0.5rem;
-    }
-    
-    .page-link {
-        padding: 10px 16px;
-        font-size: 0.8rem;
-        min-width: 100px;
-    }
-}
-
-/* Efeito de foco para acessibilidade */
-.page-link:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(11, 129, 3, 0.25);
-    z-index: 2;
 }
 
 /* Breadcrumb */
