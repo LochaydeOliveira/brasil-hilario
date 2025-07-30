@@ -188,6 +188,7 @@ body {
     color: rgb(0, 0, 0);
     text-decoration: none;
     transition: color 0.1s ease;
+    line-height: 1.1rem!important;
 }
 
 .sidebar a:hover {
@@ -563,7 +564,7 @@ footer {
 }
 
 .list-unstyle a {
-    list-style: 1.1rem;
+    list-style: 1.1rem!important;
 }
 
 /* Responsividade para o footer */
