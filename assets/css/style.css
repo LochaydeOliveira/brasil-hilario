@@ -107,6 +107,7 @@ body {
 
 .title-posts {
     color: var(--black-100-color)!important;
+    font-size: 3rem!important;
 }
 
 .featured-post .card-title {
