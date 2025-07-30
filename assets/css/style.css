@@ -476,8 +476,8 @@ footer {
 
 .social-links .social-icon {
     font-size: 1.2rem;
-    color: white;
-    background-color: #8B7000;
+    color: rgb(0, 0, 0);
+    background-color: #fcbd07;
     width: 35px;
     height: 35px;
     display: flex;
@@ -488,8 +488,8 @@ footer {
 }
 
 .social-links .social-icon:hover {
-    background-color: #A08000;
-    color: white;
+    background-color: #fcbd07;
+    color: rgb(0, 0, 0);
 }
 
 .footer-title {
