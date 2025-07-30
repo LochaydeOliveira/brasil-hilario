@@ -562,6 +562,10 @@ footer {
     margin: 3rem auto;
 }
 
+.list-unstyle a {
+    list-style: 1.1rem;
+}
+
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
     .mg-custom {
