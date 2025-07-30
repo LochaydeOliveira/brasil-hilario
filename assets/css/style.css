@@ -206,8 +206,8 @@ body {
 /* Regra com máxima especificidade para títulos dos posts */
 .sidebar .card .card-body .list-unstyled li a {
     line-height: 1.1rem !important;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.1rem!important;
+    font-weight: 700!important;
 }
 
 /* Override para qualquer framework CSS */
