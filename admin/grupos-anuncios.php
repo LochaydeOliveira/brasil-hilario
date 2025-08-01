@@ -8,8 +8,8 @@ require_once '../includes/AnunciosManager.php';
 
 $page_title = 'Grupos de Anúncios';
 
-// Verificar login
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Verificar login - usar a mesma verificação do header
+if (!isset($_SESSION['usuario_id'])) {
     header('Location: login.php');
     exit;
 }
@@ -32,7 +32,7 @@ if (isset($_POST['excluir_grupo'])) {
 // Buscar grupos
 $grupos = $gruposManager->getAllGruposComStats();
 
-include 'header.php';
+include 'includes/header.php';
 ?>
 
 <div class="container-fluid">
@@ -162,4 +162,4 @@ function confirmarExclusao(grupoId, nomeGrupo) {
 }
 </script>
 
-<?php include 'footer.php'; ?> 
+<?php include 'includes/footer.php'; ?> 
