@@ -1,5 +1,7 @@
 <?php
 // Carregar anúncios para o conteúdo principal
+require_once 'AnunciosManager.php';
+
 try {
     $anunciosManager = new AnunciosManager($pdo);
     $anunciosConteudo = $anunciosManager->getAnunciosPorLocalizacao('conteudo');

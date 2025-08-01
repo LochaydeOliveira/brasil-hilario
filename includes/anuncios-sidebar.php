@@ -1,5 +1,7 @@
 <?php
 // Carregar anúncios para a sidebar
+require_once 'AnunciosManager.php';
+
 try {
     $anunciosManager = new AnunciosManager($pdo);
     $anunciosSidebar = $anunciosManager->getAnunciosPorLocalizacao('sidebar');
