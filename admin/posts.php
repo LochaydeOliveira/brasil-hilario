@@ -18,8 +18,8 @@ $ordenacao = $_GET['ordenacao'] ?? 'criado_em DESC';
 
 // Construir a consulta SQL com filtros
 $sql = "SELECT p.*, c.nome as categoria_nome 
-        FROM posts p 
-        LEFT JOIN categorias c ON p.categoria_id = c.id 
+                         FROM posts p 
+                         LEFT JOIN categorias c ON p.categoria_id = c.id 
         WHERE 1=1";
 $params = [];
 
@@ -207,35 +207,35 @@ include 'includes/header.php';
                                 </td>
                             </tr>
                         <?php else: ?>
-                            <?php foreach ($posts as $post): ?>
-                                <tr>
-                                    <td>
-                                        <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" target="_blank">
-                                            <?php echo htmlspecialchars($post['titulo']); ?>
-                                        </a>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($post['categoria_nome'] ?? 'Sem categoria'); ?></td>
-                                    <td>
-                                        <?php if ($post['publicado']): ?>
-                                            <span class="badge bg-success">Publicado</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-secondary">Rascunho</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo date('d/m/Y H:i', strtotime($post['criado_em'])); ?></td>
-                                    <td><?php echo number_format($post['visualizacoes'], 0, ',', '.'); ?></td>
-                                    <td>
-                                        <a href="editar-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="excluir-post.php?id=<?php echo $post['id']; ?>" 
-                                           class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Tem certeza que deseja excluir este post?')">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                        <?php foreach ($posts as $post): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" target="_blank">
+                                        <?php echo htmlspecialchars($post['titulo']); ?>
+                                    </a>
+                                </td>
+                                <td><?php echo htmlspecialchars($post['categoria_nome'] ?? 'Sem categoria'); ?></td>
+                                <td>
+                                    <?php if ($post['publicado']): ?>
+                                        <span class="badge bg-success">Publicado</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary">Rascunho</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($post['criado_em'])); ?></td>
+                                <td><?php echo number_format($post['visualizacoes'], 0, ',', '.'); ?></td>
+                                <td>
+                                    <a href="editar-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="excluir-post.php?id=<?php echo $post['id']; ?>" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Tem certeza que deseja excluir este post?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>

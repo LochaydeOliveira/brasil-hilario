@@ -276,10 +276,17 @@ class AnunciosManager {
      * Gerar HTML do anúncio
      */
     public function gerarHTMLAnuncio($anuncio) {
+        // Corrigir caminho da imagem se necessário
+        $imagem_path = $anuncio['imagem'];
+        if (!empty($imagem_path) && !preg_match('/^https?:\/\//', $imagem_path)) {
+            // Se não é uma URL externa, adicionar o caminho base
+            $imagem_path = BLOG_URL . $imagem_path;
+        }
+        
         $html = '<div class="anuncio-card" data-anuncio-id="' . $anuncio['id'] . '">';
         $html .= '<div class="anuncio-patrocinado">PATROCINADO</div>';
         $html .= '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
-        $html .= '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem">';
+        $html .= '<img src="' . htmlspecialchars($imagem_path) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem">';
         $html .= '</a>';
         $html .= '<div class="anuncio-conteudo">';
         $html .= '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">';

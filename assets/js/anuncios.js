@@ -1,131 +1,161 @@
 // Sistema de Anúncios Nativos
 // Brasil Hilário
 
-// Função para registrar cliques nos anúncios
+// Função para registrar clique em anúncio
 function registrarCliqueAnuncio(anuncioId, tipoClique) {
-    // Obter o ID do post atual (se disponível)
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
     
-    // Dados para enviar
-    const dados = {
-        anuncio_id: anuncioId,
-        tipo_clique: tipoClique,
-        post_id: postId
-    };
-    
-    // Enviar requisição assíncrona
     fetch('/api/registrar-clique-anuncio.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dados)
+        body: JSON.stringify({
+            anuncio_id: anuncioId,
+            post_id: postId,
+            tipo_clique: tipoClique
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Clique registrado:', data);
-        } else {
-            console.error('Erro ao registrar clique:', data.error);
+            console.log('Clique registrado com sucesso');
         }
     })
     .catch(error => {
-        console.error('Erro na requisição:', error);
+        console.error('Erro ao registrar clique:', error);
     });
 }
 
 // Função para inserir anúncios na sidebar
 function inserirAnunciosSidebar(anuncios, postsContainer) {
-    if (!anuncios || anuncios.length === 0) return;
-    
-    const posts = Array.from(postsContainer.children);
-    const anunciosHTML = anuncios.map(anuncio => anuncio.html).join('');
-    
-    // Se há apenas 1 anúncio, inserir após o primeiro post
-    if (anuncios.length === 1) {
-        if (posts.length > 0) {
-            const anuncioDiv = document.createElement('div');
-            anuncioDiv.innerHTML = anunciosHTML;
-            postsContainer.insertBefore(anuncioDiv.firstElementChild, posts[0].nextSibling);
-        }
-    } else {
-        // Intercalar anúncios com posts
-        let anuncioIndex = 0;
-        posts.forEach((post, index) => {
-            if (anuncioIndex < anuncios.length && index > 0 && index % 2 === 0) {
-                const anuncioDiv = document.createElement('div');
-                anuncioDiv.innerHTML = anuncios[anuncioIndex].html;
-                postsContainer.insertBefore(anuncioDiv.firstElementChild, post);
-                anuncioIndex++;
-            }
-        });
-        
-        // Adicionar anúncios restantes no final
-        for (let i = anuncioIndex; i < anuncios.length; i++) {
-            const anuncioDiv = document.createElement('div');
-            anuncioDiv.innerHTML = anuncios[i].html;
-            postsContainer.appendChild(anuncioDiv.firstElementChild);
-        }
+    if (!anuncios || anuncios.length === 0) {
+        console.log('Nenhum anúncio para sidebar');
+        return;
     }
+    
+    console.log('Inserindo anúncios na sidebar:', anuncios.length);
+    
+    // Encontrar todos os posts na sidebar
+    const posts = postsContainer.querySelectorAll('li');
+    
+    anuncios.forEach((anuncio, index) => {
+        const anuncioElement = document.createElement('li');
+        anuncioElement.className = 'list-group-item';
+        anuncioElement.innerHTML = anuncio.html;
+        
+        // Inserir anúncio a cada 3 posts
+        const insertPosition = (index + 1) * 3;
+        if (insertPosition < posts.length) {
+            postsContainer.insertBefore(anuncioElement, posts[insertPosition]);
+        } else {
+            postsContainer.appendChild(anuncioElement);
+        }
+    });
 }
 
 // Função para inserir anúncios no conteúdo principal
 function inserirAnunciosConteudo(anuncios, container) {
-    if (!anuncios || anuncios.length === 0) return;
-    
-    // Criar grid de anúncios
-    const anunciosGrid = document.createElement('div');
-    anunciosGrid.className = 'anuncios-grid mb-4';
-    anunciosGrid.style.cssText = `
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin: 2rem 0;
-    `;
-    
-    anuncios.forEach(anuncio => {
-        const anuncioDiv = document.createElement('div');
-        anuncioDiv.innerHTML = anuncio.html;
-        anunciosGrid.appendChild(anuncioDiv.firstElementChild);
-    });
-    
-    // Inserir após o primeiro post ou no início
-    const primeiroPost = container.querySelector('.post-card');
-    if (primeiroPost) {
-        container.insertBefore(anunciosGrid, primeiroPost.nextSibling);
-    } else {
-        container.appendChild(anunciosGrid);
+    if (!anuncios || anuncios.length === 0) {
+        console.log('Nenhum anúncio para conteúdo');
+        return;
     }
+    
+    console.log('Inserindo anúncios no conteúdo:', anuncios.length);
+    
+    // Encontrar todos os posts no container
+    const posts = container.querySelectorAll('.blog-post');
+    
+    if (posts.length === 0) {
+        console.log('Nenhum post encontrado no container');
+        return;
+    }
+    
+    anuncios.forEach((anuncio, index) => {
+        // Criar elemento de anúncio
+        const anuncioElement = document.createElement('article');
+        anuncioElement.className = 'blog-post mb-4 anuncio-sponsorizado';
+        anuncioElement.innerHTML = anuncio.html;
+        
+        // Inserir anúncio a cada 2 posts
+        const insertPosition = (index + 1) * 2;
+        if (insertPosition < posts.length) {
+            container.insertBefore(anuncioElement, posts[insertPosition]);
+        } else {
+            // Se não há posts suficientes, inserir no final
+            container.appendChild(anuncioElement);
+        }
+    });
 }
 
 // Função para carregar anúncios via AJAX
 function carregarAnuncios(localizacao, container, callback) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
     
-    fetch(`/api/get-anuncios.php?localizacao=${localizacao}&post_id=${postId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.anuncios) {
-                callback(data.anuncios, container);
+    // Usar URL relativa correta
+    const apiUrl = `/api/get-anuncios.php?localizacao=${localizacao}&post_id=${postId}`;
+    
+    console.log('=== DEBUG ANÚNCIOS ===');
+    console.log('Carregando anúncios para:', localizacao);
+    console.log('URL:', apiUrl);
+    console.log('Container:', container);
+    console.log('Post ID:', postId);
+    
+    fetch(apiUrl)
+        .then(response => {
+            console.log('Status da resposta:', response.status);
+            console.log('Headers da resposta:', response.headers);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text(); // Primeiro pegar como texto para debug
+        })
+        .then(text => {
+            console.log('Resposta da API (texto):', text);
+            console.log('Tamanho da resposta:', text.length);
+            try {
+                const data = JSON.parse(text);
+                console.log('Dados parseados:', data);
+                if (data.success && data.anuncios) {
+                    console.log('Anúncios encontrados:', data.anuncios.length);
+                    callback(data.anuncios, container);
+                } else {
+                    console.log('Nenhum anúncio encontrado para:', localizacao);
+                    console.log('Resposta da API:', data);
+                }
+            } catch (e) {
+                console.error('Erro ao fazer parse do JSON:', e);
+                console.log('Texto recebido:', text);
+                throw e;
             }
         })
         .catch(error => {
             console.error('Erro ao carregar anúncios:', error);
+            console.log('URL tentada:', apiUrl);
         });
 }
 
 // Inicializar quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
-    // Carregar anúncios da sidebar
-    const sidebarContainer = document.querySelector('.sidebar .list-unstyled');
-    if (sidebarContainer) {
-        carregarAnuncios('sidebar', sidebarContainer, inserirAnunciosSidebar);
+    console.log('DOM carregado, iniciando carregamento de anúncios...');
+    
+    // Carregar anúncios da sidebar - procurar em todas as seções
+    const sidebarSections = document.querySelectorAll('.sidebar .card-body .list-unstyled');
+    if (sidebarSections.length > 0) {
+        console.log('Seções da sidebar encontradas:', sidebarSections.length);
+        // Usar a primeira seção (Mais Recentes) para inserir anúncios
+        carregarAnuncios('sidebar', sidebarSections[0], inserirAnunciosSidebar);
+    } else {
+        console.log('Seções da sidebar NÃO encontradas');
     }
     
-    // Carregar anúncios do conteúdo principal
-    const conteudoContainer = document.querySelector('.post-grid');
+    // Carregar anúncios do conteúdo principal - procurar pela div que contém os posts
+    const conteudoContainer = document.querySelector('.col-lg-8');
     if (conteudoContainer) {
+        console.log('Container do conteúdo encontrado');
         carregarAnuncios('conteudo', conteudoContainer, inserirAnunciosConteudo);
+    } else {
+        console.log('Container do conteúdo NÃO encontrado');
     }
 });
 
@@ -202,21 +232,6 @@ const anunciosCSS = `
     background: #0056b3;
     color: #fff;
     text-decoration: none;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .anuncio-imagem {
-        height: 120px;
-    }
-    
-    .anuncio-conteudo {
-        padding: 0.75rem;
-    }
-    
-    .anuncio-titulo {
-        font-size: 0.85rem;
-    }
 }
 </style>
 `;
