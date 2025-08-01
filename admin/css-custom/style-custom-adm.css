@@ -183,10 +183,27 @@
     font-weight: 500;
     transition: all 0.2s ease;
     border: 1px solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    line-height: 1;
 }
 
 .btn-sm + .btn-sm {
     margin-left: 0.5rem;
+}
+
+/* Alinhamento específico para ícones */
+.btn-sm i {
+    color: inherit;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    font-size: 0.875rem;
+    width: 1em;
+    height: 1em;
+    text-align: center;
 }
 
 /* Estilos específicos para botão de editar */
