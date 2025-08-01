@@ -97,6 +97,23 @@ if (!isset($_SESSION['usuario_id'])) {
             width: 100%;
         }
         
+        /* Garantir que o conteúdo principal ocupe toda a largura */
+        main {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Remover margens desnecessárias */
+        .container-fluid .row {
+            margin: 0;
+        }
+        
+        /* Garantir que o conteúdo preencha toda a largura disponível */
+        .col-md-9.ms-sm-auto.col-lg-10.px-md-4 > * {
+            width: 100%;
+            max-width: 100%;
+        }
+        
         /* Melhorias para cards */
         .card {
             border: none;
@@ -194,4 +211,3 @@ if (!isset($_SESSION['usuario_id'])) {
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="container-fluid px-0">
