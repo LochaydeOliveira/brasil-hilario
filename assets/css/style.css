@@ -979,7 +979,7 @@ footer {
     padding: 0.1rem;
 }
 
-/* Estilos do Header.php - Movidos para style.css */
+
 
 /* Estilos gerais de tipografia */
 h1, h2, h3, h4, h5, h6, .site-title, .post-title {
@@ -988,6 +988,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     font-weight: 700;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+    color: var(--cor_secundaria)!important;
 }
 
 /* Botão de busca */

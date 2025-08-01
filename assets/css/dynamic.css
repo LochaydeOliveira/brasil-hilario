@@ -2,7 +2,7 @@
 
 :root {
   --cor_primaria: #0b8103;
-  --cor_secundaria: #6c757d;
+  --cor_secundaria: #000000;
   --cor_sucesso: #28a745;
   --cor_perigo: #dc3545;
   --cor_aviso: #fcbd07;
@@ -33,6 +33,10 @@ footer a {
 
 body {
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h3 {
+  color: var(--cor_secundaria)!important;
 }
 
 h1, h2, h3, h4, h5, h6 {
