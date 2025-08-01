@@ -42,6 +42,9 @@ try {
     error_log("Erro ao obter estatísticas: " . $e->getMessage());
     $error = "Erro ao carregar estatísticas. Por favor, tente novamente mais tarde.";
 }
+
+$page_title = 'Dashboard';
+include 'includes/header.php';
 ?>
 
 

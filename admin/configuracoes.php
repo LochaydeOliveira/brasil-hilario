@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-
 // Obter configurações por grupo
 $grupos = ['geral', 'seo', 'redes_sociais', 'integracao', 'paginas'];
 $configuracoes = [];
@@ -66,7 +65,6 @@ function getConfig($configs, $grupo, $chave, $padrao = '') {
 }
 
 $page_title = 'Configurações';
-include 'includes/header.php';
 ?>
 
 <div class="container-fluid">

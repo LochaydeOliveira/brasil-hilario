@@ -17,6 +17,7 @@ $topAnuncios = $anunciosManager->getTopAnuncios(5);
 // Buscar todos os anúncios com stats
 $todosAnuncios = $anunciosManager->getAllAnunciosComStats();
 
+$page_title = 'Anúncios';
 include 'includes/header.php';
 ?>
 

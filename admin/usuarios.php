@@ -13,8 +13,8 @@ $stmt = $pdo->prepare("SELECT * FROM usuarios ORDER BY nome");
 $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$page_title = 'Usuários';
 include 'includes/header.php';
-
 ?>
 
 <div class="container-fluid">

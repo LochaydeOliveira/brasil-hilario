@@ -83,17 +83,18 @@ class AnunciosManager {
      * Buscar top 5 anúncios mais clicados
      */
     public function getTopAnuncios($limit = 5) {
+        $limit = (int) $limit; // Converter para inteiro
         $sql = "SELECT a.*, COUNT(ca.id) as total_cliques
                 FROM anuncios a 
                 LEFT JOIN cliques_anuncios ca ON a.id = ca.anuncio_id
                 WHERE a.ativo = 1
                 GROUP BY a.id 
                 ORDER BY total_cliques DESC 
-                LIMIT ?";
+                LIMIT $limit";
         
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$limit]);
+            $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             error_log("Erro ao buscar top anúncios: " . $e->getMessage());

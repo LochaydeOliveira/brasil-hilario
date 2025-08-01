@@ -24,9 +24,7 @@ if (!isset($_SESSION['usuario_id'])) {
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     
-
     <style>
-        
         .sidebar {
             position: fixed;
             top: 0;
@@ -212,13 +210,6 @@ if (!isset($_SESSION['usuario_id'])) {
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="w-100"></div>
-        <!-- <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="logout.php">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </a>
-            </div>
-        </div> -->
     </header>
 
     <div class="container-fluid">
@@ -227,16 +218,4 @@ if (!isset($_SESSION['usuario_id'])) {
                 <div class="position-sticky pt-3">
                     <?php include 'sidebar.php'; ?>
                 </div>
-            </nav>
-
-            <!-- <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <?php if (isset($page_title)): ?>
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2"><?php echo $page_title; ?></h1>
-                </div>
-                <?php endif; ?>
-            </main> -->
-        </div>
-    </div>
-</body>
-</html> 
+            </nav> 

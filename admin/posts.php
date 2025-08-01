@@ -75,6 +75,7 @@ try {
     $categorias = [];
 }
 
+$page_title = 'Posts';
 include 'includes/header.php';
 ?>
 
