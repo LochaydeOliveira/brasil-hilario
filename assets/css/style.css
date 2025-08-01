@@ -1334,21 +1334,19 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 /* Anúncios do Conteúdo Principal */
 .anuncio-card-conteudo {
-    border: 1px solid #e1e5e9;
     padding: 0 20px;
     margin: 30px 0;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     transition: box-shadow 0.2s ease;
     position: relative;
 }
 
-.anuncio-card-conteudo:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-}
+/* .anuncio-card-conteudo:hover {
+
+} */
 
 .anuncio-titulo-conteudo {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     margin: 0 0 12px 0;
     line-height: 1.4;
@@ -1358,16 +1356,15 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 }
 
 .anuncio-titulo-conteudo:hover {
-    color: #4285f4;
+    color: #4285f4!important;
     text-decoration: underline;
 }
 
 .anuncio-imagem-conteudo {
     width: 100%;
-    max-width: 300px;
-    height: 150px;
+    max-width: 250px;
+    height: 250px;
     object-fit: cover;
-    border-radius: 8px;
     margin-bottom: 12px;
     display: block;
 }
