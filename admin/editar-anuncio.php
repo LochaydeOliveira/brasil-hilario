@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Processar upload da imagem (se houver)
         $imagem_path = $anuncio['imagem']; // Manter imagem atual
         if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = '../assets/img/anuncios/';
+            $upload_dir = '../uploads/images/';
             
             // Criar diretório se não existir
             if (!is_dir($upload_dir)) {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upload_path = $upload_dir . $filename;
                 
                 if (move_uploaded_file($_FILES['imagem']['tmp_name'], $upload_path)) {
-                    $imagem_path = '/assets/img/anuncios/' . $filename;
+                    $imagem_path = '/uploads/images/' . $filename;
                 } else {
                     $mensagem = 'Erro ao fazer upload da imagem.';
                     $tipo_mensagem = 'danger';

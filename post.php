@@ -217,6 +217,10 @@ include 'includes/header.php';
 
             <hr>
 
+            <?php 
+            // Incluir anúncios do conteúdo principal
+            include 'includes/anuncios-conteudo.php';
+            ?>
 
             <?php if (!empty($post['tags'])): ?>
             <div class="post-tags mb-3">

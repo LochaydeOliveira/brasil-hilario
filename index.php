@@ -20,11 +20,6 @@ include 'includes/header.php';
 <div class="row">
 
     <div class="col-lg-8">
-        <?php 
-        // Incluir anúncios do conteúdo principal
-        include 'includes/anuncios-conteudo.php';
-        ?>
-        
         <?php
         try {
             $limit = POSTS_PER_PAGE;
@@ -77,7 +72,10 @@ include 'includes/header.php';
             if (empty($posts)) {
                 echo '<div class="alert alert-info">Nenhum post encontrado.</div>';
             } else {
-                foreach ($posts as $post): ?>
+                $post_count = 0;
+                foreach ($posts as $post): 
+                    $post_count++;
+                ?>
                     <article class="blog-post mb-4" data-aos="fade-up">
                         <?php if (!empty($post['imagem_destacada'])): ?>
                             <div class="post-image mb-3">
@@ -123,6 +121,13 @@ include 'includes/header.php';
                             Ler mais
                         </a>
                     </article>
+                    
+                    <?php 
+                    // Inserir anúncios após o primeiro post
+                    if ($post_count === 1) {
+                        include 'includes/anuncios-conteudo.php';
+                    }
+                    ?>
                 <?php endforeach;
 
 
