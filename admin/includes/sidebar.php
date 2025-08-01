@@ -3,7 +3,7 @@
 $is_admin = isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin';
 ?>
 
-<ul class="nav flex-column">
+<ul class="nav flex-column" style="width: 0;">
     <li class="nav-item">
         <a class="nav-link" href="index.php">
             <i class="fas fa-tachometer-alt"></i> Dashboard
