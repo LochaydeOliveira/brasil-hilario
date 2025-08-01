@@ -70,18 +70,24 @@ function inserirAnunciosConteudo(anuncios, container) {
 // Função para carregar anúncios via AJAX
 function carregarAnuncios(localizacao, container, callback) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
-    const apiUrl = `/api/get-anuncios.php?localizacao=${localizacao}&post_id=${postId}`;
+    const apiUrl = `/get-anuncios.php?localizacao=${localizacao}&post_id=${postId}`;
+    
+    console.log('Testando API:', apiUrl);
     
     fetch(apiUrl)
         .then(response => {
+            console.log('Status da resposta:', response.status);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
+            console.log('Resposta da API:', data);
             if (data.success && data.anuncios) {
                 callback(data.anuncios, container);
+            } else {
+                console.log('API funcionando, mas sem anúncios:', data);
             }
         })
         .catch(error => {
@@ -92,17 +98,27 @@ function carregarAnuncios(localizacao, container, callback) {
 // Inicializar quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
     // Carregar anúncios da sidebar
+    carregarAnunciosSidebar();
+    
+    // Carregar anúncios do conteúdo principal
+    carregarAnunciosConteudo();
+});
+
+// Função para carregar anúncios da sidebar
+function carregarAnunciosSidebar() {
     const sidebarSections = document.querySelectorAll('.sidebar .card-body .list-unstyled');
     if (sidebarSections.length > 0) {
         carregarAnuncios('sidebar', sidebarSections[0], inserirAnunciosSidebar);
     }
-    
-    // Carregar anúncios do conteúdo principal
+}
+
+// Função para carregar anúncios do conteúdo principal
+function carregarAnunciosConteudo() {
     const conteudoContainer = document.querySelector('.col-lg-8');
     if (conteudoContainer) {
         carregarAnuncios('conteudo', conteudoContainer, inserirAnunciosConteudo);
     }
-});
+}
 
 // Estilos CSS para anúncios
 const anunciosCSS = `
