@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 100) {
-            backToTopButton.style.display = 'block';
+            backToTopButton.style.display = 'flex';
         } else {
             backToTopButton.style.display = 'none';
         }
