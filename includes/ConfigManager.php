@@ -21,6 +21,7 @@ class ConfigManager {
     }
     
     public function set($chave, $valor, $tipo = 'string', $grupo = 'geral') {
+        // Verificar se a configuração já existe
         if ($this->exists($chave)) {
             $stmt = $this->pdo->prepare("
                 UPDATE configuracoes 
@@ -29,8 +30,8 @@ class ConfigManager {
             ");
         } else {
             $stmt = $this->pdo->prepare("
-                INSERT INTO configuracoes (chave, valor, tipo, grupo, criado_em, atualizado_em) 
-                VALUES (:chave, :valor, :tipo, :grupo, NOW(), NOW())
+                INSERT INTO configuracoes (chave, valor, tipo, grupo, atualizado_em) 
+                VALUES (:chave, :valor, :tipo, :grupo, NOW())
             ");
         }
         
