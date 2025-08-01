@@ -23,7 +23,7 @@ if (!isset($_SESSION['usuario_id'])) {
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
-    
+
     <style>
         .sidebar {
             position: fixed;
@@ -31,11 +31,9 @@ if (!isset($_SESSION['usuario_id'])) {
             bottom: 0;
             left: 0;
             z-index: 100;
-            width: 240px;
             padding: 48px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
             background-color: #343a40;
-            overflow-y: auto;
         }
         
         .sidebar-sticky {
@@ -127,40 +125,9 @@ if (!isset($_SESSION['usuario_id'])) {
             text-transform: uppercase;
         }
 
-        /* Corrigir a largura da UL da sidebar */
-        .sidebar .nav {
-            width: 100%;
-            max-width: 240px;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar .nav-item {
-            width: 100%;
-        }
-
-        .sidebar .nav-link {
-            width: 100%;
-            padding: 0.5rem 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            border: none;
-            background: transparent;
-        }
-
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar .nav-link.active {
-            color: #fff;
-            background-color: #0d6efd;
-        }
-
-        /* Ajustar o conteúdo principal */
-        .container-fluid {
+        .main-content {
             margin-left: 240px;
+            padding: 20px;
         }
 
         .navbar .nav-link {
@@ -173,18 +140,8 @@ if (!isset($_SESSION['usuario_id'])) {
         }
 
         @media (max-width: 767.98px) {
-            .sidebar {
-                position: static;
-                width: 100%;
-                padding: 0;
-            }
-            
-            .container-fluid {
+            .main-content {
                 margin-left: 0;
-            }
-            
-            .sidebar .nav {
-                max-width: 100%;
             }
         }
         
@@ -261,4 +218,4 @@ if (!isset($_SESSION['usuario_id'])) {
                 <div class="position-sticky pt-3">
                     <?php include 'sidebar.php'; ?>
                 </div>
-            </nav> 
+            </nav>

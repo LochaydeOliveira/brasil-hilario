@@ -17,52 +17,52 @@ if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') 
 }
 
 try {
-    // Use PDO na instância do ConfigManager
-    $configManager = new ConfigManager($pdo);
-    $mensagem = '';
-    $tipo_mensagem = 'success';
+// Use PDO na instância do ConfigManager
+$configManager = new ConfigManager($pdo);
+$mensagem = '';
+$tipo_mensagem = 'success';
 
-    // Processar formulário
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-        $grupo = $_POST['grupo'] ?? 'geral';
+// Processar formulário
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    $grupo = $_POST['grupo'] ?? 'geral';
 
-        try {
-            foreach ($_POST as $chave => $valor) {
-                if ($chave !== 'submit' && $chave !== 'grupo') {
-                    $tipo = 'string';
+    try {
+        foreach ($_POST as $chave => $valor) {
+            if ($chave !== 'submit' && $chave !== 'grupo') {
+                $tipo = 'string';
 
-                    if (in_array($chave, ['posts_per_page'])) {
-                        $tipo = 'integer';
-                    } elseif (in_array($chave, ['comments_active', 'newsletter_active'])) {
-                        $tipo = 'boolean';
-                    }
-
-                    $configManager->set($chave, $valor, $tipo, $grupo);
+                if (in_array($chave, ['posts_per_page'])) {
+                    $tipo = 'integer';
+                } elseif (in_array($chave, ['comments_active', 'newsletter_active'])) {
+                    $tipo = 'boolean';
                 }
+
+                $configManager->set($chave, $valor, $tipo, $grupo);
             }
-
-            $mensagem = 'Configurações salvas com sucesso!';
-            $tipo_mensagem = 'success';
-        } catch (Exception $e) {
-            $mensagem = 'Erro ao salvar configurações: ' . $e->getMessage();
-            $tipo_mensagem = 'danger';
         }
+
+        $mensagem = 'Configurações salvas com sucesso!';
+        $tipo_mensagem = 'success';
+    } catch (Exception $e) {
+        $mensagem = 'Erro ao salvar configurações: ' . $e->getMessage();
+        $tipo_mensagem = 'danger';
     }
+}
 
-    // Obter configurações por grupo
-    $grupos = ['geral', 'seo', 'redes_sociais', 'integracao', 'paginas'];
-    $configuracoes = [];
+// Obter configurações por grupo
+$grupos = ['geral', 'seo', 'redes_sociais', 'integracao', 'paginas'];
+$configuracoes = [];
 
-    foreach ($grupos as $grupo) {
-        $configuracoes[$grupo] = $configManager->getGroup($grupo);
+foreach ($grupos as $grupo) {
+    $configuracoes[$grupo] = $configManager->getGroup($grupo);
+}
+
+// Função auxiliar para obter valor de configuração
+function getConfig($configs, $grupo, $chave, $padrao = '') {
+    if (isset($configs[$grupo][$chave])) {
+        return $configs[$grupo][$chave]['valor'];
     }
-
-    // Função auxiliar para obter valor de configuração
-    function getConfig($configs, $grupo, $chave, $padrao = '') {
-        if (isset($configs[$grupo][$chave])) {
-            return $configs[$grupo][$chave]['valor'];
-        }
-        return $padrao;
+    return $padrao;
     }
 
 } catch (Exception $e) {
