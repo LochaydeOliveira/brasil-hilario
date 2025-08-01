@@ -70,7 +70,7 @@ function inserirAnunciosConteudo(anuncios, container) {
 // Função para carregar anúncios via AJAX
 function carregarAnuncios(localizacao, container, callback) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
-    const apiUrl = `/anuncios-api.php?localizacao=${localizacao}&post_id=${postId}`;
+    const apiUrl = `/anuncios.php?localizacao=${localizacao}&post_id=${postId}`;
     
     console.log('Testando API:', apiUrl);
     

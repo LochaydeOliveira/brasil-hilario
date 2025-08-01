@@ -75,8 +75,8 @@ Options -Indexes
 # Definir charset padrão
 AddDefaultCharset UTF-8 
 
-# Permitir acesso direto ao get-anuncios.php
-RewriteRule ^get-anuncios\.php$ - [L]
+# Permitir acesso direto ao anuncios.php
+RewriteRule ^anuncios\.php$ - [L]
 
 # Regras para páginas
 RewriteCond %{REQUEST_FILENAME} !-f
