@@ -123,9 +123,9 @@ include 'includes/header.php';
                     </article>
                     
                     <?php 
-                    // Inserir anúncios após o primeiro post
+                    // Inserir grupos de anúncios após o primeiro post
                     if ($post_count === 1) {
-                        include 'includes/anuncios-conteudo-layout.php';
+                        include 'includes/grupos-anuncios-conteudo.php';
                     }
                     ?>
                 <?php endforeach;

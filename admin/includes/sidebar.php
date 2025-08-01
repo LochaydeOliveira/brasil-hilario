@@ -29,6 +29,12 @@ $is_admin = isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'a
     </li>
     
     <li class="nav-item">
+        <a class="nav-link" href="grupos-anuncios.php">
+            <i class="fas fa-layer-group"></i> Grupos de Anúncios
+        </a>
+    </li>
+    
+    <li class="nav-item">
         <a class="nav-link" href="usuarios.php">
             <i class="fas fa-users"></i> Usuários
         </a>

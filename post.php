@@ -218,8 +218,8 @@ include 'includes/header.php';
             <hr>
 
             <?php 
-            // Incluir anúncios do conteúdo principal
-            include 'includes/anuncios-conteudo-layout.php';
+            // Incluir grupos de anúncios do conteúdo principal
+            include 'includes/grupos-anuncios-conteudo.php';
             ?>
 
             <?php if (!empty($post['tags'])): ?>
