@@ -191,7 +191,7 @@
 }
 
 .btn-sm + .btn-sm {
-    margin-left: 0.5rem;
+    margin-left: 0;
 }
 
 /* Alinhamento específico para ícones */

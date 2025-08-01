@@ -151,8 +151,11 @@ try {
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v18.0"></script>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-        crossorigin="anonymous">
+    <!-- Anúncios Nativos -->
+    <script src="<?php echo BLOG_URL; ?>/assets/js/anuncios.js" defer></script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous">
     </script>
 </head>
 
