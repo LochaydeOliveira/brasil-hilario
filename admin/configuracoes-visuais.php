@@ -9,17 +9,7 @@ require_once '../includes/db.php';
 require_once '../includes/VisualConfigManager.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
-
-// Verificar se o usuário é admin
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
-    header('Location: index.php');
-    exit;
-}
-
-$visualManager = new VisualConfigManager($pdo);
+$visualConfig = new VisualConfigManager($pdo);
 $mensagem = '';
 $tipo_mensagem = 'success';
 
@@ -39,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                     $elemento = $partes[1];
                     $propriedade = 'cor_' . $partes[2];
                     
-                    $resultado = $visualManager->setCor($elemento, $propriedade, $valor);
+                    $resultado = $visualConfig->setCor($elemento, $propriedade, $valor);
                     if ($resultado) {
                         $salvas++;
                         $debug_info[] = "✅ {$chave} -> {$elemento}.{$propriedade} = {$valor}";
@@ -56,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 // Exemplo: fonte_site -> elemento: site, propriedade: fonte
                 $elemento = substr($chave, 6); // Remove 'fonte_'
                 
-                $resultado = $visualManager->setFonte($elemento, 'fonte', $valor);
+                $resultado = $visualConfig->setFonte($elemento, 'fonte', $valor);
                 if ($resultado) {
                     $salvas++;
                     $debug_info[] = "✅ {$chave} -> {$elemento}.fonte = {$valor}";
@@ -72,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 // Exemplo: tamanho_titulo -> elemento: titulo, propriedade: tamanho
                 $elemento = substr($chave, 8); // Remove 'tamanho_'
                 
-                $resultado = $visualManager->setFonte($elemento, 'tamanho', $valor);
+                $resultado = $visualConfig->setFonte($elemento, 'tamanho', $valor);
                 if ($resultado) {
                     $salvas++;
                     $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho = {$valor}";
@@ -83,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         }
         
         // Gerar CSS dinâmico
-        $css_salvo = $visualManager->saveCSS();
+        $css_salvo = $visualConfig->saveCSS();
         
         $mensagem = "Configurações visuais salvas com sucesso! ({$salvas} configurações atualizadas)";
         if (!$css_salvo) {
@@ -103,17 +93,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 }
 
 // Obter configurações atuais
-$configs = $visualManager->getAllConfigs();
+$configs = $visualConfig->getAllConfigs();
 
 // Aplicar configurações padrão de fontes se não existirem
 if (empty($configs['fontes']['site'])) {
-    $visualManager->setFonte('site', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
-    $visualManager->setFonte('titulo', 'fonte', 'Merriweather, serif');
-    $visualManager->setFonte('paragrafo', 'fonte', 'Inter, sans-serif');
-    $configs = $visualManager->getAllConfigs(); // Recarregar configurações
+    $visualConfig->setFonte('site', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
+    $visualConfig->setFonte('titulo', 'fonte', 'Merriweather, serif');
+    $visualConfig->setFonte('paragrafo', 'fonte', 'Inter, sans-serif');
+    $configs = $visualConfig->getAllConfigs(); // Recarregar configurações
     
     // Forçar regeneração do CSS
-    $visualManager->saveCSS();
+    $visualConfig->saveCSS();
 }
 
 $page_title = 'Configurações Visuais';

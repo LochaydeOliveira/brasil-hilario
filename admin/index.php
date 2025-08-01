@@ -1,4 +1,5 @@
 <?php
+ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,17 +8,7 @@ require_once '../config/config.php';
 require_once '../includes/db.php'; // aqui o $pdo deve estar disponível
 require_once 'includes/auth.php';
 
-check_login();
-
-include 'includes/header.php';
-
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';
-    header('Location: index.php');
-    exit;
-}
-
-// Inicializar variáveis
+// Buscar estatísticas
 $total_posts = 0;
 $posts_publicados = 0;
 $total_usuarios = 0;

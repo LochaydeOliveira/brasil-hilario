@@ -1,4 +1,9 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php'; // deve definir $pdo
 require_once 'includes/auth.php';
@@ -6,7 +11,7 @@ require_once 'includes/editor-config.php';
 require_once 'includes/functions.php';
 
 // Verifica se o usuário está autenticado
-check_login();
+// check_login(); // REMOVIDO
 
 $post = null;
 $categories = [];

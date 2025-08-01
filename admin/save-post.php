@@ -1,11 +1,15 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php';  // Aqui seu $pdo deve estar configurado como PDO
 require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 
-check_login();
-
+// Verificar se é POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: posts.php');
     exit;

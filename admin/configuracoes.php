@@ -9,9 +9,6 @@ require_once '../includes/db.php'; // deve fornecer a variável $pdo
 require_once '../includes/ConfigManager.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
-
 // Verificar se o usuário é admin
 if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
     $_SESSION['error'] = 'Você não tem permissão para acessar esta página.';

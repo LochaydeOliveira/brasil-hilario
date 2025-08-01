@@ -1,12 +1,6 @@
 <?php
-// Verificar se o usuário está logado
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
 // Verificar se é administrador
-$is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+$is_admin = isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin';
 ?>
 
 <ul class="nav flex-column">

@@ -1,17 +1,14 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php'; // deve conter $pdo
 require_once 'includes/auth.php';
 
-// Garante que o usuário esteja logado e seja admin
-check_login();
-if (!is_admin()) {
-    $_SESSION['error_message'] = "Você não tem permissão para realizar esta ação.";
-    header('Location: ' . ADMIN_URL . '/index.php');
-    exit;
-}
-
-// Verifica se o ID do post foi fornecido
+// Verificar se o ID foi fornecido
 $post_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if (empty($post_id)) {

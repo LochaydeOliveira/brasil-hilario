@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Verifica se o usuário está autenticado
-if (!isLoggedIn()) {
+if (!isset($_SESSION['usuario_id'])) {
     header('Location: login.php');
     exit;
 }

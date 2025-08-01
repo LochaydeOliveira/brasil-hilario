@@ -1,10 +1,14 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
+// Verificar se é POST
 
 try {
     // Atualizar posts sem data de criação

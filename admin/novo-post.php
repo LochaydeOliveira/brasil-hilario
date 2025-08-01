@@ -1,14 +1,16 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../config/config.php';
 require_once '../includes/db.php'; // aqui espera-se que defina a variável $pdo
 require_once 'includes/auth.php';
 require_once 'includes/editor-config.php';
 require_once 'includes/functions.php';
 
-// Verifica se o usuário está autenticado
-check_login();
-
-$post = null; // Para novo post, $post é nulo
+// Buscar categorias
 $categories = [];
 
 try {

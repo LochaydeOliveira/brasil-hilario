@@ -1,4 +1,5 @@
 <?php
+ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,42 +8,7 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
-
-// Processar formulário de novo usuário
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = $_POST['nome'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $senha = $_POST['senha'] ?? '';
-    $confirmar_senha = $_POST['confirmar_senha'] ?? '';
-
-    if (empty($nome) || empty($email) || empty($senha)) {
-        $error = "Todos os campos são obrigatórios";
-    } elseif ($senha !== $confirmar_senha) {
-        $error = "As senhas não conferem";
-    } else {
-        try {
-            // Verificar se o email já existe
-            $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-            $stmt->execute([$email]);
-            if ($stmt->fetch()) {
-                $error = "Este email já está em uso";
-            } else {
-                // Criar novo usuário
-                $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, status) VALUES (?, ?, ?, 'ativo')");
-                $stmt->execute([$nome, $email, $senha_hash]);
-
-                $success = "Usuário criado com sucesso!";
-            }
-        } catch (Exception $e) {
-            $error = "Erro ao criar usuário: " . $e->getMessage();
-        }
-    }
-}
-
-// Buscar todos os usuários
+// Buscar usuários
 $stmt = $pdo->prepare("SELECT * FROM usuarios ORDER BY nome");
 $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);

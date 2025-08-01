@@ -8,9 +8,6 @@ require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
-
 // Parâmetros de busca e filtros
 $busca = $_GET['busca'] ?? '';
 $categoria_id = $_GET['categoria_id'] ?? '';

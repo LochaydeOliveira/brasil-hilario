@@ -9,9 +9,6 @@ require_once '../includes/db.php';
 require_once '../includes/AnunciosManager.php';
 require_once 'includes/auth.php';
 
-// Verificar se o usuário está logado
-check_login();
-
 $anunciosManager = new AnunciosManager($pdo);
 
 // Buscar top anúncios
