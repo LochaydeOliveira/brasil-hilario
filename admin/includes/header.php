@@ -20,7 +20,7 @@ if (!isset($_SESSION['usuario_id'])) {
     <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>Painel Administrativo</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/admin-style.css" rel="stylesheet">
+    <link href="css-custom/style-custom-adm.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
@@ -28,20 +28,178 @@ if (!isset($_SESSION['usuario_id'])) {
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
 
     <style>
-        /* Estilos essenciais inline */
-        .main-content {
-            margin-left: 240px;
-            margin-top: 48px;
-            padding: 2rem;
-            min-height: calc(100vh - 48px);
+        /* Ajustes específicos para o layout do admin */
+        body {
+            font-family: 'Inter', sans-serif;
         }
         
-        @media (max-width: 767.98px) {
-            .main-content {
-                margin-left: 0;
-                margin-top: 0;
-                padding: 1rem;
-            }
+        .navbar {
+            background-color: #fff !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        
+        .navbar-brand {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background: #fff!important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            max-height: 35px;
+            width: auto;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.25rem;
+            margin: 0.125rem 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            color: #fff !important;
+            background-color: #0d6efd;
+        }
+
+        .nav-link i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Melhorias para cards e formulários */
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border-radius: 0.5rem;
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+            padding: 1rem 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Melhorias para tabelas */
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #495057;
+            background-color: #f8f9fa;
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        /* Melhorias para botões */
+        .btn {
+            border-radius: 0.375rem;
+            font-weight: 500;
+        }
+        
+        /* Melhorias para badges */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Melhorias para alertas */
+        .alert {
+            border-radius: 0.5rem;
+            border: none;
+        }
+        
+        /* Melhorias para formulários */
+        .form-control, .form-select {
+            border-radius: 0.375rem;
+            border: 1px solid #dee2e6;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        /* Melhorias para modais */
+        .modal-content {
+            border-radius: 0.5rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #dee2e6;
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+        
+        /* Ajustes específicos para páginas de grupos de anúncios */
+        .card.h-100 {
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+        
+        .card.h-100:hover {
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+            border-color: #0d6efd;
+        }
+        
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .form-text {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        
+        /* Melhorias para alertas informativos */
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        
+        /* Melhorias para botões de ação */
+        .btn-group-sm .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-group-sm .btn i {
+            font-size: 0.875rem;
         }
     </style>
 </head>
