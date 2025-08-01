@@ -70,29 +70,34 @@ function inserirAnunciosConteudo(anuncios, container) {
 // Função para carregar anúncios via AJAX
 function carregarAnuncios(localizacao, container, callback) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
-    const apiUrl = `/get-anuncios.php?localizacao=${localizacao}&post_id=${postId}`;
+    const apiUrl = `/anuncios-api.php?localizacao=${localizacao}&post_id=${postId}`;
     
     console.log('Testando API:', apiUrl);
     
-    fetch(apiUrl)
-        .then(response => {
-            console.log('Status da resposta:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Resposta da API:', data);
-            if (data.success && data.anuncios) {
-                callback(data.anuncios, container);
-            } else {
-                console.log('API funcionando, mas sem anúncios:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao carregar anúncios:', error);
-        });
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Status da resposta:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Resposta da API:', data);
+        if (data.success && data.anuncios) {
+            callback(data.anuncios, container);
+        } else {
+            console.log('API funcionando, mas sem anúncios:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao carregar anúncios:', error);
+    });
 }
 
 // Inicializar quando o DOM estiver pronto
