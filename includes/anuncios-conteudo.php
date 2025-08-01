@@ -10,11 +10,11 @@ try {
         foreach ($anunciosConteudo as $anuncio) {
             echo '<article class="blog-post mb-4 anuncio-sponsorizado">';
             echo '<div class="anuncio-card-conteudo">';
-            echo '<div class="anuncio-patrocinado-badge">PATROCINADO</div>';
-            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-conteudo">' . htmlspecialchars($anuncio['titulo']) . '</a>';
+            echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
             if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                 echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-conteudo">';
+                echo '<h4 class="anuncio-titulo-conteudo">' . htmlspecialchars($anuncio['titulo']) . '</h4>';
                 echo '</a>';
             }
             if ($anuncio['cta_ativo']) {
