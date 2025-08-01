@@ -219,7 +219,7 @@ include 'includes/header.php';
 
             <?php 
             // Incluir anúncios do conteúdo principal
-            include 'includes/anuncios-conteudo.php';
+            include 'includes/anuncios-conteudo-layout.php';
             ?>
 
             <?php if (!empty($post['tags'])): ?>

@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $link_compra = trim($_POST['link_compra'] ?? '');
     $localizacao = $_POST['localizacao'] ?? '';
+    $layout = $_POST['layout'] ?? 'carrossel';
     $cta_ativo = isset($_POST['cta_ativo']);
     $cta_texto = trim($_POST['cta_texto'] ?? 'Saiba Mais');
     $posts_selecionados = $_POST['posts'] ?? [];
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'imagem' => $imagem_path,
                 'link_compra' => $link_compra,
                 'localizacao' => $localizacao,
+                'layout' => $layout,
                 'cta_ativo' => $cta_ativo,
                 'cta_texto' => $cta_texto,
                 'posts' => $posts_selecionados
@@ -147,6 +149,19 @@ include 'includes/header.php';
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="layout" class="form-label">Layout (Conteúdo Principal)</label>
+                                            <select class="form-select" id="layout" name="layout">
+                                                <option value="carrossel" <?php echo ($_POST['layout'] ?? 'carrossel') === 'carrossel' ? 'selected' : ''; ?>>Carrossel (sem limite)</option>
+                                                <option value="grade" <?php echo ($_POST['layout'] ?? '') === 'grade' ? 'selected' : ''; ?>>Grade (máx. 8 anúncios)</option>
+                                            </select>
+                                            <div class="form-text">Aplicado apenas para anúncios no conteúdo principal</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="imagem" class="form-label">Imagem do Anúncio *</label>

@@ -27,6 +27,63 @@ function registrarCliqueAnuncio(anuncioId, tipoClique) {
     });
 }
 
+// Função para inicializar carrossel de anúncios
+function inicializarCarrosselAnuncios() {
+    const carrossel = document.querySelector('.anuncios-carrossel');
+    if (!carrossel) return;
+    
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    carrossel.addEventListener('mousedown', (e) => {
+        isDown = true;
+        carrossel.style.cursor = 'grabbing';
+        startX = e.pageX - carrossel.offsetLeft;
+        scrollLeft = carrossel.scrollLeft;
+    });
+    
+    carrossel.addEventListener('mouseleave', () => {
+        isDown = false;
+        carrossel.style.cursor = 'grab';
+    });
+    
+    carrossel.addEventListener('mouseup', () => {
+        isDown = false;
+        carrossel.style.cursor = 'grab';
+    });
+    
+    carrossel.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - carrossel.offsetLeft;
+        const walk = (x - startX) * 2;
+        carrossel.scrollLeft = scrollLeft - walk;
+    });
+    
+    // Adicionar indicadores de scroll
+    const indicadores = document.createElement('div');
+    indicadores.className = 'carrossel-indicadores';
+    indicadores.innerHTML = `
+        <button class="indicador-btn" onclick="scrollCarrossel('left')">‹</button>
+        <button class="indicador-btn" onclick="scrollCarrossel('right')">›</button>
+    `;
+    carrossel.parentNode.appendChild(indicadores);
+}
+
+// Função para scroll do carrossel
+function scrollCarrossel(direction) {
+    const carrossel = document.querySelector('.anuncios-carrossel');
+    if (!carrossel) return;
+    
+    const scrollAmount = 300;
+    if (direction === 'left') {
+        carrossel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        carrossel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+}
+
 // Estilos CSS para anúncios
 const anunciosCSS = `
 <style>
@@ -101,8 +158,43 @@ const anunciosCSS = `
     color: #fff;
     text-decoration: none;
 }
+
+/* Indicadores do carrossel */
+.carrossel-indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.indicador-btn {
+    background: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.indicador-btn:hover {
+    background: #3367d6;
+}
+
+@media (max-width: 768px) {
+    .carrossel-indicadores {
+        display: none;
+    }
+}
 </style>
 `;
 
 // Inserir CSS no head
-document.head.insertAdjacentHTML('beforeend', anunciosCSS); 
+document.head.insertAdjacentHTML('beforeend', anunciosCSS);
+
+// Inicializar quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarCarrosselAnuncios();
+}); 

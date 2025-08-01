@@ -125,7 +125,7 @@ include 'includes/header.php';
                     <?php 
                     // Inserir anúncios após o primeiro post
                     if ($post_count === 1) {
-                        include 'includes/anuncios-conteudo.php';
+                        include 'includes/anuncios-conteudo-layout.php';
                     }
                     ?>
                 <?php endforeach;

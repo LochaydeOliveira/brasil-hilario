@@ -106,8 +106,8 @@ class AnunciosManager {
      * Criar novo anúncio
      */
     public function criarAnuncio($dados) {
-        $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, localizacao, cta_ativo, cta_texto) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, localizacao, layout, cta_ativo, cta_texto) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -116,6 +116,7 @@ class AnunciosManager {
                 $dados['imagem'],
                 $dados['link_compra'],
                 $dados['localizacao'],
+                $dados['layout'] ?? 'carrossel',
                 $dados['cta_ativo'] ?? false,
                 $dados['cta_texto'] ?? 'Saiba Mais'
             ]);
@@ -139,7 +140,7 @@ class AnunciosManager {
      */
     public function atualizarAnuncio($id, $dados) {
         $sql = "UPDATE anuncios SET 
-                titulo = ?, imagem = ?, link_compra = ?, localizacao = ?, 
+                titulo = ?, imagem = ?, link_compra = ?, localizacao = ?, layout = ?,
                 cta_ativo = ?, cta_texto = ?, ativo = ?
                 WHERE id = ?";
         
@@ -150,6 +151,7 @@ class AnunciosManager {
                 $dados['imagem'],
                 $dados['link_compra'],
                 $dados['localizacao'],
+                $dados['layout'] ?? 'carrossel',
                 $dados['cta_ativo'] ?? false,
                 $dados['cta_texto'] ?? 'Saiba Mais',
                 $dados['ativo'] ?? true,
