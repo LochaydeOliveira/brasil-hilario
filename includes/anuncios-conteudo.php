@@ -11,11 +11,15 @@ try {
             echo '<article class="blog-post mb-4 anuncio-sponsorizado">';
             echo '<div class="anuncio-card-conteudo">';
             echo '<div class="anuncio-patrocinado-badge">PATROCINADO</div>';
-            echo '<h3 class="anuncio-titulo-conteudo">' . htmlspecialchars($anuncio['titulo']) . '</h3>';
+            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-conteudo">' . htmlspecialchars($anuncio['titulo']) . '</a>';
             if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                 echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-conteudo">';
+                echo '</a>';
             }
-            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-conteudo">Ver mais</a>';
+            if ($anuncio['cta_ativo']) {
+                echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-conteudo">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
+            }
             echo '</div>';
             echo '</article>';
         }

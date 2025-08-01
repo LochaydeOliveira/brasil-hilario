@@ -11,11 +11,15 @@ try {
             echo '<li class="mb-3 anuncio-item">';
             echo '<div class="anuncio-card-sidebar">';
             echo '<div class="anuncio-patrocinado-badge">PATROCINADO</div>';
-            echo '<h4 class="anuncio-titulo-sidebar">' . htmlspecialchars($anuncio['titulo']) . '</h4>';
+            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-sidebar">' . htmlspecialchars($anuncio['titulo']) . '</a>';
             if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                 echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
+                echo '</a>';
             }
-            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-sidebar">Ver mais</a>';
+            if ($anuncio['cta_ativo']) {
+                echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-sidebar">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
+            }
             echo '</div>';
             echo '</li>';
         }
