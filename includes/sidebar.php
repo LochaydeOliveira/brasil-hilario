@@ -66,6 +66,11 @@ try {
                     </small>
                 </li>
                 <?php endforeach; ?>
+                
+                <?php 
+                // Incluir anúncios da sidebar
+                include 'anuncios-sidebar.php';
+                ?>
             </ul>
         </div>
     </div>

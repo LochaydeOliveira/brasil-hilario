@@ -20,6 +20,11 @@ include 'includes/header.php';
 <div class="row">
 
     <div class="col-lg-8">
+        <?php 
+        // Incluir anúncios do conteúdo principal
+        include 'includes/anuncios-conteudo.php';
+        ?>
+        
         <?php
         try {
             $limit = POSTS_PER_PAGE;
