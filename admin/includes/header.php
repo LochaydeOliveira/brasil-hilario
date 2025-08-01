@@ -43,6 +43,60 @@ if (!isset($_SESSION['usuario_id'])) {
             width: auto;
         }
         
+        /* Correção da cor do texto do sidebar */
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: #fff !important;
+            background-color: #0d6efd;
+        }
+        
+        .sidebar .nav-link i {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .sidebar .nav-link:hover i {
+            color: #fff !important;
+        }
+        
+        .sidebar .nav-link.active i {
+            color: #fff !important;
+        }
+        
+        /* Correção do alinhamento do conteúdo */
+        .main-content {
+            padding: 0;
+        }
+        
+        .col-md-9.ms-sm-auto.col-lg-10.px-md-4 {
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        
+        /* Garantir que o conteúdo preencha toda a largura */
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        /* Ajuste específico para o conteúdo principal */
+        .col-md-9.ms-sm-auto.col-lg-10.px-md-4 .container-fluid {
+            max-width: 100%;
+            width: 100%;
+        }
+        
         /* Melhorias para cards */
         .card {
             border: none;
@@ -140,3 +194,4 @@ if (!isset($_SESSION['usuario_id'])) {
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid px-0">
