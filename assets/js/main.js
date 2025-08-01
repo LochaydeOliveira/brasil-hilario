@@ -85,10 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 40px;
-            height: 40px;
+            width: 33px;
+            height: 33px;
             border-radius: 50%;
-            background-color: #007bff;
+            background-color:rgb(56, 56, 56);
             color: white;
             border: none;
             cursor: pointer;
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             z-index: 1000;
         }
         .back-to-top:hover {
-            background-color: #0056b3;
+            background-color:rgb(0, 0, 0);
         }
     `;
     document.head.appendChild(style);
