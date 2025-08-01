@@ -31,9 +31,10 @@ $stmt = $pdo->prepare("
     SELECT COUNT(DISTINCT p.id) as total
     FROM posts p
     JOIN post_tags pt ON p.id = pt.post_id
-    WHERE pt.tag_id = ? AND p.publicado = 1
+    WHERE pt.tag_id = :tag_id AND p.publicado = 1
 ");
-$stmt->execute([$tag['id']]);
+$stmt->bindValue(':tag_id', $tag['id'], PDO::PARAM_INT);
+$stmt->execute();
 $total_posts = $stmt->fetchColumn();
 $total_pages = ceil($total_posts / $posts_per_page);
 
@@ -46,16 +47,16 @@ $stmt = $pdo->prepare("
     JOIN post_tags pt ON p.id = pt.post_id
     LEFT JOIN post_tags pt2 ON p.id = pt2.post_id
     LEFT JOIN tags t ON pt2.tag_id = t.id
-    WHERE pt.tag_id = ? AND p.publicado = 1
+    WHERE pt.tag_id = :tag_id AND p.publicado = 1
     GROUP BY p.id
     ORDER BY p.criado_em DESC
     LIMIT :limit OFFSET :offset
 ");
 
-// Bind dos parâmetros numéricos requer bindValue com tipo PDO::PARAM_INT
+// Bind dos parâmetros nomeados
+$stmt->bindValue(':tag_id', $tag['id'], PDO::PARAM_INT);
 $stmt->bindValue(':limit', $posts_per_page, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->bindValue(1, $tag['id'], PDO::PARAM_INT); // O primeiro parâmetro posicional
 
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -153,7 +154,7 @@ include 'includes/header.php';
                             <?php if ($page < $total_pages): ?>
                                 <li class="page-item">
                                     <a class="page-link" href="?slug=<?php echo urlencode($tag_slug); ?>&page=<?php echo $page + 1; ?>">
-                                        Próxima
+                                        Próximo
                                     </a>
                                 </li>
                             <?php endif; ?>
