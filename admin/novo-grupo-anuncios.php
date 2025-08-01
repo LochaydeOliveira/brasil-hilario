@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 
+require_once '../config/config.php';
 require_once '../config/database.php';
 require_once '../includes/GruposAnunciosManager.php';
 require_once '../includes/AnunciosManager.php';

@@ -3,6 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Incluir configurações
+require_once __DIR__ . '/../../config/config.php';
+
 // Verifica se o usuário está autenticado
 if (!isset($_SESSION['usuario_id'])) {
     header('Location: login.php');
