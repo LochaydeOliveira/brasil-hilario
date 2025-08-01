@@ -28,7 +28,7 @@ if (!isset($_SESSION['usuario_id'])) {
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
 
     <style>
-        /* Ajustes específicos para o layout do admin */
+        /* Ajustes mínimos para melhorar a aparência */
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -38,46 +38,12 @@ if (!isset($_SESSION['usuario_id'])) {
             box-shadow: 0 2px 4px rgba(0,0,0,.1);
         }
         
-        .navbar-brand {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            background: #fff!important;
-            display: flex;
-            align-items: center;
-        }
-        
         .navbar-brand img {
             max-height: 35px;
             width: auto;
         }
         
-        .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-            border-radius: 0.25rem;
-            margin: 0.125rem 0.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .nav-link:hover {
-            color: #fff !important;
-            background-color: rgba(255, 255, 255, 0.1);
-            text-decoration: none;
-        }
-
-        .nav-link.active {
-            color: #fff !important;
-            background-color: #0d6efd;
-        }
-
-        .nav-link i {
-            margin-right: 0.5rem;
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* Melhorias para cards e formulários */
+        /* Melhorias para cards */
         .card {
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -152,55 +118,6 @@ if (!isset($_SESSION['usuario_id'])) {
             border-top: 1px solid #dee2e6;
             border-radius: 0 0 0.5rem 0.5rem;
         }
-        
-        /* Ajustes específicos para páginas de grupos de anúncios */
-        .card.h-100 {
-            border: 1px solid #e9ecef;
-            transition: all 0.2s ease;
-        }
-        
-        .card.h-100:hover {
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-            border-color: #0d6efd;
-        }
-        
-        .form-check-input:checked {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-        }
-        
-        .form-check-label {
-            cursor: pointer;
-            font-weight: 500;
-        }
-        
-        .form-text {
-            color: #6c757d;
-            font-size: 0.875rem;
-        }
-        
-        /* Melhorias para alertas informativos */
-        .alert-info {
-            background-color: #d1ecf1;
-            border-color: #bee5eb;
-            color: #0c5460;
-        }
-        
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffeaa7;
-            color: #856404;
-        }
-        
-        /* Melhorias para botões de ação */
-        .btn-group-sm .btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-        
-        .btn-group-sm .btn i {
-            font-size: 0.875rem;
-        }
     </style>
 </head>
 <body>
@@ -222,4 +139,4 @@ if (!isset($_SESSION['usuario_id'])) {
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
