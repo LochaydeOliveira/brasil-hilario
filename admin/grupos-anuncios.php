@@ -36,13 +36,12 @@ $grupos = $gruposManager->getAllGruposComStats();
 include 'includes/header.php';
 ?>
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Grupos de Anúncios</h1>
-        <a href="novo-grupo-anuncios.php" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Grupo
-        </a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Grupos de Anúncios</h1>
+    <a href="novo-grupo-anuncios.php" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Novo Grupo
+    </a>
+</div>
 
     <?php if (isset($mensagem)): ?>
         <div class="alert alert-<?php echo $tipo_mensagem; ?> alert-dismissible fade show" role="alert">
@@ -130,7 +129,6 @@ include 'includes/header.php';
             <?php endif; ?>
         </div>
     </div>
-</div>
 
 <!-- Modal de Confirmação -->
 <div class="modal fade" id="modalConfirmacao" tabindex="-1">

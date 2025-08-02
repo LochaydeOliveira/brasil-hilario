@@ -53,13 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include 'includes/header.php';
 ?>
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Novo Grupo de Anúncios</h1>
-        <a href="grupos-anuncios.php" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Novo Grupo de Anúncios</h1>
+    <a href="grupos-anuncios.php" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+</div>
 
     <?php if (isset($erro)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -203,7 +202,6 @@ include 'includes/header.php';
             </div>
         </div>
     </div>
-</div>
 
 <script>
 // Contador de anúncios selecionados
