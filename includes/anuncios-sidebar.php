@@ -10,13 +10,13 @@ try {
         foreach ($anunciosSidebar as $anuncio) {
             echo '<li class="mb-3 anuncio-item">';
             echo '<div class="anuncio-card-sidebar">';
-            echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
-            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-sidebar">' . htmlspecialchars($anuncio['titulo']) . '</a>';
+            echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';            
             if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                 echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
                 echo '</a>';
             }
+            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-sidebar">' . htmlspecialchars($anuncio['titulo']) . '</a>';
             if ($anuncio['cta_ativo']) {
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-sidebar">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
             }

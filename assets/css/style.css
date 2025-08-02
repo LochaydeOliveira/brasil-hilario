@@ -1269,16 +1269,14 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 /* Anúncios da Sidebar */
 .anuncio-card-sidebar {
     border: 1px solid #e1e5e9;
-    border-radius: 8px;
-    padding: 12px;
+    padding: 0;
     margin-bottom: 15px;
     background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     transition: box-shadow 0.2s ease;
 }
 
 .anuncio-card-sidebar:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 1px solid #242424;
 }
 
 
@@ -1299,9 +1297,8 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 .anuncio-imagem-sidebar {
     width: 100%;
-    height: 80px;
+    height: auto;
     object-fit: cover;
-    border-radius: 4px;
     margin-bottom: 8px;
     display: block;
 }
