@@ -1533,7 +1533,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     position: relative;
     flex-shrink: 0;
     overflow: hidden;
-    height: 315px;
+    height: 340px;
     width: 100%;
     max-width: 250px;
 }
@@ -1727,17 +1727,14 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 /* Badges das marcas nos anúncios */
 .marca-badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    left: 0;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 4px;
-    padding: 2px 6px;
     z-index: 2;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    bottom: 10px;
 }
 
 .marca-badge img {
-    height: 16px;
+    height: 25px;
     width: auto;
     display: block;
 }
