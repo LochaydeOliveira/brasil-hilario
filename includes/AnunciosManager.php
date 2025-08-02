@@ -286,7 +286,7 @@ class AnunciosManager {
         }
         
         $html = '<div class="anuncio-card" data-anuncio-id="' . $anuncio['id'] . '">';
-        $html .= '<div class="anuncio-patrocinado">PATROCINADO</div>';
+        $html .= '<div class="anuncio-patrocinado">Anúncio</div>';
         $html .= '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
         $html .= '<img src="' . htmlspecialchars($imagem_path) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem">';
         $html .= '</a>';

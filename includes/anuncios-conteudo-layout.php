@@ -23,7 +23,7 @@ try {
             echo '<div class="anuncios-grade">';
             foreach ($anunciosGrade as $anuncio) {
                 echo '<div class="anuncio-card-grade">';
-                echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
+                echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
                 if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                     echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-grade">';
@@ -45,7 +45,7 @@ try {
             echo '<div class="anuncios-carrossel">';
             foreach ($anunciosCarrossel as $anuncio) {
                 echo '<div class="anuncio-card-carrossel">';
-                echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
+                echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
                 if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                     echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-carrossel">';

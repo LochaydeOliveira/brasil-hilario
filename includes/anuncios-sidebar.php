@@ -10,7 +10,7 @@ try {
         foreach ($anunciosSidebar as $anuncio) {
             echo '<li class="mb-3 anuncio-item">';
             echo '<div class="anuncio-card-sidebar">';
-            echo '<div class="anuncio-patrocinado-badge">PATROCINADO</div>';
+            echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
             echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-sidebar">' . htmlspecialchars($anuncio['titulo']) . '</a>';
             if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
