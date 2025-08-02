@@ -1582,9 +1582,8 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgb(43 52 66 / 45%);
-    color: white;
-    border: none;
+    background: #fff;
+    color: #1e1e1ed4;
     border-radius: 50%;
     width: 45px;
     height: 45px;
@@ -1595,13 +1594,14 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    border: 1px solid #3b3b3b59;
 }
 
 .carrossel-btn:hover {
-    background: rgba(66, 133, 244, 1);
+    background: rgb(119, 119, 119);
     transform: translateY(-50%) scale(1.1);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    color: #fff;
 }
 
 .carrossel-btn-prev {
@@ -1609,7 +1609,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 }
 
 .carrossel-btn-next {
-    right: -25px;
+    right: 0;
 }
 
 /* Responsividade */
