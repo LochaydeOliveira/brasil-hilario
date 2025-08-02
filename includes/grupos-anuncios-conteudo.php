@@ -37,13 +37,13 @@ try {
                     }
                     
                     if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link">';
+                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-grade">';
                         echo '</a>';
                     }
-                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-grade">' . htmlspecialchars($anuncio['titulo']) . '</a>';
+                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-grade" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
                     if ($anuncio['cta_ativo']) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-grade">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
+                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-grade" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
                     }
                     echo '</div>';
                 }
@@ -71,13 +71,13 @@ try {
                     }
                     
                     if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link">';
+                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-carrossel">';
                         echo '</a>';
                     }
-                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-carrossel">' . htmlspecialchars($anuncio['titulo']) . '</a>';
+                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-carrossel" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
                     if ($anuncio['cta_ativo']) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-carrossel">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
+                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-carrossel" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
                     }
                     echo '</div>';
                 }
