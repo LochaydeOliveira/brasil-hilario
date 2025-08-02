@@ -1690,7 +1690,15 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     }
     
     .anuncio-titulo-carrossel {
-        font-size: 13px;
+        font-size: 17px;
+        padding: 0;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: calc(1.2em * 3);
+        line-height: 1.2em;
     }
     
     .carrossel-btn {
