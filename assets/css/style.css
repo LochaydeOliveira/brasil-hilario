@@ -324,6 +324,9 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .title-posts {
+        font-size: 1.7em!important;
+    }
     .post-grid {
         grid-template-columns: 1fr;
     }
