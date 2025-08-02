@@ -90,37 +90,57 @@ function salvarCliqueLog($anuncioId, $postId, $tipoClique) {
     }
 }
 
-// Tentar conectar ao banco de dados
-$sucesso = false;
-try {
-    require_once '../config/config.php';
-    require_once '../includes/db.php';
-    require_once '../includes/AnunciosManager.php';
-    
-    $anunciosManager = new AnunciosManager($pdo);
-    
-    // Verificar se o anúncio existe e está ativo
-    $anuncio = $anunciosManager->getAnuncio($anuncioId);
-    if (!$anuncio || !$anuncio['ativo']) {
-        error_log("Anúncio não encontrado ou inativo: $anuncioId");
-        // Mesmo assim, salvar no log
-        $sucesso = salvarCliqueLog($anuncioId, $postId, $tipoClique);
-    } else {
-        // Registrar o clique no banco
-        $sucesso = $anunciosManager->registrarClique($anuncioId, $postId, $tipoClique);
+// Registrar clique no banco de dados
+function registrarCliqueBanco($anuncioId, $postId, $tipoClique) {
+    try {
+        // Incluir arquivos necessários
+        require_once '../config/config.php';
+        require_once '../includes/db.php';
         
-        // Também salvar no log como backup
-        salvarCliqueLog($anuncioId, $postId, $tipoClique);
+        // Conectar ao banco
+        $pdo = new PDO(
+            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+            DB_USER,
+            DB_PASS,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]
+        );
+        
+        // Inserir clique na tabela cliques_anuncios
+        $stmt = $pdo->prepare("
+            INSERT INTO cliques_anuncios (anuncio_id, post_id, tipo_clique, ip_usuario, data_clique) 
+            VALUES (?, ?, ?, ?, NOW())
+        ");
+        
+        $result = $stmt->execute([
+            $anuncioId,
+            $postId,
+            $tipoClique,
+            getUserIP()
+        ]);
+        
+        if ($result) {
+            error_log("Clique registrado no banco de dados: anuncio_id=$anuncioId, post_id=$postId, tipo=$tipoClique");
+            return true;
+        } else {
+            error_log("Erro ao registrar clique no banco de dados");
+            return false;
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro ao conectar com banco de dados: " . $e->getMessage());
+        return false;
     }
-    
-} catch (Exception $e) {
-    error_log("Erro ao conectar com banco de dados: " . $e->getMessage());
-    
-    // Se não conseguir conectar ao banco, salvar apenas no log
-    $sucesso = salvarCliqueLog($anuncioId, $postId, $tipoClique);
 }
 
-if ($sucesso) {
+// Tentar registrar no banco primeiro, depois no log como backup
+$sucessoBanco = registrarCliqueBanco($anuncioId, $postId, $tipoClique);
+$sucessoLog = salvarCliqueLog($anuncioId, $postId, $tipoClique);
+
+if ($sucessoBanco || $sucessoLog) {
     error_log("Clique registrado com sucesso - anuncio_id: $anuncioId, post_id: $postId, tipo: $tipoClique");
     echo json_encode([
         'success' => true,
@@ -128,10 +148,11 @@ if ($sucesso) {
         'anuncio_id' => $anuncioId,
         'tipo_clique' => $tipoClique,
         'post_id' => $postId,
-        'method' => 'log_file'
+        'method' => $sucessoBanco ? 'database' : 'log_file'
     ]);
 } else {
     error_log("Erro ao registrar clique");
     http_response_code(500);
     echo json_encode(['error' => 'Erro ao registrar clique']);
-} 
+}
+?> 
