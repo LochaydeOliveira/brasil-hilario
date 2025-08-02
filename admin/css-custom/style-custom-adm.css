@@ -37,48 +37,83 @@ main {
     min-height: calc(100vh - 60px);
 }
 
-/* Garantir que o conteúdo interno se expanda */
+/* Ajustar elementos internos para não quebrar o layout */
 .col-md-9.ms-sm-auto.col-lg-10.px-md-4 > * {
-    flex: 1;
+    flex: 0 0 auto; /* Não expandir automaticamente */
 }
 
-/* Ajustar cards para ocuparem espaço disponível */
+/* Ajustar cards para ocuparem espaço disponível quando necessário */
 .card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    height: auto; /* Altura automática */
+    display: block; /* Voltar ao display normal */
 }
 
 .card-body {
-    flex: 1;
+    flex: none; /* Não forçar flex */
 }
 
-/* Ajustar tabelas para ocuparem espaço disponível */
+/* Ajustar tabelas para comportamento normal */
 .table-responsive {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    flex: none; /* Não forçar flex */
+    display: block; /* Voltar ao display normal */
 }
 
 .table {
-    flex: 1;
+    flex: none; /* Não forçar flex */
 }
 
-/* Ajustar formulários para ocuparem espaço disponível */
+/* Ajustar formulários para comportamento normal */
 form {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    flex: none; /* Não forçar flex */
+    display: block; /* Voltar ao display normal */
 }
 
-.form-group, .mb-3 {
-    flex-shrink: 0;
+/* Garantir que elementos específicos mantenham comportamento normal */
+.d-flex.justify-content-between,
+.btn-group,
+.alert,
+.nav-tabs,
+.tab-content {
+    flex: none;
+    display: block;
 }
 
-/* Garantir que botões fiquem no final */
-.btn-group, .d-flex.justify-content-between {
-    flex-shrink: 0;
-    margin-top: auto;
+/* Ajustar containers de conteúdo */
+.row .col-md-12,
+.row .col-md-6,
+.row .col-md-4,
+.row .col-md-3 {
+    flex: none;
+    display: block;
+}
+
+/* Garantir que elementos de layout específicos funcionem */
+.d-flex {
+    display: flex !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.flex-1 {
+    flex: 1 !important;
+}
+
+/* Ajustar espaçamento para elementos internos */
+.mb-3, .mb-4, .mb-5 {
+    margin-bottom: 1rem !important;
+}
+
+.mt-3, .mt-4, .mt-5 {
+    margin-top: 1rem !important;
+}
+
+/* Garantir que botões e ações mantenham posicionamento */
+.btn-toolbar,
+.d-flex.justify-content-between {
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 .sidebar {

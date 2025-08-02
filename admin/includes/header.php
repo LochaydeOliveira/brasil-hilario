@@ -155,7 +155,32 @@ if (!isset($_SESSION['usuario_id'])) {
         
         /* Garantir que o conteúdo interno se expanda */
         .col-md-9.ms-sm-auto.col-lg-10.px-md-4 > * {
-            flex: 1;
+            flex: 0 0 auto; /* Não expandir automaticamente */
+        }
+        
+        /* Ajustar elementos internos para comportamento normal */
+        .card, .table-responsive, form, .alert, .nav-tabs, .tab-content {
+            flex: none;
+            display: block;
+        }
+        
+        /* Garantir que containers de conteúdo funcionem normalmente */
+        .row .col-md-12, .row .col-md-6, .row .col-md-4, .row .col-md-3 {
+            flex: none;
+            display: block;
+        }
+        
+        /* Manter elementos de layout específicos */
+        .d-flex {
+            display: flex !important;
+        }
+        
+        .flex-column {
+            flex-direction: column !important;
+        }
+        
+        .flex-1 {
+            flex: 1 !important;
         }
         
         /* Melhorias para cards */
