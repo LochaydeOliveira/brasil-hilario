@@ -1546,10 +1546,8 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 .anuncio-imagem-carrossel {
     width: 100%;
-    height: 140px;
+    height: 250px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 12px;
     display: block;
     transition: transform 0.3s ease;
 }
