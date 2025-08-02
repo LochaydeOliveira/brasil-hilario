@@ -158,7 +158,7 @@ include 'includes/header.php';
                                                     <small class="text-muted d-block mt-1">
                                                         <i class="fas fa-map-marker-alt"></i> <?php echo ucfirst($anuncio['localizacao']); ?>
                                                         <br>
-                                                        <i class="fas fa-mouse-pointer"></i> <?php echo $anuncio['cliques'] ?? 0; ?> cliques
+                                                        <i class="fas fa-mouse-pointer"></i> <?php echo $anuncio['total_cliques'] ?? 0; ?> cliques
                                                     </small>
                                                 </div>
                                             </div>

@@ -193,7 +193,7 @@ include 'includes/header.php';
                                                     <br>
                                                     <small class="text-muted">
                                                         <?php echo ucfirst($anuncio['localizacao']); ?> • 
-                                                        <?php echo $anuncio['cliques']; ?> cliques
+                                                        <?php echo $anuncio['total_cliques'] ?? 0; ?> cliques
                                                     </small>
                                                 </label>
                                             </div>
@@ -258,7 +258,7 @@ include 'includes/header.php';
                                         <br>
                                         <small class="text-muted"><?php echo ucfirst($anuncio['localizacao']); ?></small>
                                     </div>
-                                    <span class="badge bg-secondary"><?php echo $anuncio['cliques']; ?> cliques</span>
+                                    <span class="badge bg-secondary"><?php echo $anuncio['total_cliques'] ?? 0; ?> cliques</span>
                                 </div>
                             <?php endforeach; ?>
                         </div>
