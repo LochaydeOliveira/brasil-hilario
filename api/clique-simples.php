@@ -60,38 +60,117 @@ function getUserIP() {
 }
 
 // Salvar clique em arquivo de log
-$logFile = '../logs/cliques_anuncios.log';
-$logDir = dirname($logFile);
-
-// Criar diretório se não existir
-if (!is_dir($logDir)) {
-    mkdir($logDir, 0755, true);
+function salvarCliqueLog($anuncioId, $postId, $tipoClique) {
+    $logFile = '../logs/cliques_anuncios.log';
+    $logDir = dirname($logFile);
+    
+    // Criar diretório se não existir
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+    
+    $dados = [
+        'anuncio_id' => $anuncioId,
+        'post_id' => $postId,
+        'tipo_clique' => $tipoClique,
+        'ip_usuario' => getUserIP(),
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+        'data_clique' => date('Y-m-d H:i:s'),
+        'timestamp' => time()
+    ];
+    
+    $logEntry = json_encode($dados) . "\n";
+    
+    if (file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX)) {
+        error_log("Clique salvo no log: " . json_encode($dados));
+        return true;
+    } else {
+        error_log("Erro ao salvar clique no log");
+        return false;
+    }
 }
 
-$dados = [
-    'anuncio_id' => $anuncioId,
-    'post_id' => $postId,
-    'tipo_clique' => $tipoClique,
-    'ip_usuario' => getUserIP(),
-    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-    'data_clique' => date('Y-m-d H:i:s'),
-    'timestamp' => time()
-];
+// Registrar clique no banco de dados
+function registrarCliqueBanco($anuncioId, $postId, $tipoClique) {
+    try {
+        require_once '../config/config.php';
+        
+        // Conectar ao banco
+        $pdo = new PDO(
+            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+            DB_USER,
+            DB_PASS,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]
+        );
+        
+        // Verificar se a tabela existe
+        $stmt = $pdo->query("SHOW TABLES LIKE 'cliques_anuncios'");
+        if ($stmt->rowCount() == 0) {
+            // Criar tabela se não existir
+            $sql = "
+            CREATE TABLE cliques_anuncios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                anuncio_id INT NOT NULL,
+                post_id INT NOT NULL,
+                tipo_clique ENUM('imagem', 'titulo', 'cta') NOT NULL,
+                ip_usuario VARCHAR(45),
+                data_clique TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_anuncio_id (anuncio_id),
+                INDEX idx_post_id (post_id),
+                INDEX idx_data_clique (data_clique)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ";
+            $pdo->exec($sql);
+            error_log("Tabela cliques_anuncios criada");
+        }
+        
+        // Inserir clique na tabela cliques_anuncios
+        $stmt = $pdo->prepare("
+            INSERT INTO cliques_anuncios (anuncio_id, post_id, tipo_clique, ip_usuario, data_clique) 
+            VALUES (?, ?, ?, ?, NOW())
+        ");
+        
+        $result = $stmt->execute([
+            $anuncioId,
+            $postId,
+            $tipoClique,
+            getUserIP()
+        ]);
+        
+        if ($result) {
+            error_log("Clique registrado no banco de dados: anuncio_id=$anuncioId, post_id=$postId, tipo=$tipoClique");
+            return true;
+        } else {
+            error_log("Erro ao registrar clique no banco de dados");
+            return false;
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro ao conectar com banco de dados: " . $e->getMessage());
+        return false;
+    }
+}
 
-$logEntry = json_encode($dados) . "\n";
+// Registrar no banco e no log
+$sucessoBanco = registrarCliqueBanco($anuncioId, $postId, $tipoClique);
+$sucessoLog = salvarCliqueLog($anuncioId, $postId, $tipoClique);
 
-if (file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX)) {
-    error_log("Clique salvo no log: " . json_encode($dados));
+if ($sucessoBanco || $sucessoLog) {
+    error_log("Clique registrado com sucesso - anuncio_id: $anuncioId, post_id: $postId, tipo: $tipoClique");
     echo json_encode([
         'success' => true,
         'message' => 'Clique registrado com sucesso',
         'anuncio_id' => $anuncioId,
         'tipo_clique' => $tipoClique,
         'post_id' => $postId,
-        'method' => 'log_file'
+        'method' => $sucessoBanco ? 'database' : 'log_file'
     ]);
 } else {
-    error_log("Erro ao salvar clique no log");
+    error_log("Erro ao registrar clique");
     http_response_code(500);
     echo json_encode(['error' => 'Erro ao registrar clique']);
 }

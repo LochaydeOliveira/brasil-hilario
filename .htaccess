@@ -27,11 +27,19 @@ RewriteRule ^termos/?$ termos.php [L,QSA]
 # Proteger diretórios sensíveis
 Options -Indexes
 
-# Permitir acesso às APIs
+# Permitir acesso às APIs e scripts de migração
 <IfModule mod_rewrite.c>
     # Permitir acesso direto às APIs
     RewriteRule ^api/registrar-clique-anuncio\.php$ - [L]
     RewriteRule ^api/get-anuncios\.php$ - [L]
+    RewriteRule ^api/clique-simples\.php$ - [L]
+    
+    # Permitir acesso aos scripts de migração e teste
+    RewriteRule ^migrar-cliques-banco\.php$ - [L]
+    RewriteRule ^verificar-tabela-cliques\.php$ - [L]
+    RewriteRule ^visualizar-cliques\.php$ - [L]
+    RewriteRule ^teste-api-direto\.php$ - [L]
+    RewriteRule ^teste-final\.php$ - [L]
     
     # Bloquear outros arquivos sensíveis
     RewriteRule ^(config|includes|sql)/ - [F,L]
