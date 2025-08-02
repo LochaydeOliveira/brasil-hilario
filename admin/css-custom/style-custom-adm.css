@@ -1,3 +1,86 @@
+/* Garantir altura automática das páginas do admin */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-fluid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+}
+
+.sidebar {
+    flex-shrink: 0;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Garantir que o conteúdo principal ocupe todo o espaço disponível */
+.col-md-9.ms-sm-auto.col-lg-10.px-md-4 {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px);
+}
+
+/* Garantir que o conteúdo interno se expanda */
+.col-md-9.ms-sm-auto.col-lg-10.px-md-4 > * {
+    flex: 1;
+}
+
+/* Ajustar cards para ocuparem espaço disponível */
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1;
+}
+
+/* Ajustar tabelas para ocuparem espaço disponível */
+.table-responsive {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.table {
+    flex: 1;
+}
+
+/* Ajustar formulários para ocuparem espaço disponível */
+form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group, .mb-3 {
+    flex-shrink: 0;
+}
+
+/* Garantir que botões fiquem no final */
+.btn-group, .d-flex.justify-content-between {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
 .sidebar {
     top: 30px!important;
 }

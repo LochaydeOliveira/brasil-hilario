@@ -114,6 +114,50 @@ if (!isset($_SESSION['usuario_id'])) {
             max-width: 100%;
         }
         
+        /* Garantir altura automática e preenchimento da tela */
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .row {
+            flex: 1;
+            display: flex;
+        }
+        
+        .sidebar {
+            flex-shrink: 0;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Garantir que o conteúdo principal ocupe todo o espaço disponível */
+        .col-md-9.ms-sm-auto.col-lg-10.px-md-4 {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 60px); /* 60px é a altura aproximada do header */
+        }
+        
+        /* Garantir que o conteúdo interno se expanda */
+        .col-md-9.ms-sm-auto.col-lg-10.px-md-4 > * {
+            flex: 1;
+        }
+        
         /* Melhorias para cards */
         .card {
             border: none;
