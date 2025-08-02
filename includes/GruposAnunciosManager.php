@@ -32,7 +32,7 @@ class GruposAnunciosManager {
      * Buscar anúncios de um grupo específico
      */
     public function getAnunciosDoGrupo($grupoId) {
-        $sql = "SELECT a.* 
+        $sql = "SELECT a.*, gi.ordem
                 FROM anuncios a 
                 JOIN grupos_anuncios_items gi ON a.id = gi.anuncio_id
                 WHERE gi.grupo_id = ? AND a.ativo = 1
@@ -118,21 +118,17 @@ class GruposAnunciosManager {
      * Buscar grupo por ID
      */
     public function getGrupo($id) {
-        $sql = "SELECT g.*, GROUP_CONCAT(gi.anuncio_id ORDER BY gi.ordem) as anuncios_ids
+        $sql = "SELECT g.*
                 FROM grupos_anuncios g 
-                LEFT JOIN grupos_anuncios_items gi ON g.id = gi.grupo_id
-                WHERE g.id = ?
-                GROUP BY g.id";
+                WHERE g.id = ?";
         
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$id]);
             $grupo = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($grupo && $grupo['anuncios_ids']) {
-                $grupo['anuncios_ids'] = explode(',', $grupo['anuncios_ids']);
-            } else {
-                $grupo['anuncios_ids'] = [];
+            if (!$grupo) {
+                return false;
             }
             
             return $grupo;
