@@ -5,8 +5,8 @@
 function registrarCliqueAnuncio(anuncioId, tipoClique) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
     
-    // Usar API original corrigida
-    const apiUrl = './api/registrar-clique-anuncio.php';
+    // Usar API super simples temporariamente
+    const apiUrl = './api/clique-simples.php';
     
     console.log('Tentando registrar clique:', {
         anuncioId: anuncioId,

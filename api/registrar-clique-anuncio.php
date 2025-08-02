@@ -1,4 +1,8 @@
 <?php
+// Habilitar exibição de erros para debug
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Headers CORS
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -90,12 +94,23 @@ function salvarCliqueLog($anuncioId, $postId, $tipoClique) {
     }
 }
 
-// Registrar clique no banco de dados
+// Registrar clique no banco de dados (versão simplificada)
 function registrarCliqueBanco($anuncioId, $postId, $tipoClique) {
     try {
+        // Verificar se os arquivos de configuração existem
+        if (!file_exists('../config/config.php')) {
+            error_log("Arquivo config.php não encontrado");
+            return false;
+        }
+        
         // Incluir arquivos necessários
         require_once '../config/config.php';
-        require_once '../includes/db.php';
+        
+        // Verificar se as constantes estão definidas
+        if (!defined('DB_HOST') || !defined('DB_NAME') || !defined('DB_USER') || !defined('DB_PASS')) {
+            error_log("Constantes de banco de dados não definidas");
+            return false;
+        }
         
         // Conectar ao banco
         $pdo = new PDO(
@@ -108,6 +123,27 @@ function registrarCliqueBanco($anuncioId, $postId, $tipoClique) {
                 PDO::ATTR_EMULATE_PREPARES => false
             ]
         );
+        
+        // Verificar se a tabela existe
+        $stmt = $pdo->query("SHOW TABLES LIKE 'cliques_anuncios'");
+        if ($stmt->rowCount() == 0) {
+            // Criar tabela se não existir
+            $sql = "
+            CREATE TABLE cliques_anuncios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                anuncio_id INT NOT NULL,
+                post_id INT NOT NULL,
+                tipo_clique ENUM('imagem', 'titulo', 'cta') NOT NULL,
+                ip_usuario VARCHAR(45),
+                data_clique TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_anuncio_id (anuncio_id),
+                INDEX idx_post_id (post_id),
+                INDEX idx_data_clique (data_clique)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ";
+            $pdo->exec($sql);
+            error_log("Tabela cliques_anuncios criada");
+        }
         
         // Inserir clique na tabela cliques_anuncios
         $stmt = $pdo->prepare("
