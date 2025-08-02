@@ -1,17 +1,31 @@
 // Sistema de Anúncios Nativos
 // Brasil Hilário
 
+// Função para obter o caminho base da aplicação
+function getBasePath() {
+    const script = document.currentScript || document.querySelector('script[src*="anuncios.js"]');
+    if (script) {
+        const src = script.src;
+        const basePath = src.substring(0, src.lastIndexOf('/assets/'));
+        return basePath;
+    }
+    return '';
+}
+
 // Função para registrar clique em anúncio
 function registrarCliqueAnuncio(anuncioId, tipoClique) {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
+    const basePath = getBasePath();
+    const apiUrl = basePath + '/api/registrar-clique-anuncio.php';
     
     console.log('Tentando registrar clique:', {
         anuncioId: anuncioId,
         tipoClique: tipoClique,
-        postId: postId
+        postId: postId,
+        apiUrl: apiUrl
     });
     
-    fetch('/api/registrar-clique-anuncio.php', {
+    fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -24,6 +38,9 @@ function registrarCliqueAnuncio(anuncioId, tipoClique) {
     })
     .then(response => {
         console.log('Resposta do servidor:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         return response.json();
     })
     .then(data => {

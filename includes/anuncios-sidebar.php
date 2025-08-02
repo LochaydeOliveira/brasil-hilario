@@ -26,9 +26,9 @@ try {
                 if (!empty($grupo['marca'])) {
                     echo '<div class="marca-badge">';
                     if ($grupo['marca'] === 'shopee') {
-                        echo '<img src="assets/img/logo-shopee.png" alt="Shopee">';
+                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Shopee">';
                     } elseif ($grupo['marca'] === 'amazon') {
-                        echo '<img src="assets/img/logo-amazon.png" alt="Amazon">';
+                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Amazon">';
                     }
                     echo '</div>';
                 }

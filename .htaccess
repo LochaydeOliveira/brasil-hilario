@@ -27,6 +27,9 @@ RewriteRule ^termos/?$ termos.php [L,QSA]
 # Proteger diretórios sensíveis
 Options -Indexes
 <IfModule mod_rewrite.c>
+    # Permitir acesso à API de anúncios
+    RewriteRule ^api/registrar-clique-anuncio\.php$ - [L]
+    # Bloquear outros arquivos sensíveis
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 
