@@ -1281,18 +1281,6 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.anuncio-patrocinado-badge {
-    background: #4285f4;
-    color: white;
-    padding: 2px 6px;
-    font-size: 10px;
-    border-radius: 3px;
-    display: inline-block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
 
 .anuncio-titulo-sidebar {
     font-size: 14px;
@@ -1437,13 +1425,11 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: #4285f4;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    border-radius: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
+    background: #ffffff;
+    color: #000000;
+    padding: 2px 5px;
+    font-size: 12px;
+    font-weight: 400;
     letter-spacing: 0.5px;
     z-index: 2;
 }
