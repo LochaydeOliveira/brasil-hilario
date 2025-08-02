@@ -1724,6 +1724,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     }
 }
 
+
 /* Badges das marcas nos anúncios */
 .marca-badge {
     position: absolute;
@@ -1754,3 +1755,4 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
         height: 14px;
     }
 }
+
