@@ -1743,13 +1743,9 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 /* Responsividade para badges */
 @media (max-width: 768px) {
     .marca-badge {
-        top: 5px;
-        right: 5px;
+        bottom: 5px;
         padding: 1px 4px;
     }
     
-    .marca-badge img {
-        height: 14px;
-    }
 }
 
