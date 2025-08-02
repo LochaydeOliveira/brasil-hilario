@@ -174,9 +174,7 @@ include 'includes/header.php';
                     <a href="posts.php" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
-        </main>
-    </div>
-</div>
+
 
 <!-- TinyMCE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>

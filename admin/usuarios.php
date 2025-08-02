@@ -70,9 +70,7 @@ include 'includes/header.php';
                     </tbody>
                 </table>
             </div>
-        </main>
-    </div>
-</div>
+
 
 
 <div class="modal fade" id="novoUsuarioModal" tabindex="-1">

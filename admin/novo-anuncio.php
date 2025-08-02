@@ -245,9 +245,7 @@ include 'includes/header.php';
                     </form>
                 </div>
             </div>
-        </main>
-    </div>
-</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

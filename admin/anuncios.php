@@ -271,8 +271,5 @@ include 'includes/header.php';
                     <?php endif; ?>
                 </div>
             </div>
-        </main>
-    </div>
-</div>
 
 <?php include 'includes/footer.php'; ?> 

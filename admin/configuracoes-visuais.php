@@ -514,9 +514,7 @@ include 'includes/header.php';
                     </a>
                 </div>
             </form>
-        </main>
-    </div>
-</div>
+
 
 <script>
 // Atualizar preview em tempo real
