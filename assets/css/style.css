@@ -1289,6 +1289,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     text-decoration: none!important;
     display: block!important;
     padding-left: 0.5rem!important;
+    font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif!important;
 }
 
 .anuncio-titulo-sidebar:hover {
@@ -1429,6 +1430,21 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     font-weight: 400;
     letter-spacing: 0.5px;
     z-index: 2;
+}
+
+.anuncio-patrocinado-badge-sidebar {
+    position: relative;
+    top: 12px;
+    right: -5px;
+    background: #ffffff;
+    color: #000000;
+    padding: 0px 10px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    max-width: max-content;
+    border: 1px solid #727272;
 }
 
 .anuncio-imagem-link {
