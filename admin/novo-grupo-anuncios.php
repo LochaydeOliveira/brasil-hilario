@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $localizacao = $_POST['localizacao'];
     $layout = $_POST['layout'] ?? 'carrossel';
+    $marca = $_POST['marca'] ?? '';
     $anuncios = $_POST['anuncios'] ?? [];
     
     if (empty($nome)) {
@@ -37,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome' => $nome,
             'localizacao' => $localizacao,
             'layout' => $layout,
+            'marca' => $marca,
             'anuncios' => $anuncios
         ];
         
@@ -114,6 +116,16 @@ include 'includes/header.php';
                                     <div class="form-text">Aplicado apenas para anúncios no conteúdo principal</div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="marca" class="form-label">Marca/Marketplace</label>
+                            <select class="form-select" id="marca" name="marca">
+                                <option value="" <?php echo ($_POST['marca'] ?? '') === '' ? 'selected' : ''; ?>>Vazio (Infoproduto)</option>
+                                <option value="shopee" <?php echo ($_POST['marca'] ?? '') === 'shopee' ? 'selected' : ''; ?>>Shopee</option>
+                                <option value="amazon" <?php echo ($_POST['marca'] ?? '') === 'amazon' ? 'selected' : ''; ?>>Amazon</option>
+                            </select>
+                            <div class="form-text">Selecione a marca ou marketplace dos produtos</div>
                         </div>
 
                         <div class="mb-3">

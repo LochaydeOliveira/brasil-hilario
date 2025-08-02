@@ -24,6 +24,18 @@ try {
                 foreach ($anuncios as $anuncio) {
                     echo '<div class="anuncio-card-grade">';
                     echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
+                    
+                    // Badge da marca
+                    if (!empty($grupo['marca'])) {
+                        echo '<div class="marca-badge">';
+                        if ($grupo['marca'] === 'shopee') {
+                            echo '<img src="assets/img/logo-shopee.png" alt="Shopee">';
+                        } elseif ($grupo['marca'] === 'amazon') {
+                            echo '<img src="assets/img/logo-amazon.png" alt="Amazon">';
+                        }
+                        echo '</div>';
+                    }
+                    
                     if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                         echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-grade">';
@@ -46,6 +58,18 @@ try {
                 foreach ($anuncios as $anuncio) {
                     echo '<div class="anuncio-card-carrossel">';
                     echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
+                    
+                    // Badge da marca
+                    if (!empty($grupo['marca'])) {
+                        echo '<div class="marca-badge">';
+                        if ($grupo['marca'] === 'shopee') {
+                            echo '<img src="assets/img/logo-shopee.png" alt="Shopee">';
+                        } elseif ($grupo['marca'] === 'amazon') {
+                            echo '<img src="assets/img/logo-amazon.png" alt="Amazon">';
+                        }
+                        echo '</div>';
+                    }
+                    
                     if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                         echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-carrossel">';

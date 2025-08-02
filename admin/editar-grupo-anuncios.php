@@ -29,8 +29,6 @@ $grupoId = (int)$_GET['id'];
 // Buscar dados do grupo
 $grupo = $gruposManager->getGrupo($grupoId);
 if (!$grupo) {
-    // Debug temporário
-    error_log("Grupo não encontrado: " . $grupoId);
     header('Location: grupos-anuncios.php');
     exit;
 }
@@ -47,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $localizacao = $_POST['localizacao'];
     $layout = $_POST['layout'] ?? 'carrossel';
+    $marca = $_POST['marca'] ?? '';
     $anuncios = $_POST['anuncios'] ?? [];
     
     if (empty($nome)) {
@@ -58,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome' => $nome,
             'localizacao' => $localizacao,
             'layout' => $layout,
+            'marca' => $marca,
             'anuncios' => $anuncios,
             'ativo' => isset($_POST['ativo'])
         ];
@@ -139,6 +139,20 @@ include 'includes/header.php';
                                     <div class="form-text">Como os anúncios serão organizados</div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="marca" class="form-label">Marca/Marketplace</label>
+                                    <select class="form-select" id="marca" name="marca">
+                                        <option value="" <?php echo ($grupo['marca'] ?? '') === '' ? 'selected' : ''; ?>>Vazio (Infoproduto)</option>
+                                        <option value="shopee" <?php echo ($grupo['marca'] ?? '') === 'shopee' ? 'selected' : ''; ?>>Shopee</option>
+                                        <option value="amazon" <?php echo ($grupo['marca'] ?? '') === 'amazon' ? 'selected' : ''; ?>>Amazon</option>
+                                    </select>
+                                    <div class="form-text">Selecione a marca ou marketplace dos produtos</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Status</label>

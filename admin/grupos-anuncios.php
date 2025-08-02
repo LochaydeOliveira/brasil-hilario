@@ -69,6 +69,7 @@ include 'includes/header.php';
                                 <th>Nome</th>
                                 <th>Localização</th>
                                 <th>Layout</th>
+                                <th>Marca</th>
                                 <th>Anúncios</th>
                                 <th>Status</th>
                                 <th>Criado em</th>
@@ -90,6 +91,15 @@ include 'includes/header.php';
                                         <span class="badge bg-<?php echo $grupo['layout'] === 'carrossel' ? 'success' : 'warning'; ?>">
                                             <?php echo ucfirst($grupo['layout']); ?>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($grupo['marca'])): ?>
+                                            <span class="badge bg-info">
+                                                <?php echo ucfirst($grupo['marca']); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary">Infoproduto</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <span class="badge bg-secondary">

@@ -52,14 +52,15 @@ class GruposAnunciosManager {
      * Criar novo grupo de anúncios
      */
     public function criarGrupo($dados) {
-        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca) VALUES (?, ?, ?, ?)";
         
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $dados['nome'],
                 $dados['localizacao'],
-                $dados['layout'] ?? 'carrossel'
+                $dados['layout'] ?? 'carrossel',
+                $dados['marca'] ?? ''
             ]);
             
             $grupoId = $this->pdo->lastInsertId();
@@ -143,7 +144,7 @@ class GruposAnunciosManager {
      */
     public function atualizarGrupo($id, $dados) {
         $sql = "UPDATE grupos_anuncios SET 
-                nome = ?, localizacao = ?, layout = ?, ativo = ?
+                nome = ?, localizacao = ?, layout = ?, marca = ?, ativo = ?
                 WHERE id = ?";
         
         try {
@@ -152,6 +153,7 @@ class GruposAnunciosManager {
                 $dados['nome'],
                 $dados['localizacao'],
                 $dados['layout'] ?? 'carrossel',
+                $dados['marca'] ?? '',
                 $dados['ativo'] ?? true,
                 $id
             ]);
