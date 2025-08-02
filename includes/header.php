@@ -98,6 +98,10 @@ try {
     <meta property="twitter:description" content="<?php echo $page_description; ?>">
     <meta property="twitter:image" content="<?php echo $page_image; ?>">
 
+    <?php if (isset($post) && isset($post['id'])): ?>
+    <meta name="post-id" content="<?php echo $post['id']; ?>">
+    <?php endif; ?>
+
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
