@@ -1584,10 +1584,9 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     transform: translateY(-50%);
     background: #fff;
     color: #1e1e1ed4;
-    border-radius: 50%;
     width: 45px;
     height: 45px;
-    font-size: 24px;
+    font-size: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 3;
@@ -1597,6 +1596,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     border: 1px solid #3b3b3b59;
     line-height: 1;
     text-align: center;
+    padding: 5px 0 15px;
 }
 
 .carrossel-btn:hover {
