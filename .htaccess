@@ -31,7 +31,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteRule ^api/registrar-clique\.php$ - [L]
     RewriteRule ^api/get-anuncios\.php$ - [L]
-    RewriteRule ^debug-clique\.php$ - [L]
+    RewriteRule ^teste-secoes-posts\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 

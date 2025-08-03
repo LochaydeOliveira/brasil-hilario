@@ -3,6 +3,8 @@ session_start();
 require_once 'includes/db.php';
 require_once 'config/config.php';
 require_once 'config/admin_ips.php';
+require_once 'config/search.php';
+require_once 'vendor/autoload.php';
 
 try {
     $slug = $_GET['slug'] ?? '';
@@ -39,6 +41,30 @@ try {
     ");
     $stmt_tags->execute([$post['id']]);
     $post['tags'] = $stmt_tags->fetchAll();
+
+    // Buscar posts relacionados (mesma categoria, excluindo o post atual)
+    $stmt_related = $pdo->prepare("
+        SELECT p.id, p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome
+        FROM posts p 
+        JOIN categorias c ON p.categoria_id = c.id 
+        WHERE p.categoria_id = ? AND p.id != ? AND p.publicado = 1
+        ORDER BY p.data_publicacao DESC 
+        LIMIT 4
+    ");
+    $stmt_related->execute([$post['categoria_id'], $post['id']]);
+    $related_posts = $stmt_related->fetchAll();
+
+    // Buscar últimas notícias (posts mais recentes)
+    $stmt_latest = $pdo->prepare("
+        SELECT p.id, p.titulo, p.slug, p.imagem_destacada, c.nome as categoria_nome
+        FROM posts p 
+        JOIN categorias c ON p.categoria_id = c.id 
+        WHERE p.publicado = 1 AND p.id != ?
+        ORDER BY p.data_publicacao DESC 
+        LIMIT 4
+    ");
+    $stmt_latest->execute([$post['id']]);
+    $latest_posts = $stmt_latest->fetchAll();
 
     // Verificar se deve contar a visualização
     if (shouldCountView($post['id'])) {
