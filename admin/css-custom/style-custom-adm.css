@@ -116,6 +116,10 @@ form {
     margin-bottom: 1rem;
 }
 
+#sidebarMenu {
+    font-size: 14px!important;
+}
+
 .sidebar {
     top: 30px!important;
 }

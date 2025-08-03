@@ -635,9 +635,6 @@ footer {
     list-style: 1.1rem!important;
 }
 
-#sidebarMenu {
-    font-size: 14px!important;
-}
 
 /* Responsividade para o footer */
 @media (max-width: 767.98px) {
