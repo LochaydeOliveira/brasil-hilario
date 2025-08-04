@@ -1051,7 +1051,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     font-family: "Merriweather", serif;
     font-weight: 700;
     margin-bottom: 1.5rem !important;
-    border-bottom: 3px solid #d92332;
+    border-bottom: 3px solid #ffc107;
     padding-bottom: 0.5rem;
     display: inline-block;
 }
