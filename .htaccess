@@ -12,6 +12,20 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
+# Proteger diretórios sensíveis
+Options -Indexes
+
+# Permitir acesso às APIs e arquivos de debug (DEVE VIR ANTES das regras genéricas)
+<IfModule mod_rewrite.c>
+    RewriteRule ^api/registrar-clique\.php$ - [L]
+    RewriteRule ^api/get-anuncios\.php$ - [L]
+    RewriteRule ^teste-secoes-posts\.php$ - [L]
+    RewriteRule ^debug-clique-v2\.php$ - [L]
+    RewriteRule ^teste-acesso-debug\.php$ - [L]
+    RewriteRule ^anuncios\.php$ - [L]
+    RewriteRule ^(config|includes|sql)/ - [F,L]
+</IfModule>
+
 # URLs Amigáveis
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -24,17 +38,10 @@ RewriteRule ^contato/?$ contato.php [L,QSA]
 RewriteRule ^privacidade/?$ privacidade.php [L,QSA]
 RewriteRule ^termos/?$ termos.php [L,QSA]
 
-# Proteger diretórios sensíveis
-Options -Indexes
-
-# Permitir acesso às APIs
-<IfModule mod_rewrite.c>
-    RewriteRule ^api/registrar-clique\.php$ - [L]
-    RewriteRule ^api/get-anuncios\.php$ - [L]
-    RewriteRule ^teste-secoes-posts\.php$ - [L]
-    RewriteRule ^debug-clique-v2\.php$ - [L]
-    RewriteRule ^(config|includes|sql)/ - [F,L]
-</IfModule>
+# Regras para páginas (DEVE VIR POR ÚLTIMO)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ pagina.php?slug=$1 [L,QSA]
 
 # Compressão GZIP
 <IfModule mod_deflate.c>
@@ -80,14 +87,6 @@ Options -Indexes
 
 # Definir charset padrão
 AddDefaultCharset UTF-8 
-
-# Permitir acesso direto ao anuncios.php
-RewriteRule ^anuncios\.php$ - [L]
-
-# Regras para páginas
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)/?$ pagina.php?slug=$1 [L,QSA]
 
 # Proteger arquivos sensíveis
 <FilesMatch "^\.">
