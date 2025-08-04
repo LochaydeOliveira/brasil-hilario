@@ -1,20 +1,16 @@
-// Sistema de Anúncios Nativos - Versão SIMPLES e ROBUSTA
+// Sistema de Anúncios Nativos - ULTRA-SIMPLES
 // Brasil Hilário
 
 // Função para registrar clique em anúncio
 function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
-    // Obter post-id da meta tag ou usar 0
-    const postIdMeta = document.querySelector('meta[name="post-id"]');
-    const postId = postIdMeta ? postIdMeta.content : 0;
-    
-    // Dados para enviar
+    // Dados básicos
     const dados = {
         anuncio_id: parseInt(anuncioId),
-        post_id: parseInt(postId),
+        post_id: 0,
         tipo_clique: tipoClique
     };
     
-    // Fazer requisição
+    // Fazer requisição simples
     fetch('/api/registrar-clique.php', {
         method: 'POST',
         headers: {
@@ -22,21 +18,16 @@ function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
         },
         body: JSON.stringify(dados)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('✅ Clique registrado:', data.message);
+            console.log('✅ Clique registrado');
         } else {
-            console.error('❌ Erro:', data.error);
+            console.log('❌ Erro:', data.error);
         }
     })
     .catch(error => {
-        console.error('❌ Erro na requisição:', error.message);
+        console.log('❌ Erro na requisição');
     });
 }
 
@@ -53,19 +44,7 @@ function scrollCarrossel(grupoId, direction) {
     }
 }
 
-// Inicializar quando o DOM estiver pronto
+// Inicializar
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Sistema de anúncios nativos carregado');
-    
-    // Verificar se há meta tag post-id
-    const postIdMeta = document.querySelector('meta[name="post-id"]');
-    if (postIdMeta) {
-        console.log('✅ Meta tag post-id encontrada:', postIdMeta.content);
-    } else {
-        console.log('⚠️ Meta tag post-id não encontrada - usando 0');
-    }
-    
-    // Verificar se há anúncios na página
-    const anuncios = document.querySelectorAll('[onclick*="registrarCliqueAnuncio"]');
-    console.log('🔍 Anúncios encontrados na página:', anuncios.length);
+    console.log('🚀 Sistema de anúncios carregado');
 }); 
