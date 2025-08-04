@@ -100,6 +100,8 @@ try {
 
     <?php if (isset($post) && isset($post['id'])): ?>
     <meta name="post-id" content="<?php echo $post['id']; ?>">
+    <?php else: ?>
+    <meta name="post-id" content="0">
     <?php endif; ?>
 
     <link rel="icon" type="image/png" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">

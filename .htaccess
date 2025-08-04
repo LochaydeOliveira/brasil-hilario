@@ -15,13 +15,9 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 # Proteger diretórios sensíveis
 Options -Indexes
 
-# Permitir acesso às APIs e arquivos de debug (DEVE VIR ANTES das regras genéricas)
+# Permitir acesso às APIs (DEVE VIR ANTES das regras genéricas)
 <IfModule mod_rewrite.c>
-    RewriteRule ^api/registrar-clique\.php$ - [L]
-    RewriteRule ^api/get-anuncios\.php$ - [L]
-    RewriteRule ^teste-secoes-posts\.php$ - [L]
-    RewriteRule ^debug-clique-v2\.php$ - [L]
-    RewriteRule ^teste-acesso-debug\.php$ - [L]
+    RewriteRule ^api/ - [L]
     RewriteRule ^anuncios\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
