@@ -15,7 +15,7 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 # Proteger diretórios sensíveis
 Options -Indexes
 
-# Permitir acesso às APIs (DEVE VIR ANTES das regras genéricas)
+# Permitir acesso direto aos arquivos de teste (DEVE VIR ANTES das regras genéricas)
 <IfModule mod_rewrite.c>
     RewriteRule ^api/ - [L]
     RewriteRule ^anuncios\.php$ - [L]
@@ -25,6 +25,7 @@ Options -Indexes
     RewriteRule ^verificar-tabela\.php$ - [L]
     RewriteRule ^teste-api\.php$ - [L]
     RewriteRule ^corrigir-tabela\.php$ - [L]
+    RewriteRule ^corrigir-tabela-sql\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 

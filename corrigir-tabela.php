@@ -23,7 +23,6 @@ try {
     }
     echo "</table>";
     
-    // Verificar se post_id já permite NULL
     $post_id_null = false;
     foreach ($colunas as $coluna) {
         if ($coluna['Field'] === 'post_id' && $coluna['Null'] === 'YES') {
