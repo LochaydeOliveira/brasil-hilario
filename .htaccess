@@ -24,6 +24,7 @@ Options -Indexes
     RewriteRule ^teste-simples\.php$ - [L]
     RewriteRule ^verificar-tabela\.php$ - [L]
     RewriteRule ^teste-api\.php$ - [L]
+    RewriteRule ^corrigir-tabela\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 
