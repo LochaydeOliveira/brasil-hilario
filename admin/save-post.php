@@ -126,6 +126,7 @@ try {
 
         $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id = ?");
         $stmt->execute([$id]);
+        error_log("DEBUG: Tags antigas removidas do post ID: $id");
 
     } else {
         // Novo post
@@ -144,6 +145,7 @@ try {
         $id = $pdo->lastInsertId();
     }
 
+    error_log("DEBUG: Processando " . count($tags) . " tags para o post ID: $id");
     foreach ($tags as $tag_nome) {
         if (empty($tag_nome)) continue;
 
@@ -160,10 +162,15 @@ try {
             $stmt = $pdo->prepare("INSERT INTO tags (nome, slug) VALUES (?, ?)");
             $stmt->execute([$tag_nome, $tag_slug]);
             $tag_id = $pdo->lastInsertId();
+            error_log("DEBUG: Nova tag criada - Nome: $tag_nome, Slug: $tag_slug, ID: $tag_id");
+        } else {
+            error_log("DEBUG: Tag existente encontrada - Nome: $tag_nome, Slug: $tag_slug, ID: $tag_id");
         }
 
-        $stmt = $pdo->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
-        $stmt->execute([$id, $tag_id]);
+        // Usar INSERT IGNORE para evitar erros de chave duplicada
+        $stmt = $pdo->prepare("INSERT IGNORE INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+        $result = $stmt->execute([$id, $tag_id]);
+        error_log("DEBUG: Inserção de tag - Post ID: $id, Tag ID: $tag_id, Resultado: " . ($result ? 'SUCESSO' : 'FALHA'));
     }
 
     $pdo->commit();
