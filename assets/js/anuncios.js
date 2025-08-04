@@ -3,10 +3,14 @@
 
 // Função para registrar clique em anúncio
 function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
+    // Obter post-id da meta tag
+    const postIdMeta = document.querySelector('meta[name="post-id"]');
+    const postId = postIdMeta ? parseInt(postIdMeta.content) : 0;
+    
     // Dados básicos
     const dados = {
         anuncio_id: parseInt(anuncioId),
-        post_id: 0,
+        post_id: postId,
         tipo_clique: tipoClique
     };
     
