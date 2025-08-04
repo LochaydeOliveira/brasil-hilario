@@ -53,20 +53,37 @@ try {
 
 // Verificar se o post existe (FOREIGN KEY constraint)
 $post_id = $dados['post_id'] ?? 0;
-if ($post_id > 0) {
+
+// Se post_id é 0 ou não existe, buscar um post válido
+if ($post_id <= 0) {
+    try {
+        $stmt = $pdo->query("SELECT id FROM posts WHERE status = 'publicado' ORDER BY id DESC LIMIT 1");
+        $post = $stmt->fetch();
+        $post_id = $post ? $post['id'] : null;
+    } catch (Exception $e) {
+        $post_id = null;
+    }
+} else {
     try {
         $stmt = $pdo->prepare("SELECT id FROM posts WHERE id = ?");
         $stmt->execute([$post_id]);
         $post = $stmt->fetch();
         
         if (!$post) {
-            // Se o post não existe, usar 0 (sem post específico)
-            $post_id = 0;
+            // Se o post não existe, buscar um post válido
+            $stmt = $pdo->query("SELECT id FROM posts WHERE status = 'publicado' ORDER BY id DESC LIMIT 1");
+            $post = $stmt->fetch();
+            $post_id = $post ? $post['id'] : null;
         }
     } catch (Exception $e) {
-        // Em caso de erro, usar 0
-        $post_id = 0;
+        $post_id = null;
     }
+}
+
+// Se não conseguiu encontrar nenhum post válido, não registrar
+if (!$post_id) {
+    echo json_encode(['success' => false, 'error' => 'Nenhum post válido encontrado']);
+    exit;
 }
 
 // Registrar clique
