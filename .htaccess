@@ -19,6 +19,8 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteRule ^api/ - [L]
     RewriteRule ^anuncios\.php$ - [L]
+    RewriteRule ^debug-api-cliques\.php$ - [L]
+    RewriteRule ^teste-final-sistema\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 

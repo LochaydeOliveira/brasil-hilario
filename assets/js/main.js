@@ -41,18 +41,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Contador de visualizações
     function incrementarVisualizacao(postId) {
-        fetch('/api/incrementar-visualizacao.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ post_id: postId })
-        });
+        // Só incrementar se o post-id for válido e maior que 0
+        if (postId && postId > 0) {
+            fetch('/api/incrementar-visualizacao.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ post_id: postId })
+            })
+            .catch(error => {
+                // Silenciar erros para não afetar a experiência do usuário
+                console.log('Visualização não contabilizada');
+            });
+        }
     }
 
     // Verificar se está na página de post
     const postId = document.querySelector('meta[name="post-id"]')?.content;
-    if (postId) {
+    if (postId && postId > 0) {
         incrementarVisualizacao(postId);
     }
 

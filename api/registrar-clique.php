@@ -24,7 +24,7 @@ $dados = json_decode($input, true);
 
 // Validar dados
 if (!$dados || !isset($dados['anuncio_id'])) {
-    echo json_encode(['success' => false, 'error' => 'Dados inválidos']);
+    echo json_encode(['success' => false, 'error' => 'Dados inválidos - anuncio_id obrigatório']);
     exit;
 }
 
@@ -33,12 +33,21 @@ try {
     require_once '../config/database.php';
     
     // Verificar se o anúncio existe
-    $stmt = $pdo->prepare("SELECT id FROM anuncios WHERE id = ? AND ativo = 1");
+    $stmt = $pdo->prepare("SELECT id, titulo FROM anuncios WHERE id = ? AND ativo = 1");
     $stmt->execute([$dados['anuncio_id']]);
     $anuncio = $stmt->fetch();
     
     if (!$anuncio) {
-        echo json_encode(['success' => false, 'error' => 'Anúncio não encontrado']);
+        // Listar anúncios disponíveis para debug
+        $stmt = $pdo->query("SELECT id, titulo FROM anuncios WHERE ativo = 1 LIMIT 3");
+        $anuncios_disponiveis = $stmt->fetchAll();
+        
+        $mensagem = "Anúncio ID " . $dados['anuncio_id'] . " não encontrado";
+        if (!empty($anuncios_disponiveis)) {
+            $mensagem .= ". Anúncios disponíveis: " . implode(', ', array_column($anuncios_disponiveis, 'id'));
+        }
+        
+        echo json_encode(['success' => false, 'error' => $mensagem]);
         exit;
     }
     
@@ -55,13 +64,13 @@ try {
     ]);
     
     if ($result) {
-        echo json_encode(['success' => true, 'message' => 'Clique registrado']);
+        echo json_encode(['success' => true, 'message' => 'Clique registrado com sucesso']);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Erro ao registrar clique']);
+        echo json_encode(['success' => false, 'error' => 'Erro ao registrar clique no banco']);
     }
     
 } catch (Exception $e) {
     error_log("Erro na API de cliques: " . $e->getMessage());
-    echo json_encode(['success' => false, 'error' => 'Erro no servidor']);
+    echo json_encode(['success' => false, 'error' => 'Erro interno do servidor']);
 }
 ?> 
