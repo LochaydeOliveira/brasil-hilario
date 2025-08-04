@@ -32,6 +32,7 @@ Options -Indexes
     RewriteRule ^api/registrar-clique\.php$ - [L]
     RewriteRule ^api/get-anuncios\.php$ - [L]
     RewriteRule ^teste-secoes-posts\.php$ - [L]
+    RewriteRule ^debug-clique-v2\.php$ - [L]
     RewriteRule ^(config|includes|sql)/ - [F,L]
 </IfModule>
 

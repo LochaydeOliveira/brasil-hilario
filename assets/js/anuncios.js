@@ -5,7 +5,7 @@
 function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
     const postId = document.querySelector('meta[name="post-id"]')?.content || 0;
     
-    fetch('/api/registrar-clique.php', {
+    fetch('/debug-clique-v2.php', { // Temporariamente apontando para debug
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,13 +16,17 @@ function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
             tipo_clique: tipoClique
         })
     })
-    .then(response => response.json())
+    .then(response => response.text()) // Mudando para text() para ver o debug
     .then(data => {
+        console.log('🔍 Debug response:', data);
+        // Temporariamente comentando o JSON parse
+        /*
         if (data.success) {
             console.log('✅ Clique registrado:', data.message);
         } else {
             console.error('❌ Erro:', data.error);
         }
+        */
     })
     .catch(error => {
         console.error('❌ Erro na requisição:', error);
