@@ -17,8 +17,6 @@ $editor_config = [
                 'image media | removeformat | help',
     'content_style' => 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; }',
     'images_upload_url' => 'upload-image.php',
-    'images_reuse_filename' => true,
-    'language' => 'pt_BR',
-    'language_url' => 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/langs/pt_BR.min.js'
+    'images_reuse_filename' => true
 ];
 ?>

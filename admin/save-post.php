@@ -9,11 +9,18 @@ require_once '../includes/db.php';  // Aqui seu $pdo deve estar configurado como
 require_once 'includes/auth.php';
 require_once 'includes/functions.php';
 
+// DEBUG: Log para verificar se o arquivo está sendo executado
+error_log("DEBUG: save-post.php executado - Método: " . $_SERVER['REQUEST_METHOD']);
+
 // Verificar se é POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    error_log("DEBUG: Método não é POST - redirecionando");
     header('Location: posts.php');
     exit;
 }
+
+// DEBUG: Log dos dados recebidos
+error_log("DEBUG: Dados POST recebidos: " . print_r($_POST, true));
 
 try {
     $pdo->beginTransaction();
@@ -27,6 +34,9 @@ try {
     $categoria_id = (int)$_POST['categoria_id'];
     $publicado = isset($_POST['publicado']) ? 1 : 0;
     $tags = isset($_POST['tags']) ? array_filter(array_map('trim', explode(',', $_POST['tags']))) : [];
+
+    // DEBUG: Log dos dados processados
+    error_log("DEBUG: ID: $id, Título: $titulo, Slug: $slug");
 
     $imagem_destacada = null;
     if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
@@ -79,6 +89,9 @@ try {
         if (!$post) throw new Exception("Post não encontrado.");
         if (!can_edit_post($post['autor_id'])) throw new Exception("Sem permissão.");
 
+        // DEBUG: Log antes da atualização
+        error_log("DEBUG: Atualizando post ID: $id");
+
         if ($_SESSION['usuario_tipo'] === 'admin') {
             $autor_id = isset($_POST['autor_id']) ? (int)$_POST['autor_id'] : $post['autor_id'];
 
@@ -92,7 +105,7 @@ try {
                     imagem_destacada = COALESCE(?, imagem_destacada), autor_id = ?, atualizado_em = NOW()
                 WHERE id = ?
             ");
-            $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id]);
+            $result = $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $autor_id, $id]);
         } else {
             $stmt = $pdo->prepare("
                 UPDATE posts 
@@ -100,8 +113,11 @@ try {
                     imagem_destacada = COALESCE(?, imagem_destacada), atualizado_em = NOW()
                 WHERE id = ?
             ");
-            $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id]);
+            $result = $stmt->execute([$titulo, $slug, $conteudo, $resumo, $categoria_id, $publicado, $imagem_destacada, $id]);
         }
+
+        // DEBUG: Log do resultado da atualização
+        error_log("DEBUG: Resultado da atualização: " . ($result ? 'SUCESSO' : 'FALHA'));
 
         if ($imagem_destacada && $post['imagem_destacada']) {
             $old_image = '../uploads/images/' . $post['imagem_destacada'];
@@ -151,12 +167,20 @@ try {
     }
 
     $pdo->commit();
+    
+    // DEBUG: Log de sucesso
+    error_log("DEBUG: Post salvo com sucesso - ID: $id");
+    
     $_SESSION['success'] = "Post salvo com sucesso!";
     header('Location: posts.php');
     exit;
 
 } catch (Exception $e) {
     $pdo->rollBack();
+    
+    // DEBUG: Log de erro
+    error_log("DEBUG: Erro ao salvar post: " . $e->getMessage());
+    
     $_SESSION['error'] = $e->getMessage();
     header('Location: ' . ($id ? "editar-post.php?id=$id" : 'novo-post.php'));
     exit;
