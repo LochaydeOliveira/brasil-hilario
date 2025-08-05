@@ -545,7 +545,7 @@ footer {
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 6px;
+    border-radius: 0;
     text-decoration: none;
     transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
@@ -1176,7 +1176,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 }
 
 .related-post-link:hover .related-post-card {
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    /* box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; */
 }
 
 .related-post-card {
@@ -1858,6 +1858,27 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     display: block;
 }
 
+/* Badges das marcas na sidebar */
+.anuncio-card-sidebar {
+    position: relative;
+}
+
+.anuncio-card-sidebar .marca-badge {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 2;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.anuncio-card-sidebar .marca-badge img {
+    height: 20px;
+    width: auto;
+    display: block;
+}
+
 /* Responsividade para badges */
 @media (max-width: 768px) {
     .marca-badge {
@@ -1865,5 +1886,13 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
         padding: 1px 4px;
     }
     
+    .anuncio-card-sidebar .marca-badge {
+        left: 3px;
+        bottom: 3px;
+    }
+    
+    .anuncio-card-sidebar .marca-badge img {
+        height: 18px;
+    }
 }
 

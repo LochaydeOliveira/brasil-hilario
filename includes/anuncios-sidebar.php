@@ -26,7 +26,7 @@ try {
                 if (!empty($grupo['marca'])) {
                     echo '<div class="marca-badge">';
                     if ($grupo['marca'] === 'shopee') {
-                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Shopee">';
+                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-shopee.png" alt="Shopee">';
                     } elseif ($grupo['marca'] === 'amazon') {
                         echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Amazon">';
                     }
@@ -58,6 +58,17 @@ try {
                 echo '<li class="mb-3 anuncio-item">';
                 echo '<div class="anuncio-card-sidebar">';
                 echo '<div class="anuncio-patrocinado-badge-sidebar">Anúncio</div>';
+                
+                // Badge da marca para anúncios individuais
+                if (!empty($anuncio['marca'])) {
+                    echo '<div class="marca-badge">';
+                    if ($anuncio['marca'] === 'shopee') {
+                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-shopee.png" alt="Shopee">';
+                    } elseif ($anuncio['marca'] === 'amazon') {
+                        echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Amazon">';
+                    }
+                    echo '</div>';
+                }
                 
                 if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';

@@ -100,7 +100,7 @@ function buildPostsSectionHtml($title, $posts) {
         $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
         $image_path = !empty($p['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($p['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
 
-        $section_html .= '<div class="col-lg-3 col-md-6 mb-4">';
+        $section_html .= '<div class="col-lg-3 col-md-6 mb-4 shadow-sm">';
         $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
         $section_html .= '<div class="card h-100 related-post-card">';
         $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
