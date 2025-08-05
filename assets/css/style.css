@@ -1864,13 +1864,11 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 }
 
 .anuncio-card-sidebar .marca-badge {
-    position: absolute;
-    left: 5px;
-    bottom: 5px;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 2;
-    padding: 2px 4px;
-    border-radius: 3px;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    top: -5px;
+    position: relative;
 }
 
 .anuncio-card-sidebar .marca-badge img {
