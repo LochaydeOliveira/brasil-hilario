@@ -530,6 +530,116 @@ footer {
     color: #333;
 }
 
+/* Social Sharing Buttons */
+.social-sharing-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.social-share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+}
+
+.social-share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+.social-share-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Facebook */
+.facebook-share {
+    color: #1877f2;
+}
+
+.facebook-share:hover {
+    background-color: #1877f2;
+    color: #ffffff;
+    border-color: #1877f2;
+}
+
+/* Twitter/X */
+.twitter-share {
+    color: #000000;
+}
+
+.twitter-share:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+/* WhatsApp */
+.whatsapp-share {
+    color: #25d366;
+}
+
+.whatsapp-share:hover {
+    background-color: #25d366;
+    color: #ffffff;
+    border-color: #25d366;
+}
+
+/* Telegram */
+.telegram-share {
+    color: #0088cc;
+}
+
+.telegram-share:hover {
+    background-color: #0088cc;
+    color: #ffffff;
+    border-color: #0088cc;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .social-sharing-buttons {
+        gap: 6px;
+        justify-content: center;
+    }
+    
+    .social-share-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .social-share-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-sharing-buttons {
+        gap: 4px;
+    }
+    
+    .social-share-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .social-share-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+}
+
 .footer-logo-img {
     height: 60px;
     width: auto;
@@ -608,10 +718,11 @@ footer {
 }
 
 .badge {
-    border-radius: 1px!important;
-    background: #ededed !important;
-    color: #000!important;
+    border-radius: 0!important;
+    background: #ffffff !important;
+    color: #000000 !important;
     text-transform: uppercase!important;
+    font-size: 12px;
 }
 
 .header-pg-ctt {
