@@ -535,7 +535,8 @@ footer {
     display: flex;
     gap: 8px;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .social-share-btn {
@@ -595,22 +596,17 @@ footer {
     border-color: #25d366;
 }
 
-/* Telegram */
-.telegram-share {
-    color: #0088cc;
-}
-
-.telegram-share:hover {
-    background-color: #0088cc;
-    color: #ffffff;
-    border-color: #0088cc;
-}
-
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
+    .post-meta .d-flex {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
     .social-sharing-buttons {
         gap: 6px;
-        justify-content: center;
+        justify-content: flex-start;
+        margin-top: 0;
     }
     
     .social-share-btn {

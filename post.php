@@ -187,37 +187,7 @@ include 'includes/header.php';
 
             <h1 class="mt-4 mb-3 title-posts"><?php echo htmlspecialchars($post['titulo']); ?></h1>
 
-            <!-- Botões de Compartilhamento -->
-            <div class="social-sharing-buttons mb-3">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>"
-                   target="_blank" class="social-share-btn facebook-share" aria-label="Compartilhar no Facebook">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
-                    </svg>
-                </a>
-                
-                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>&text=<?php echo urlencode($post['titulo']); ?>"
-                   target="_blank" class="social-share-btn twitter-share" aria-label="Compartilhar no Twitter">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
-                    </svg>
-                </a>
-                
-                <a href="whatsapp://send?text=<?php echo urlencode($post['titulo'] . ' ' . BLOG_URL . '/post/' . $post['slug']); ?>"
-                   data-action="share/whatsapp/share" target="_blank" class="social-share-btn whatsapp-share" aria-label="Compartilhar no WhatsApp">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1 1.007-3.505c.176-.341.376-.65.596-.918a6.545 6.545 0 0 1 1.48-1.168 6.56 6.56 0 0 1 3.842-1.195c1.747 0 3.386.636 4.6 1.792a6.574 6.574 0 0 1 1.601 4.158c-.004 1.697-.66 3.296-1.843 4.5a6.59 6.59 0 0 1-4.6 1.92z"/>
-                        <path d="M11.076 9.807c-.325.096-.635.147-.92.147-.28 0-.53-.05-.746-.148a1.419 1.419 0 0 1-.535-.373c-.139-.16-.232-.354-.268-.586a1.36 1.36 0 0 1 .02-.518c.047-.18.14-.35.274-.51.135-.16.31-.293.525-.396.215-.105.47-.158.765-.158.325 0 .61.082.855.248.245.166.435.39.57.672.134.281.202.61.202.987 0 .325-.05.61-.148.854a1.47 1.47 0 0 1-.373.535 1.36 1.36 0 0 1-.51.268z"/>
-                    </svg>
-                </a>
-                
-                <a href="https://telegram.me/share/url?url=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>&text=<?php echo urlencode($post['titulo']); ?>"
-                   target="_blank" class="social-share-btn telegram-share" aria-label="Compartilhar no Telegram">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.938-3.977.938-3.977s-.239-.479-.239-1.187c0-1.113.645-1.943 1.448-1.943.682 0 1.012.512 1.012 1.127 0 .682-.435 1.702-.659 2.647-.187.787.375 1.428 1.113 1.428 1.336 0 2.362-1.508 2.362-3.688 0-1.928-1.386-3.276-3.366-3.276-2.292 0-3.639 1.718-3.639 3.494 0 .682.175 1.415.402 1.812.045.09.052.168.037.252-.04.168-.128.531-.145.68-.023.105-.087.127-.2.076-.746-.348-1.213-1.439-1.213-2.314 0-1.628 1.184-3.127 3.562-3.127 1.874 0 3.331 1.337 3.331 3.127 0 1.874-1.18 3.378-2.82 3.378-.55 0-1.067-.286-1.243-.636 0 0-.216.828-.268 1.034-.097.363-.32.817-.479 1.075A8.001 8.001 0 1 0 8 0z"/>
-                    </svg>
-                </a>
-            </div>
+
 
             <?php if (!empty($post['autor_id'])): ?>
                 <p class="lead">
@@ -233,9 +203,38 @@ include 'includes/header.php';
             <hr>
 
             <div class="post-meta mb-3">
-                <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?></span>
-                <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
-                <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="meta-info">
+                        <span class="me-3"><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?></span>
+                        <span class="me-3"><i class="far fa-folder"></i> <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>"><?php echo htmlspecialchars($post['categoria_nome']); ?></a></span>
+                        <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
+                    </div>
+
+                    <!-- Botões de Compartilhamento -->
+                    <div class="social-sharing-buttons">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>"
+                        target="_blank" class="social-share-btn facebook-share" aria-label="Compartilhar no Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                            </svg>
+                        </a>
+                        
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>&text=<?php echo urlencode($post['titulo']); ?>"
+                        target="_blank" class="social-share-btn twitter-share" aria-label="Compartilhar no Twitter">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                            </svg>
+                        </a>
+                        
+                        <a href="https://wa.me/?text=<?php echo urlencode($post['titulo'] . ' ' . BLOG_URL . '/post/' . $post['slug']); ?>"
+                        target="_blank" class="social-share-btn whatsapp-share" aria-label="Compartilhar no WhatsApp">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1 1.007-3.505c.176-.341.376-.65.596-.918a6.545 6.545 0 0 1 1.48-1.168 6.56 6.56 0 0 1 3.842-1.195c1.747 0 3.386.636 4.6 1.792a6.574 6.574 0 0 1 1.601 4.158c-.004 1.697-.66 3.296-1.843 4.5a6.59 6.59 0 0 1-4.6 1.92z"/>
+                                <path d="M11.076 9.807c-.325.096-.635.147-.92.147-.28 0-.53-.05-.746-.148a1.419 1.419 0 0 1-.535-.373c-.139-.16-.232-.354-.268-.586a1.36 1.36 0 0 1 .02-.518c.047-.18.14-.35.274-.51.135-.16.31-.293.525-.396.215-.105.47-.158.765-.158.325 0 .61.082.855.248.245.166.435.39.57.672.134.281.202.61.202.987 0 .325-.05.61-.148.854a1.47 1.47 0 0 1-.373.535 1.36 1.36 0 0 1-.51.268z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="post-content">
