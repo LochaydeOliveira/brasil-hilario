@@ -1869,6 +1869,7 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     justify-content: flex-end;
     top: -5px;
     position: relative;
+    background: none;
 }
 
 .anuncio-card-sidebar .marca-badge img {
