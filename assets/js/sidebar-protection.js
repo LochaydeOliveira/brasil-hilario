@@ -13,6 +13,24 @@
     
     let retryCount = 0;
     let sidebarElement = null;
+    let lastOverlapCount = 0;
+    let isPostPage = false;
+    
+    // Detectar se é página de post
+    function detectPostPage() {
+        // Verificar se estamos em uma página de post
+        const url = window.location.pathname;
+        const isPost = url.includes('/post/') || document.querySelector('.post-content');
+        const hasMultipleAds = document.querySelectorAll('.adsbygoogle').length > 1;
+        
+        isPostPage = isPost || hasMultipleAds;
+        
+        if (isPostPage) {
+            console.log('Sidebar Protection: Página de post detectada - Proteção intensificada');
+        }
+        
+        return isPostPage;
+    }
     
     // Função para verificar se a sidebar está visível
     function isSidebarVisible() {
@@ -38,13 +56,13 @@
         
         // Verificar se há problemas de visibilidade
         if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
-            console.log('Sidebar: Problema detectado, corrigindo...');
+            console.log('Sidebar: Problema de visibilidade detectado, corrigindo...');
             
             // Forçar visibilidade
             sidebarElement.style.display = 'block';
             sidebarElement.style.visibility = 'visible';
             sidebarElement.style.opacity = '1';
-            sidebarElement.style.zIndex = '10';
+            sidebarElement.style.zIndex = '100';
             
             // Garantir que elementos filhos também estejam visíveis
             const children = sidebarElement.querySelectorAll('*');
@@ -65,6 +83,48 @@
         }
     }
     
+    // Função para corrigir sobreposições específicas
+    function fixOverlapIssues() {
+        if (!sidebarElement) return;
+        
+        // Garantir que a sidebar tenha prioridade
+        sidebarElement.style.position = 'relative';
+        sidebarElement.style.zIndex = '100';
+        
+        // Forçar que elementos dentro da sidebar tenham z-index adequado
+        const sidebarChildren = sidebarElement.querySelectorAll('*');
+        sidebarChildren.forEach(child => {
+            const childStyle = window.getComputedStyle(child);
+            if (childStyle.position === 'static') {
+                child.style.position = 'relative';
+            }
+            child.style.zIndex = '101';
+        });
+        
+        // Garantir que cards na sidebar tenham z-index alto
+        const cards = sidebarElement.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.position = 'relative';
+            card.style.zIndex = '102';
+        });
+        
+        // Proteção específica para páginas de post
+        if (isPostPage) {
+            // Forçar z-index ainda mais alto em páginas de post
+            sidebarElement.style.zIndex = '200';
+            sidebarChildren.forEach(child => {
+                child.style.zIndex = '201';
+            });
+            cards.forEach(card => {
+                card.style.zIndex = '202';
+            });
+            
+            console.log('Sidebar: Proteção intensificada aplicada (página de post)');
+        } else {
+            console.log('Sidebar: Proteção de sobreposição aplicada');
+        }
+    }
+    
     // Função para monitorar mudanças no DOM
     function setupDOMObserver() {
         const observer = new MutationObserver((mutations) => {
@@ -73,7 +133,10 @@
                 if (mutation.type === 'childList' || mutation.type === 'attributes') {
                     const target = mutation.target;
                     if (target === sidebarElement || sidebarElement.contains(target)) {
-                        setTimeout(fixSidebarIssues, 100);
+                        setTimeout(() => {
+                            fixSidebarIssues();
+                            fixOverlapIssues();
+                        }, 100);
                     }
                 }
             });
@@ -90,6 +153,7 @@
     // Função para monitorar anúncios AdSense
     function monitorAdSense() {
         const ads = document.querySelectorAll('.adsbygoogle');
+        let overlapCount = 0;
         
         ads.forEach(ad => {
             // Verificar se o anúncio está interferindo com a sidebar
@@ -104,11 +168,36 @@
                                 adRect.top > sidebarRect.bottom);
                 
                 if (overlap) {
-                    console.log('Sidebar: Anúncio detectado sobrepondo a sidebar');
-                    fixSidebarIssues();
+                    overlapCount++;
+                    
+                    // Verificar se o anúncio tem z-index muito alto
+                    const adStyle = window.getComputedStyle(ad);
+                    const adZIndex = parseInt(adStyle.zIndex) || 0;
+                    
+                    if (adZIndex > 50) {
+                        console.log('Sidebar: Anúncio com z-index alto detectado, ajustando...');
+                        ad.style.zIndex = '1';
+                        ad.style.position = 'relative';
+                    }
                 }
             }
         });
+        
+        // Aplicar correções se houver sobreposições
+        if (overlapCount > 0 && overlapCount !== lastOverlapCount) {
+            console.log(`Sidebar: ${overlapCount} anúncio(s) sobrepondo a sidebar, aplicando proteção...`);
+            fixOverlapIssues();
+            lastOverlapCount = overlapCount;
+        } else if (overlapCount === 0 && lastOverlapCount > 0) {
+            console.log('Sidebar: Sobreposições resolvidas');
+            lastOverlapCount = 0;
+        }
+        
+        // Proteção adicional para páginas de post com muitos anúncios
+        if (isPostPage && ads.length > 2) {
+            console.log(`Sidebar: Página de post com ${ads.length} anúncios detectados - Proteção intensificada`);
+            fixOverlapIssues();
+        }
     }
     
     // Função principal de monitoramento
@@ -127,6 +216,9 @@
             return;
         }
         
+        // Detectar tipo de página
+        detectPostPage();
+        
         // Verificar visibilidade
         if (!isSidebarVisible()) {
             console.log('Sidebar: Problema de visibilidade detectado');
@@ -135,6 +227,9 @@
         
         // Monitorar anúncios
         monitorAdSense();
+        
+        // Aplicar proteção preventiva
+        fixOverlapIssues();
     }
     
     // Função de inicialização
@@ -172,7 +267,9 @@
     window.sidebarProtection = {
         checkVisibility: isSidebarVisible,
         fixIssues: fixSidebarIssues,
-        monitor: monitorSidebar
+        fixOverlap: fixOverlapIssues,
+        monitor: monitorSidebar,
+        isPostPage: () => isPostPage
     };
     
 })(); 
