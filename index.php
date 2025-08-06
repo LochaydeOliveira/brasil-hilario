@@ -21,15 +21,7 @@ include 'includes/header.php';
 
     <div class="col-lg-8">
 
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="fluid"
-     data-ad-layout-key="-51+ch+13-bo+go"
-     data-ad-client="ca-pub-8313157699231074"
-     data-ad-slot="9465218983"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+
 
         <?php
         try {
@@ -141,7 +133,6 @@ include 'includes/header.php';
                     ?>
                 <?php endforeach;
 
-
                 if ($total_pages > 1):
                 ?>
                 <nav aria-label="Navegação de posts" class="mt-4">
@@ -180,6 +171,21 @@ include 'includes/header.php';
             echo '<div class="alert alert-danger">Erro ao carregar posts: ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
         ?>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
+     crossorigin="anonymous">
+</script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-51+ch+13-bo+go"
+     data-ad-client="ca-pub-8313157699231074"
+     data-ad-slot="9465218983">
+</ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
     </div>
 
     <div class="col-lg-4">

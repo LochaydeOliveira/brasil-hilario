@@ -119,6 +119,7 @@ function buildPostsSectionHtml($title, $posts) {
     // Bloco Google AdSense logo após a seção
     $section_html .= <<<HTML
 <div class="adsense-block my-4 text-center">
+<!-- Ads em Grade - Google -->
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-format="autorelaxed"
@@ -311,16 +312,6 @@ include 'includes/header.php';
 
     </div>
 
-    <ins class="adsbygoogle"
-        style="display:block; text-align:center;"
-        data-ad-layout="in-article"
-        data-ad-format="fluid"
-        data-ad-client="ca-pub-8313157699231074"
-        data-ad-slot="7748469758">
-    </ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
 </div>
 
 <?php include 'includes/footer.php'; ?>
