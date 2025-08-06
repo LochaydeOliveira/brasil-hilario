@@ -166,6 +166,57 @@ body {
     background: #fff;
     padding: 0 2rem;
     border-left: 1px solid var(--border-color);
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+}
+
+/* Proteção contra conflitos do AdSense */
+.sidebar * {
+    position: relative;
+    z-index: inherit;
+}
+
+/* Garantir que a sidebar não seja afetada por anúncios */
+.sidebar .card,
+.sidebar .card-body,
+.sidebar .list-unstyled,
+.sidebar .list-unstyled li {
+    position: relative;
+    z-index: 11;
+}
+
+/* Proteção específica para anúncios na sidebar */
+.sidebar .adsbygoogle {
+    position: relative !important;
+    z-index: 12 !important;
+    overflow: visible !important;
+}
+
+/* Garantir que a sidebar permaneça visível */
+@media (min-width: 768px) {
+    .sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Proteção contra interferência do AdSense */
+.adsbygoogle {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Garantir que anúncios não afetem o layout */
+.adsbygoogle[data-ad-layout="in-article"] {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.adsbygoogle[data-ad-format="fluid"] {
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 .sidebar-title {
