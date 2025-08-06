@@ -95,6 +95,22 @@ function buildPostsSectionHtml($title, $posts) {
     $section_html = '<section class="related-posts-block my-5">';
     $section_html .= '<h4 class="related-posts-title">' . htmlspecialchars($title) . '</h4>';
     $section_html .= '<div class="row">';
+        // Bloco Google AdSense logo após a seção
+        $section_html .= <<<HTML
+        <div class="adsense-block my-4 text-center">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-8313157699231074"
+                 data-ad-slot="2883155880">
+            </ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        HTML;
+        
+            return $section_html;
 
     foreach ($posts as $p) {
         $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
@@ -116,23 +132,7 @@ function buildPostsSectionHtml($title, $posts) {
     $section_html .= '</div>';
     $section_html .= '</section>';
 
-    // Bloco Google AdSense logo após a seção
-    $section_html .= <<<HTML
-<div class="adsense-block my-4 text-center">
-<!-- Ads em Grade - Google -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-format="autorelaxed"
-         data-ad-client="ca-pub-8313157699231074"
-         data-ad-slot="2883155880">
-    </ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-HTML;
 
-    return $section_html;
 }
 
 function injectSections($content, $sections) {
