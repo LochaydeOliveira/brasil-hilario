@@ -160,9 +160,6 @@ try {
     <!-- Anúncios Nativos -->
     <script src="<?php echo BLOG_URL; ?>/assets/js/anuncios.js" defer></script>
     
-    <!-- Proteção da Sidebar contra conflitos do AdSense -->
-    <script src="<?php echo BLOG_URL; ?>/assets/js/sidebar-protection.js" defer></script>
-    
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous">
     </script>
