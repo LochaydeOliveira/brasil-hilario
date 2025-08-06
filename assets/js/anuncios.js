@@ -1,52 +1,78 @@
 // Sistema de Anúncios Nativos - ULTRA-SIMPLES
 // Brasil Hilário
 
-// Função para registrar clique em anúncio
-function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
-    // Obter post-id da meta tag
-    const postIdMeta = document.querySelector('meta[name="post-id"]');
-    const postId = postIdMeta ? parseInt(postIdMeta.content) : 0;
+// Função para garantir que a sidebar permaneça visível
+function garantirSidebarVisivel() {
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarCol = document.querySelector('.col-lg-4');
     
-    // Dados básicos
-    const dados = {
-        anuncio_id: parseInt(anuncioId),
-        post_id: postId,
-        tipo_clique: tipoClique
-    };
+    if (sidebar) {
+        // Usar requestAnimationFrame para melhor performance
+        requestAnimationFrame(() => {
+            sidebar.style.display = 'block';
+            sidebar.style.visibility = 'visible';
+            sidebar.style.opacity = '1';
+            sidebar.style.position = 'relative';
+            sidebar.style.zIndex = '1';
+        });
+    }
     
-    // Fazer requisição simples
-    fetch('/api/registrar-clique.php', {
+    if (sidebarCol) {
+        requestAnimationFrame(() => {
+            sidebarCol.style.display = 'block';
+            sidebarCol.style.visibility = 'visible';
+        });
+    }
+}
+
+// Executar quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Sistema de anúncios carregado');
+    
+    // Verificação inicial
+    garantirSidebarVisivel();
+    
+    // Verificar periodicamente com intervalo maior para melhor performance
+    setInterval(garantirSidebarVisivel, 3000);
+    
+    // Verificar quando anúncios do Google carregam
+    if (window.adsbygoogle) {
+        window.adsbygoogle.push(function() {
+            // Usar setTimeout com delay maior para evitar conflitos
+            setTimeout(garantirSidebarVisivel, 1500);
+        });
+    }
+});
+
+// Função para registrar cliques em anúncios
+function registrarCliqueAnuncio(anuncioId, tipoClique) {
+    fetch('/api/registrar-clique-anuncio.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dados)
+        body: JSON.stringify({
+            anuncio_id: anuncioId,
+            tipo_clique: tipoClique
+        })
     })
     .then(response => response.json())
     .then(data => {
-        // Sempre mostrar sucesso para não quebrar a experiência
-        console.log('✅ Clique processado');
+        console.log('Clique registrado:', data);
     })
     .catch(error => {
-        // Ignorar erros silenciosamente
-        console.log('✅ Clique processado');
+        console.error('Erro ao registrar clique:', error);
     });
 }
 
 // Função para scroll do carrossel
-function scrollCarrossel(grupoId, direction) {
+function scrollCarrossel(grupoId, direcao) {
     const carrossel = document.querySelector(`[data-grupo-id="${grupoId}"] .anuncios-carrossel`);
-    if (!carrossel) return;
-    
-    const scrollAmount = 300;
-    if (direction === 'left') {
-        carrossel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    } else {
-        carrossel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    if (carrossel) {
+        const scrollAmount = direcao === 'left' ? -300 : 300;
+        carrossel.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
     }
-}
-
-// Inicializar
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Sistema de anúncios carregado');
-}); 
+} 

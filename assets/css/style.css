@@ -166,6 +166,42 @@ body {
     background: #fff;
     padding: 0 2rem;
     border-left: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1;
+}
+
+/* Garantir que a sidebar permaneça visível mesmo com anúncios do Google */
+.sidebar,
+.col-lg-4 .sidebar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Override para qualquer CSS que possa estar escondendo a sidebar */
+.sidebar[style*="display: none"],
+.sidebar[style*="visibility: hidden"],
+.sidebar[style*="opacity: 0"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que a coluna da sidebar permaneça visível */
+.col-lg-4 {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Responsividade da sidebar */
+@media (max-width: 767.98px) {
+    .sidebar {
+        margin-top: 2rem;
+        display: block !important;
+        visibility: visible !important;
+    }
 }
 
 .sidebar-title {

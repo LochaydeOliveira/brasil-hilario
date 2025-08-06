@@ -68,7 +68,7 @@ try {
                 <?php endforeach; ?>
                 
                 <?php 
-                // Incluir anúncios da sidebar
+
                 include 'anuncios-sidebar.php';
                 ?>
             </ul>
@@ -123,20 +123,18 @@ try {
     </div>
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="300">
-        <div class="card-body">
-
-        <ins class="adsbygoogle"
-            style="display:block; text-align:center;"
-            data-ad-layout="in-article"
-            data-ad-format="fluid"
-            data-ad-client="ca-pub-8313157699231074"
-            data-ad-slot="4177902168">
-        </ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-
-        </div>
+        <div class="card-body"></div>
     </div>
 
-</div> 
+</div>
+
+<ins class="adsbygoogle"
+    style="display:block; text-align:center;"
+    data-ad-layout="in-article"
+    data-ad-format="fluid"
+    data-ad-client="ca-pub-8313157699231074"
+    data-ad-slot="4177902168">
+</ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
