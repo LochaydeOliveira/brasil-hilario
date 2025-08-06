@@ -195,12 +195,61 @@ body {
     visibility: visible !important;
 }
 
+/* CSS específico para páginas de posts */
+.post-content + .col-lg-4 .sidebar,
+.container .row .col-lg-4 .sidebar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+    min-height: 200px !important;
+}
+
+/* Proteção específica para anúncios do Google */
+.adsbygoogle + .col-lg-4 .sidebar,
+.adsbygoogle ~ .col-lg-4 .sidebar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que o container tenha espaço suficiente */
+.container .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.container .row .col-md-8,
+.container .row .col-lg-8 {
+    flex: 0 0 66.666667% !important;
+    max-width: 66.666667% !important;
+}
+
+.container .row .col-lg-4 {
+    flex: 0 0 33.333333% !important;
+    max-width: 33.333333% !important;
+    display: block !important;
+    visibility: visible !important;
+}
+
 /* Responsividade da sidebar */
 @media (max-width: 767.98px) {
     .sidebar {
         margin-top: 2rem;
         display: block !important;
         visibility: visible !important;
+    }
+    
+    .container .row .col-md-8,
+    .container .row .col-lg-8 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .container .row .col-lg-4 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
     }
 }
 
