@@ -172,19 +172,7 @@ include 'includes/header.php';
         }
         ?>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-     crossorigin="anonymous">
-</script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="fluid"
-     data-ad-layout-key="-51+ch+13-bo+go"
-     data-ad-client="ca-pub-8313157699231074"
-     data-ad-slot="9465218983">
-</ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+
 
     </div>
 
