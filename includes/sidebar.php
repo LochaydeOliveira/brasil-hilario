@@ -75,36 +75,32 @@ try {
             </ul>
         </div>
 
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-        crossorigin="anonymous">
-        </script>
-        <!-- Ads de Display - Google -->
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-client="ca-pub-8313157699231074"
-            data-ad-slot="6450653464"
-            data-ad-format="auto"
-            data-full-width-responsive="true">
-        </ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <div style="margin: 2rem 0;">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
+            <!-- Ads de Display - Google -->
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-8313157699231074"
+                data-ad-slot="6450653464"
+                data-ad-format="auto"
+                data-full-width-responsive="true">
+            </ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-        crossorigin="anonymous">
-        </script>
+    <div style="margin: 2rem 0;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
         <!-- Ads de Display - Google -->
         <ins class="adsbygoogle"
             style="display:block"
             data-ad-client="ca-pub-8313157699231074"
             data-ad-slot="6450653464"
             data-ad-format="auto"
-            data-full-width-responsive="true">
+            data-full-width-responsive="true">            
         </ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="100">
         <div class="card-header">
@@ -123,9 +119,8 @@ try {
         </div>
     </div>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-        crossorigin="anonymous">
-        </script>
+    <div style="margin: 2rem 0;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
         <!-- Ads de Display - Google -->
         <ins class="adsbygoogle"
             style="display:block"
@@ -137,6 +132,7 @@ try {
         <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
+    </div>
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
@@ -168,6 +164,7 @@ try {
         </div>
     </div>
 
+    <div style="margin: 2rem 0;">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
         <!-- Ads de Display - Google -->
         <ins class="adsbygoogle"
@@ -178,6 +175,8 @@ try {
             data-full-width-responsive="true">
         </ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
 
     <div class="card mb-4" data-aos="fade-left" data-aos-delay="300">
         <div class="card-body"></div>
