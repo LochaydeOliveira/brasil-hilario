@@ -116,8 +116,12 @@ function buildPostsSectionHtml($title, $posts) {
     $section_html .= '</div>';
     $section_html .= '</section>';
 
-    // Bloco Google AdSense logo após a seção
-    $section_html .= <<<HTML
+    return $section_html;
+}
+
+function buildAdSenseHtml($type = 'default') {
+    if ($type === 'first') {
+        return <<<HTML
 <div class="adsense-block my-4 text-center">
     <ins class="adsbygoogle"
          style="display:block"
@@ -130,23 +134,8 @@ function buildPostsSectionHtml($title, $posts) {
     </script>
 </div>
 HTML;
-
-    return $section_html;
-}
-
-function buildAdSenseHtml() {
-    return <<<HTML
-<div class="adsense-block my-4 text-center">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-format="autorelaxed"
-         data-ad-client="ca-pub-8313157699231074"
-         data-ad-slot="2883155880">
-    </ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+    } else {
+        return <<<HTML
 <div class="adsense-block my-4 text-center">
     <ins class="adsbygoogle"
          style="display:block; text-align:center;"
@@ -159,6 +148,7 @@ function buildAdSenseHtml() {
     </script>
 </div>
 HTML;
+    }
 }
 
 function injectSections($content, $sections) {
@@ -167,7 +157,7 @@ function injectSections($content, $sections) {
     }
 
     $paragraphs = explode('</p>', $content);
-    
+
     // Se há poucos parágrafos, não injetar nada
     if (count($paragraphs) < 3) {
         return $content;
@@ -178,7 +168,7 @@ function injectSections($content, $sections) {
     
     // Adicionar seções de posts relacionados
     if (!empty($sections)) {
-        usort($sections, function($a, $b) {
+    usort($sections, function($a, $b) {
             return $a['point'] <=> $b['point'];
         });
         
@@ -194,12 +184,14 @@ function injectSections($content, $sections) {
     // Adicionar anúncios AdSense em pontos estratégicos
     $adsense_points = [3, 7, 12]; // Parágrafos onde inserir anúncios
     
-    foreach ($adsense_points as $point) {
+    foreach ($adsense_points as $index => $point) {
         if ($point < count($paragraphs)) {
+            // Primeiro anúncio (slot 2883155880) apenas no primeiro ponto
+            $ad_type = ($index === 0) ? 'first' : 'default';
             $all_injections[] = [
                 'type' => 'adsense',
                 'point' => $point,
-                'html' => buildAdSenseHtml()
+                'html' => buildAdSenseHtml($ad_type)
             ];
         }
     }
@@ -208,14 +200,14 @@ function injectSections($content, $sections) {
     usort($all_injections, function($a, $b) {
         return $a['point'] <=> $b['point'];
     });
-    
+
     // Aplicar as injeções
     $offset = 0;
     foreach ($all_injections as $injection) {
         $injection_point = $injection['point'] + $offset;
         if (count($paragraphs) >= $injection_point + 1) {
             array_splice($paragraphs, $injection_point, 0, $injection['html']);
-            $offset++;
+        $offset++;
         }
     }
 
