@@ -108,6 +108,7 @@ body {
 .title-posts {
     color: var(--black-100-color)!important;
     font-size: 3rem!important;
+    line-height: 45px!important;
 }
 
 .featured-post .card-title {
