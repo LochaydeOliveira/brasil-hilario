@@ -220,16 +220,6 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
-            <ins class="adsbygoogle"
-                style="display:block; text-align:center;"
-                data-ad-layout="in-article"
-                data-ad-format="fluid"
-                data-ad-client="ca-pub-8313157699231074"
-                data-ad-slot="7748469758">
-            </ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
             <div class="post-content">
                 <?php 
                 $content_to_display = '';
@@ -263,6 +253,16 @@ include 'includes/header.php';
 
                 echo injectSections($content_to_display, $sections_to_inject);
                 ?>
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
+                <ins class="adsbygoogle"
+                    style="display:block; text-align:center;"
+                    data-ad-layout="in-article"
+                    data-ad-format="fluid"
+                    data-ad-client="ca-pub-8313157699231074"
+                    data-ad-slot="7748469758">
+                </ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
 
             <hr>
