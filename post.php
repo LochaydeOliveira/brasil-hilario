@@ -95,11 +95,12 @@ function buildPostsSectionHtml($title, $posts) {
     $section_html = '<section class="related-posts-block my-5">';
     $section_html .= '<h4 class="related-posts-title">' . htmlspecialchars($title) . '</h4>';
     $section_html .= '<div class="row">';
+
     foreach ($posts as $p) {
         $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
         $image_path = !empty($p['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($p['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
 
-        $section_html .= '<div class="col-lg-3 col-md-6 mb-4 shadow-sm">';
+        $section_html .= '<div class="col-lg-3 col-md-6 mb-4">';
         $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
         $section_html .= '<div class="card h-100 related-post-card">';
         $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
@@ -115,33 +116,107 @@ function buildPostsSectionHtml($title, $posts) {
     $section_html .= '</div>';
     $section_html .= '</section>';
 
+    // Bloco Google AdSense logo após a seção
+    $section_html .= <<<HTML
+<div class="adsense-block my-4 text-center">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="autorelaxed"
+         data-ad-client="ca-pub-8313157699231074"
+         data-ad-slot="2883155880">
+    </ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+HTML;
 
+    return $section_html;
+}
+
+function buildAdSenseHtml() {
+    return <<<HTML
+<div class="adsense-block my-4 text-center">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="autorelaxed"
+         data-ad-client="ca-pub-8313157699231074"
+         data-ad-slot="2883155880">
+    </ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+<div class="adsense-block my-4 text-center">
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-8313157699231074"
+         data-ad-slot="7748469758"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+HTML;
 }
 
 function injectSections($content, $sections) {
-    if (empty($sections)) {
-        return $content;
-    }
-
     if (stripos($content, '</p>') === false) {
         return $content;
     }
 
     $paragraphs = explode('</p>', $content);
+    
+    // Se há poucos parágrafos, não injetar nada
+    if (count($paragraphs) < 3) {
+        return $content;
+    }
 
-    usort($sections, function($a, $b) {
+    // Preparar todas as injeções (seções + anúncios AdSense)
+    $all_injections = [];
+    
+    // Adicionar seções de posts relacionados
+    if (!empty($sections)) {
+        usort($sections, function($a, $b) {
+            return $a['point'] <=> $b['point'];
+        });
+        
+        foreach ($sections as $section) {
+            $all_injections[] = [
+                'type' => 'section',
+                'point' => $section['point'],
+                'html' => buildPostsSectionHtml($section['title'], $section['posts'])
+            ];
+        }
+    }
+    
+    // Adicionar anúncios AdSense em pontos estratégicos
+    $adsense_points = [3, 7, 12]; // Parágrafos onde inserir anúncios
+    
+    foreach ($adsense_points as $point) {
+        if ($point < count($paragraphs)) {
+            $all_injections[] = [
+                'type' => 'adsense',
+                'point' => $point,
+                'html' => buildAdSenseHtml()
+            ];
+        }
+    }
+    
+    // Ordenar todas as injeções por ponto
+    usort($all_injections, function($a, $b) {
         return $a['point'] <=> $b['point'];
     });
-
+    
+    // Aplicar as injeções
     $offset = 0;
-    foreach ($sections as $section) {
-        $injection_point = $section['point'] + $offset;
-        $section_html = buildPostsSectionHtml($section['title'], $section['posts']);
-        if (empty($section_html) || count($paragraphs) < $injection_point + 1) {
-            continue;
+    foreach ($all_injections as $injection) {
+        $injection_point = $injection['point'] + $offset;
+        if (count($paragraphs) >= $injection_point + 1) {
+            array_splice($paragraphs, $injection_point, 0, $injection['html']);
+            $offset++;
         }
-        array_splice($paragraphs, $injection_point, 0, $section_html);
-        $offset++;
     }
 
     return implode('</p>', $paragraphs);
@@ -194,7 +269,6 @@ include 'includes/header.php';
                         <span><i class="far fa-eye"></i> <?php echo number_format($post['visualizacoes']); ?> visualizações</span>
                     </div>
 
-                    <!-- Botões de Compartilhamento -->
                     <div class="social-sharing-buttons">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BLOG_URL . '/post/' . $post['slug']); ?>"
                         target="_blank" class="social-share-btn facebook-share" aria-label="Compartilhar no Facebook">
@@ -254,15 +328,6 @@ include 'includes/header.php';
                 echo injectSections($content_to_display, $sections_to_inject);
                 ?>
 
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                    style="display:block; text-align:center;"
-                    data-ad-layout="in-article"
-                    data-ad-format="fluid"
-                    data-ad-client="ca-pub-8313157699231074"
-                    data-ad-slot="7748469758">
-                </ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
 
             <hr>

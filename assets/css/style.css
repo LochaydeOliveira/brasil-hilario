@@ -1896,3 +1896,33 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     }
 }
 
+/* Estilos para blocos de anúncios do Google AdSense */
+.adsense-block {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.adsense-block ins {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsividade para blocos AdSense */
+@media (max-width: 768px) {
+    .adsense-block {
+        margin: 1.5rem 0;
+        padding: 0.5rem 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .adsense-block {
+        margin: 1rem 0;
+        padding: 0.25rem 0;
+    }
+}
+
