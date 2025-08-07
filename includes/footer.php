@@ -10,6 +10,19 @@ try {
 }
 ?>
 
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-8313157699231074"
+         data-ad-slot="7748469758"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
     <footer class="bg-white py-5 mt-5">
         <div class="container pd-cst-ftr">
             <div class="row">
@@ -329,17 +342,5 @@ try {
         }
     </script>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074"
-         crossorigin="anonymous"></script>
-    <ins class="adsbygoogle"
-         style="display:block; text-align:center;"
-         data-ad-layout="in-article"
-         data-ad-format="fluid"
-         data-ad-client="ca-pub-8313157699231074"
-         data-ad-slot="7748469758"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
 </body>
 </html>
