@@ -174,6 +174,9 @@ include 'includes/header.php';
         #visualTabs {
             display: flex;
         }
+        #configTabs {
+            display: flex;
+        }
     </style>
 </head>
 
