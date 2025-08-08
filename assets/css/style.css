@@ -108,7 +108,7 @@ body {
 .title-posts {
     color: var(--black-100-color)!important;
     font-size: 3rem!important;
-    line-height: 45px!important;
+    line-height: 3rem!important;
 }
 
 .featured-post .card-title {
@@ -1121,10 +1121,6 @@ footer {
 .navbar-toggler:focus {
     box-shadow: none;
     z-index: 9999!important;
-}
-
-.navbar-toggler:focus .navbar-toggler-icon {
-    background-image: none;
 }
 
 .pad-01 {
