@@ -102,30 +102,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         }
         
         // Processar tamanhos responsivos
-        foreach ($_POST as $chave => $valor) {
-            if (strpos($chave, 'tamanho_') === 0 && strpos($chave, '_desktop') !== false && !empty($valor)) {
-                $elemento = substr($chave, 8, -8); // Remove 'tamanho_' e '_desktop'
-                
-                $resultado = $visualConfig->setTamanhoFonte($elemento, 'desktop', $valor);
-                if ($resultado) {
-                    $salvas++;
-                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho_desktop = {$valor}";
-                } else {
-                    $debug_info[] = "❌ Falha ao salvar {$chave}";
+        foreach ($_POST as $key => $value) {
+            if (strpos($key, 'tamanho_') === 0) {
+                $parts = explode('_', $key);
+                if (count($parts) >= 3) {
+                    $elemento = $parts[1];
+                    $dispositivo = $parts[2];
+                    $visualConfig->setTamanhoFonte($elemento, $dispositivo, $value);
                 }
             }
-            
-            if (strpos($chave, 'tamanho_') === 0 && strpos($chave, '_mobile') !== false && !empty($valor)) {
-                $elemento = substr($chave, 8, -7); // Remove 'tamanho_' e '_mobile'
-                
-                $resultado = $visualConfig->setTamanhoFonte($elemento, 'mobile', $valor);
-                if ($resultado) {
-                    $salvas++;
-                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho_mobile = {$valor}";
-                } else {
-                    $debug_info[] = "❌ Falha ao salvar {$chave}";
-                }
-            }
+        }
+        
+        // Processar configurações das seções específicas do blog
+        // Seção "Leia Também"
+        if (isset($_POST['fonte_leia_tambem'])) {
+            $visualConfig->setFonteSecao('leia_tambem', $_POST['fonte_leia_tambem']);
+        }
+        if (isset($_POST['peso_titulo_leia_tambem'])) {
+            $visualConfig->setPesoSecao('leia_tambem', 'titulo', $_POST['peso_titulo_leia_tambem']);
+        }
+        if (isset($_POST['peso_texto_leia_tambem'])) {
+            $visualConfig->setPesoSecao('leia_tambem', 'texto', $_POST['peso_texto_leia_tambem']);
+        }
+        if (isset($_POST['tamanho_titulo_leia_tambem_desktop'])) {
+            $visualConfig->setTamanhoSecao('leia_tambem', 'titulo', 'desktop', $_POST['tamanho_titulo_leia_tambem_desktop']);
+        }
+        if (isset($_POST['tamanho_titulo_leia_tambem_mobile'])) {
+            $visualConfig->setTamanhoSecao('leia_tambem', 'titulo', 'mobile', $_POST['tamanho_titulo_leia_tambem_mobile']);
+        }
+        if (isset($_POST['tamanho_texto_leia_tambem_desktop'])) {
+            $visualConfig->setTamanhoSecao('leia_tambem', 'texto', 'desktop', $_POST['tamanho_texto_leia_tambem_desktop']);
+        }
+        if (isset($_POST['tamanho_texto_leia_tambem_mobile'])) {
+            $visualConfig->setTamanhoSecao('leia_tambem', 'texto', 'mobile', $_POST['tamanho_texto_leia_tambem_mobile']);
+        }
+        
+        // Seção "Últimas do Portal"
+        if (isset($_POST['fonte_ultimas_portal'])) {
+            $visualConfig->setFonteSecao('ultimas_portal', $_POST['fonte_ultimas_portal']);
+        }
+        if (isset($_POST['peso_titulo_ultimas_portal'])) {
+            $visualConfig->setPesoSecao('ultimas_portal', 'titulo', $_POST['peso_titulo_ultimas_portal']);
+        }
+        if (isset($_POST['peso_texto_ultimas_portal'])) {
+            $visualConfig->setPesoSecao('ultimas_portal', 'texto', $_POST['peso_texto_ultimas_portal']);
+        }
+        if (isset($_POST['tamanho_titulo_ultimas_portal_desktop'])) {
+            $visualConfig->setTamanhoSecao('ultimas_portal', 'titulo', 'desktop', $_POST['tamanho_titulo_ultimas_portal_desktop']);
+        }
+        if (isset($_POST['tamanho_titulo_ultimas_portal_mobile'])) {
+            $visualConfig->setTamanhoSecao('ultimas_portal', 'titulo', 'mobile', $_POST['tamanho_titulo_ultimas_portal_mobile']);
+        }
+        if (isset($_POST['tamanho_texto_ultimas_portal_desktop'])) {
+            $visualConfig->setTamanhoSecao('ultimas_portal', 'texto', 'desktop', $_POST['tamanho_texto_ultimas_portal_desktop']);
+        }
+        if (isset($_POST['tamanho_texto_ultimas_portal_mobile'])) {
+            $visualConfig->setTamanhoSecao('ultimas_portal', 'texto', 'mobile', $_POST['tamanho_texto_ultimas_portal_mobile']);
         }
         
         // Gerar CSS dinâmico
@@ -617,6 +649,212 @@ include 'includes/header.php';
                                                 <option value="12px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '12px' ? 'selected' : '' ?>>12px</option>
                                                 <option value="10px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '10px' ? 'selected' : '' ?>>10px</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seções Específicas do Blog -->
+                    <div class="tab-pane fade" id="blog-specific" role="tabpanel">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-cog"></i> Configuração de Fontes para Seções Específicas do Blog</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Seção Leia Também -->
+                                <div class="mb-4">
+                                    <h6>Seção "Leia Também"</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="fonte_leia_tambem" class="form-label">Fonte:</label>
+                                                <select class="form-select" id="fonte_leia_tambem" name="fonte_leia_tambem" data-preview=".related-posts-title">
+                                                    <option value="Arial, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                    <option value="Helvetica, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                    <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                    <option value="Georgia, serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                    <option value="Times New Roman, serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                    <option value="Verdana, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Verdana, sans-serif' ? 'selected' : '' ?>>Verdana</option>
+                                                    <option value="Tahoma, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Tahoma, sans-serif' ? 'selected' : '' ?>>Tahoma</option>
+                                                    <option value="Trebuchet MS, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Trebuchet MS, sans-serif' ? 'selected' : '' ?>>Trebuchet MS</option>
+                                                    <option value="Impact, sans-serif" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Impact, sans-serif' ? 'selected' : '' ?>>Impact</option>
+                                                    <option value="Comic Sans MS, cursive" <?= ($configs['fontes']['leia_tambem']['fonte'] ?? '') === 'Comic Sans MS, cursive' ? 'selected' : '' ?>>Comic Sans MS</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label for="peso_titulo_leia_tambem" class="form-label">Peso do Título:</label>
+                                                    <select class="form-select" id="peso_titulo_leia_tambem" name="peso_titulo_leia_tambem">
+                                                        <option value="100" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                        <option value="200" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '200' ? 'selected' : '' ?>>200 - Extra Light</option>
+                                                        <option value="300" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                        <option value="400" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '400' ? 'selected' : '' ?>>400 - Regular</option>
+                                                        <option value="500" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                        <option value="600" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                        <option value="700" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                                        <option value="800" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '800' ? 'selected' : '' ?>>800 - Extra Bold</option>
+                                                        <option value="900" <?= ($configs['fontes']['leia_tambem']['peso_titulo'] ?? '700') === '900' ? 'selected' : '' ?>>900 - Black</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="peso_texto_leia_tambem" class="form-label">Peso do Texto:</label>
+                                                    <select class="form-select" id="peso_texto_leia_tambem" name="peso_texto_leia_tambem">
+                                                        <option value="100" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                        <option value="200" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '200' ? 'selected' : '' ?>>200 - Extra Light</option>
+                                                        <option value="300" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                        <option value="400" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '400' ? 'selected' : '' ?>>400 - Regular</option>
+                                                        <option value="500" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                        <option value="600" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                        <option value="700" <?= ($configs['fontes']['leia_tambem']['peso_texto'] ?? '400') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-6">
+                                                    <label for="tamanho_titulo_leia_tambem_desktop" class="form-label">Tamanho Título (Desktop):</label>
+                                                    <select class="form-select" id="tamanho_titulo_leia_tambem_desktop" name="tamanho_titulo_leia_tambem_desktop">
+                                                        <option value="18px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                        <option value="20px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                                        <option value="22px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '22px' ? 'selected' : '' ?>>22px</option>
+                                                        <option value="24px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                        <option value="26px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '26px' ? 'selected' : '' ?>>26px</option>
+                                                        <option value="28px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_desktop'] ?? '20px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="tamanho_titulo_leia_tambem_mobile" class="form-label">Tamanho Título (Mobile):</label>
+                                                    <select class="form-select" id="tamanho_titulo_leia_tambem_mobile" name="tamanho_titulo_leia_tambem_mobile">
+                                                        <option value="16px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_mobile'] ?? '18px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                        <option value="18px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_mobile'] ?? '18px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                        <option value="20px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_mobile'] ?? '18px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                                        <option value="22px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_mobile'] ?? '18px') === '22px' ? 'selected' : '' ?>>22px</option>
+                                                        <option value="24px" <?= ($configs['fontes']['leia_tambem']['tamanho_titulo_mobile'] ?? '18px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-6">
+                                                    <label for="tamanho_texto_leia_tambem_desktop" class="form-label">Tamanho Texto (Desktop):</label>
+                                                    <select class="form-select" id="tamanho_texto_leia_tambem_desktop" name="tamanho_texto_leia_tambem_desktop">
+                                                        <option value="12px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_desktop'] ?? '14px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                                        <option value="14px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_desktop'] ?? '14px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                        <option value="16px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_desktop'] ?? '14px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                        <option value="18px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_desktop'] ?? '14px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="tamanho_texto_leia_tambem_mobile" class="form-label">Tamanho Texto (Mobile):</label>
+                                                    <select class="form-select" id="tamanho_texto_leia_tambem_mobile" name="tamanho_texto_leia_tambem_mobile">
+                                                        <option value="10px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_mobile'] ?? '12px') === '10px' ? 'selected' : '' ?>>10px</option>
+                                                        <option value="12px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_mobile'] ?? '12px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                                        <option value="14px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_mobile'] ?? '12px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                        <option value="16px" <?= ($configs['fontes']['leia_tambem']['tamanho_texto_mobile'] ?? '12px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Seção Últimas do Portal -->
+                                        <div class="mb-4">
+                                            <h6>Seção "Últimas do Portal"</h6>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="fonte_ultimas_portal" class="form-label">Fonte:</label>
+                                                        <select class="form-select" id="fonte_ultimas_portal" name="fonte_ultimas_portal" data-preview=".related-posts-title">
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Verdana, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Verdana, sans-serif' ? 'selected' : '' ?>>Verdana</option>
+                                                            <option value="Tahoma, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Tahoma, sans-serif' ? 'selected' : '' ?>>Tahoma</option>
+                                                            <option value="Trebuchet MS, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Trebuchet MS, sans-serif' ? 'selected' : '' ?>>Trebuchet MS</option>
+                                                            <option value="Impact, sans-serif" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Impact, sans-serif' ? 'selected' : '' ?>>Impact</option>
+                                                            <option value="Comic Sans MS, cursive" <?= ($configs['fontes']['ultimas_portal']['fonte'] ?? '') === 'Comic Sans MS, cursive' ? 'selected' : '' ?>>Comic Sans MS</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label for="peso_titulo_ultimas_portal" class="form-label">Peso do Título:</label>
+                                                            <select class="form-select" id="peso_titulo_ultimas_portal" name="peso_titulo_ultimas_portal">
+                                                                <option value="100" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                                <option value="200" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '200' ? 'selected' : '' ?>>200 - Extra Light</option>
+                                                                <option value="300" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                                <option value="400" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '400' ? 'selected' : '' ?>>400 - Regular</option>
+                                                                <option value="500" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                                <option value="600" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                                <option value="700" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                                                <option value="800" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '800' ? 'selected' : '' ?>>800 - Extra Bold</option>
+                                                                <option value="900" <?= ($configs['fontes']['ultimas_portal']['peso_titulo'] ?? '700') === '900' ? 'selected' : '' ?>>900 - Black</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="peso_texto_ultimas_portal" class="form-label">Peso do Texto:</label>
+                                                            <select class="form-select" id="peso_texto_ultimas_portal" name="peso_texto_ultimas_portal">
+                                                                <option value="100" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                                <option value="200" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '200' ? 'selected' : '' ?>>200 - Extra Light</option>
+                                                                <option value="300" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                                <option value="400" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '400' ? 'selected' : '' ?>>400 - Regular</option>
+                                                                <option value="500" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                                <option value="600" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                                <option value="700" <?= ($configs['fontes']['ultimas_portal']['peso_texto'] ?? '400') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mt-2">
+                                                        <div class="col-6">
+                                                            <label for="tamanho_titulo_ultimas_portal_desktop" class="form-label">Tamanho Título (Desktop):</label>
+                                                            <select class="form-select" id="tamanho_titulo_ultimas_portal_desktop" name="tamanho_titulo_ultimas_portal_desktop">
+                                                                <option value="18px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                                <option value="20px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                                                <option value="22px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '22px' ? 'selected' : '' ?>>22px</option>
+                                                                <option value="24px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                                <option value="26px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '26px' ? 'selected' : '' ?>>26px</option>
+                                                                <option value="28px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_desktop'] ?? '20px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="tamanho_titulo_ultimas_portal_mobile" class="form-label">Tamanho Título (Mobile):</label>
+                                                            <select class="form-select" id="tamanho_titulo_ultimas_portal_mobile" name="tamanho_titulo_ultimas_portal_mobile">
+                                                                <option value="16px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_mobile'] ?? '18px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                                <option value="18px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_mobile'] ?? '18px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                                <option value="20px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_mobile'] ?? '18px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                                                <option value="22px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_mobile'] ?? '18px') === '22px' ? 'selected' : '' ?>>22px</option>
+                                                                <option value="24px" <?= ($configs['fontes']['ultimas_portal']['tamanho_titulo_mobile'] ?? '18px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mt-2">
+                                                        <div class="col-6">
+                                                            <label for="tamanho_texto_ultimas_portal_desktop" class="form-label">Tamanho Texto (Desktop):</label>
+                                                            <select class="form-select" id="tamanho_texto_ultimas_portal_desktop" name="tamanho_texto_ultimas_portal_desktop">
+                                                                <option value="12px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_desktop'] ?? '14px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                                                <option value="14px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_desktop'] ?? '14px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                                <option value="16px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_desktop'] ?? '14px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                                <option value="18px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_desktop'] ?? '14px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="tamanho_texto_ultimas_portal_mobile" class="form-label">Tamanho Texto (Mobile):</label>
+                                                            <select class="form-select" id="tamanho_texto_ultimas_portal_mobile" name="tamanho_texto_ultimas_portal_mobile">
+                                                                <option value="10px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_mobile'] ?? '12px') === '10px' ? 'selected' : '' ?>>10px</option>
+                                                                <option value="12px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_mobile'] ?? '12px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                                                <option value="14px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_mobile'] ?? '12px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                                <option value="16px" <?= ($configs['fontes']['ultimas_portal']['tamanho_texto_mobile'] ?? '12px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

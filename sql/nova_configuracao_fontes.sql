@@ -44,4 +44,24 @@ INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo
 ('fontes', 'botoes', 'tamanho_desktop', '14px', 'texto', 1),
 ('fontes', 'botoes', 'tamanho_mobile', '12px', 'texto', 1),
 ('fontes', 'meta_textos', 'tamanho_desktop', '12px', 'texto', 1),
-('fontes', 'meta_textos', 'tamanho_mobile', '10px', 'texto', 1); 
+('fontes', 'meta_textos', 'tamanho_mobile', '10px', 'texto', 1);
+
+-- Configurações para seções específicas do blog
+INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo, ativo) VALUES
+-- Seção "Leia Também"
+('fontes', 'leia_tambem', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', 'fonte', 1),
+('fontes', 'leia_tambem', 'peso_titulo', '600', 'texto', 1),
+('fontes', 'leia_tambem', 'tamanho_titulo_desktop', '22px', 'texto', 1),
+('fontes', 'leia_tambem', 'tamanho_titulo_mobile', '20px', 'texto', 1),
+('fontes', 'leia_tambem', 'peso_texto', '400', 'texto', 1),
+('fontes', 'leia_tambem', 'tamanho_texto_desktop', '14px', 'texto', 1),
+('fontes', 'leia_tambem', 'tamanho_texto_mobile', '12px', 'texto', 1),
+
+-- Seção "Últimas do Portal"
+('fontes', 'ultimas_portal', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', 'fonte', 1),
+('fontes', 'ultimas_portal', 'peso_titulo', '600', 'texto', 1),
+('fontes', 'ultimas_portal', 'tamanho_titulo_desktop', '22px', 'texto', 1),
+('fontes', 'ultimas_portal', 'tamanho_titulo_mobile', '20px', 'texto', 1),
+('fontes', 'ultimas_portal', 'peso_texto', '400', 'texto', 1),
+('fontes', 'ultimas_portal', 'tamanho_texto_desktop', '14px', 'texto', 1),
+('fontes', 'ultimas_portal', 'tamanho_texto_mobile', '12px', 'texto', 1); 

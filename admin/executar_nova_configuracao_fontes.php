@@ -1,6 +1,6 @@
 <?php
-require_once '../config/config.php';
-require_once '../includes/db.php';
+require_once 'config/config.php';
+require_once 'includes/db.php';
 
 echo "<h2>Executando Nova Configuração de Fontes</h2>";
 
@@ -46,7 +46,24 @@ try {
         ['fontes', 'botoes', 'tamanho_desktop', '14px', 'texto'],
         ['fontes', 'botoes', 'tamanho_mobile', '12px', 'texto'],
         ['fontes', 'meta_textos', 'tamanho_desktop', '12px', 'texto'],
-        ['fontes', 'meta_textos', 'tamanho_mobile', '10px', 'texto']
+        ['fontes', 'meta_textos', 'tamanho_mobile', '10px', 'texto'],
+        
+        // Configurações para seções específicas do blog
+        ['fontes', 'leia_tambem', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', 'fonte'],
+        ['fontes', 'leia_tambem', 'peso_titulo', '600', 'texto'],
+        ['fontes', 'leia_tambem', 'tamanho_titulo_desktop', '22px', 'texto'],
+        ['fontes', 'leia_tambem', 'tamanho_titulo_mobile', '20px', 'texto'],
+        ['fontes', 'leia_tambem', 'peso_texto', '400', 'texto'],
+        ['fontes', 'leia_tambem', 'tamanho_texto_desktop', '14px', 'texto'],
+        ['fontes', 'leia_tambem', 'tamanho_texto_mobile', '12px', 'texto'],
+        
+        ['fontes', 'ultimas_portal', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', 'fonte'],
+        ['fontes', 'ultimas_portal', 'peso_titulo', '600', 'texto'],
+        ['fontes', 'ultimas_portal', 'tamanho_titulo_desktop', '22px', 'texto'],
+        ['fontes', 'ultimas_portal', 'tamanho_titulo_mobile', '20px', 'texto'],
+        ['fontes', 'ultimas_portal', 'peso_texto', '400', 'texto'],
+        ['fontes', 'ultimas_portal', 'tamanho_texto_desktop', '14px', 'texto'],
+        ['fontes', 'ultimas_portal', 'tamanho_texto_mobile', '12px', 'texto']
     ];
     
     $adicionadas = 0;

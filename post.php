@@ -14,6 +14,18 @@ try {
         exit;
     }
 
+    // Buscar configurações de fontes da tabela configuracoes_visuais
+    $font_configs = [];
+    $stmt_fonts = $pdo->prepare("
+        SELECT categoria, elemento, propriedade, valor 
+        FROM configuracoes_visuais 
+        WHERE categoria = 'fontes' AND ativo = 1
+    ");
+    $stmt_fonts->execute();
+    while ($row = $stmt_fonts->fetch()) {
+        $font_configs[$row['elemento']][$row['propriedade']] = $row['valor'];
+    }
+
     // Buscar o post
     $stmt = $pdo->prepare("
         SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
@@ -87,13 +99,69 @@ try {
     die("Erro: " . $e->getMessage());
 }
 
-function buildPostsSectionHtml($title, $posts) {
+function buildPostsSectionHtml($title, $posts, $font_configs = []) {
     if (empty($posts)) {
         return '';
     }
 
-    $section_html = '<section class="related-posts-block my-5">';
-    $section_html .= '<h4 class="related-posts-title">' . htmlspecialchars($title) . '</h4>';
+    // Determinar qual seção estamos construindo para aplicar as configurações corretas
+    $section_type = '';
+    if (stripos($title, 'Leia Também') !== false) {
+        $section_type = 'leia_tambem';
+    } elseif (stripos($title, 'Últimas do Portal') !== false) {
+        $section_type = 'ultimas_portal';
+    }
+
+    // Buscar configurações específicas da seção
+    $title_style = '';
+    $text_style = '';
+    $mobile_css = '';
+    
+    if ($section_type && isset($font_configs[$section_type])) {
+        $config = $font_configs[$section_type];
+        
+        // Estilo para o título da seção (desktop)
+        if (isset($config['fonte'])) {
+            $title_style .= "font-family: {$config['fonte']}; ";
+        }
+        if (isset($config['peso_titulo'])) {
+            $title_style .= "font-weight: {$config['peso_titulo']}; ";
+        }
+        if (isset($config['tamanho_titulo_desktop'])) {
+            $title_style .= "font-size: {$config['tamanho_titulo_desktop']}; ";
+        }
+        
+        // Estilo para o texto dos posts (desktop)
+        if (isset($config['fonte'])) {
+            $text_style .= "font-family: {$config['fonte']}; ";
+        }
+        if (isset($config['peso_texto'])) {
+            $text_style .= "font-weight: {$config['peso_texto']}; ";
+        }
+        if (isset($config['tamanho_texto_desktop'])) {
+            $text_style .= "font-size: {$config['tamanho_texto_desktop']}; ";
+        }
+        
+        // Gerar CSS responsivo para mobile
+        if (isset($config['tamanho_titulo_mobile']) || isset($config['tamanho_texto_mobile'])) {
+            $mobile_css = '<style>';
+            $mobile_css .= '@media (max-width: 768px) {';
+            
+            if (isset($config['tamanho_titulo_mobile'])) {
+                $mobile_css .= ".related-posts-title { font-size: {$config['tamanho_titulo_mobile']} !important; }";
+            }
+            if (isset($config['tamanho_texto_mobile'])) {
+                $mobile_css .= ".related-post-title { font-size: {$config['tamanho_texto_mobile']} !important; }";
+            }
+            
+            $mobile_css .= '}';
+            $mobile_css .= '</style>';
+        }
+    }
+
+    $section_html = $mobile_css; // CSS responsivo primeiro
+    $section_html .= '<section class="related-posts-block my-5">';
+    $section_html .= '<h4 class="related-posts-title" style="' . $title_style . '">' . htmlspecialchars($title) . '</h4>';
     $section_html .= '<div class="row">';
 
     foreach ($posts as $p) {
@@ -105,7 +173,7 @@ function buildPostsSectionHtml($title, $posts) {
         $section_html .= '<div class="card h-100 related-post-card">';
         $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
         $section_html .= '<div class="pad-01 d-flex flex-column ">';
-        $section_html .= '<h6 class="card-title related-post-title mt-auto">' . htmlspecialchars($p['titulo']) . '</h6>';
+        $section_html .= '<h6 class="card-title related-post-title mt-auto" style="' . $text_style . '">' . htmlspecialchars($p['titulo']) . '</h6>';
         $section_html .= '<div><span class="badge mb-2">' . htmlspecialchars($p['categoria_nome']) . '</span></div>';
         $section_html .= '</div>';
         $section_html .= '</div>';
@@ -151,7 +219,7 @@ HTML;
     }
 }
 
-function injectSections($content, $sections) {
+function injectSections($content, $sections, $font_configs = []) {
     if (stripos($content, '</p>') === false) {
         return $content;
     }
@@ -176,7 +244,7 @@ function injectSections($content, $sections) {
             $all_injections[] = [
                 'type' => 'section',
                 'point' => $section['point'],
-                'html' => buildPostsSectionHtml($section['title'], $section['posts'])
+                'html' => buildPostsSectionHtml($section['title'], $section['posts'], $font_configs)
             ];
         }
     }
@@ -317,7 +385,7 @@ include 'includes/header.php';
                     ];
                 }
 
-                echo injectSections($content_to_display, $sections_to_inject);
+                echo injectSections($content_to_display, $sections_to_inject, $font_configs);
                 ?>
 
             </div>

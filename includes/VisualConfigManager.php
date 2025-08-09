@@ -177,6 +177,63 @@ class VisualConfigManager {
         }
     }
     
+    // Métodos para seções específicas do blog
+    public function getFonteSecao($secao, $padrao = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') {
+        return $this->getFonte($secao, 'fonte', $padrao);
+    }
+    
+    public function setFonteSecao($secao, $valor) {
+        return $this->setFonte($secao, 'fonte', $valor);
+    }
+    
+    public function getPesoSecao($secao, $tipo = 'titulo', $padrao = '600') {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = ? AND propriedade = ? AND ativo = 1
+        ");
+        $stmt->execute([$secao, 'peso_' . $tipo]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['valor'] : $padrao;
+    }
+    
+    public function setPesoSecao($secao, $tipo, $valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', ?, ?, ?, 'texto')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute([$secao, 'peso_' . $tipo, $valor]);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar peso seção: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function getTamanhoSecao($secao, $tipo = 'titulo', $dispositivo = 'desktop', $padrao = '22px') {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = ? AND propriedade = ? AND ativo = 1
+        ");
+        $stmt->execute([$secao, 'tamanho_' . $tipo . '_' . $dispositivo]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['valor'] : $padrao;
+    }
+    
+    public function setTamanhoSecao($secao, $tipo, $dispositivo, $valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', ?, ?, ?, 'texto')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute([$secao, 'tamanho_' . $tipo . '_' . $dispositivo, $valor]);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar tamanho seção: " . $e->getMessage());
+            return false;
+        }
+    }
+    
     // Obter todas as configurações visuais
     public function getAllConfigs() {
         $stmt = $this->pdo->query("
@@ -412,6 +469,51 @@ class VisualConfigManager {
                 $css .= "}\n\n";
             }
         }
+        
+        // CSS para seções específicas do blog (independente do modo de fonte)
+        $css .= "/* Seções Específicas do Blog */\n";
+        
+        // Seção "Leia Também"
+        $fonteLeiaTambem = $this->getFonteSecao('leia_tambem');
+        $pesoTituloLeiaTambem = $this->getPesoSecao('leia_tambem', 'titulo', '600');
+        $tamanhoTituloLeiaTambemDesktop = $this->getTamanhoSecao('leia_tambem', 'titulo', 'desktop', '22px');
+        $tamanhoTituloLeiaTambemMobile = $this->getTamanhoSecao('leia_tambem', 'titulo', 'mobile', '20px');
+        $pesoTextoLeiaTambem = $this->getPesoSecao('leia_tambem', 'texto', '400');
+        $tamanhoTextoLeiaTambemDesktop = $this->getTamanhoSecao('leia_tambem', 'texto', 'desktop', '14px');
+        $tamanhoTextoLeiaTambemMobile = $this->getTamanhoSecao('leia_tambem', 'texto', 'mobile', '12px');
+        
+        $css .= ".related-posts-title {\n";
+        $css .= "  font-family: {$fonteLeiaTambem};\n";
+        $css .= "  font-weight: {$pesoTituloLeiaTambem};\n";
+        $css .= "  font-size: {$tamanhoTituloLeiaTambemDesktop};\n";
+        $css .= "}\n\n";
+        
+        $css .= ".related-post-title {\n";
+        $css .= "  font-family: {$fonteLeiaTambem};\n";
+        $css .= "  font-weight: {$pesoTextoLeiaTambem};\n";
+        $css .= "  font-size: {$tamanhoTextoLeiaTambemDesktop};\n";
+        $css .= "}\n\n";
+        
+        $css .= "@media (max-width: 768px) {\n";
+        $css .= "  .related-posts-title {\n";
+        $css .= "    font-size: {$tamanhoTituloLeiaTambemMobile};\n";
+        $css .= "  }\n";
+        $css .= "  .related-post-title {\n";
+        $css .= "    font-size: {$tamanhoTextoLeiaTambemMobile};\n";
+        $css .= "  }\n";
+        $css .= "}\n\n";
+        
+        // Seção "Últimas do Portal" (usa as mesmas classes CSS)
+        $fonteUltimasPortal = $this->getFonteSecao('ultimas_portal');
+        $pesoTituloUltimasPortal = $this->getPesoSecao('ultimas_portal', 'titulo', '600');
+        $tamanhoTituloUltimasPortalDesktop = $this->getTamanhoSecao('ultimas_portal', 'titulo', 'desktop', '22px');
+        $tamanhoTituloUltimasPortalMobile = $this->getTamanhoSecao('ultimas_portal', 'titulo', 'mobile', '20px');
+        $pesoTextoUltimasPortal = $this->getPesoSecao('ultimas_portal', 'texto', '400');
+        $tamanhoTextoUltimasPortalDesktop = $this->getTamanhoSecao('ultimas_portal', 'texto', 'desktop', '14px');
+        $tamanhoTextoUltimasPortalMobile = $this->getTamanhoSecao('ultimas_portal', 'texto', 'mobile', '12px');
+        
+        // Como ambas as seções usam as mesmas classes CSS, vamos sobrescrever com as configurações específicas
+        // quando necessário. Por padrão, elas herdam as configurações da seção "Leia Também"
         
         return $css;
     }
