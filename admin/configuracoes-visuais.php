@@ -56,16 +56,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar todos os tamanhos de fonte
+        // Processar fonte geral
+        if (isset($_POST['fonte_geral']) && !empty($_POST['fonte_geral'])) {
+            $resultado = $visualConfig->setFonteGeral($_POST['fonte_geral']);
+            if ($resultado) {
+                $salvas++;
+                $debug_info[] = "✅ fonte_geral -> site.fonte_geral = {$_POST['fonte_geral']}";
+            } else {
+                $debug_info[] = "❌ Falha ao salvar fonte_geral";
+            }
+        }
+        
+        // Processar personalização de fontes
+        if (isset($_POST['personalizar_fontes'])) {
+            $resultado = $visualConfig->setPersonalizarFontes(true);
+            if ($resultado) {
+                $salvas++;
+                $debug_info[] = "✅ personalizar_fontes -> site.personalizar_fontes = 1";
+            } else {
+                $debug_info[] = "❌ Falha ao salvar personalizar_fontes";
+            }
+        } else {
+            $resultado = $visualConfig->setPersonalizarFontes(false);
+            if ($resultado) {
+                $salvas++;
+                $debug_info[] = "✅ personalizar_fontes -> site.personalizar_fontes = 0";
+            } else {
+                $debug_info[] = "❌ Falha ao salvar personalizar_fontes";
+            }
+        }
+        
+        // Processar pesos de fonte
         foreach ($_POST as $chave => $valor) {
-            if (strpos($chave, 'tamanho_') === 0 && !empty($valor)) {
-                // Exemplo: tamanho_titulo -> elemento: titulo, propriedade: tamanho
-                $elemento = substr($chave, 8); // Remove 'tamanho_'
+            if (strpos($chave, 'peso_') === 0 && !empty($valor)) {
+                $elemento = substr($chave, 5); // Remove 'peso_'
                 
-                $resultado = $visualConfig->setFonte($elemento, 'tamanho', $valor);
+                $resultado = $visualConfig->setPesoFonte($elemento, $valor);
                 if ($resultado) {
                     $salvas++;
-                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho = {$valor}";
+                    $debug_info[] = "✅ {$chave} -> site.peso_{$elemento} = {$valor}";
+                } else {
+                    $debug_info[] = "❌ Falha ao salvar {$chave}";
+                }
+            }
+        }
+        
+        // Processar tamanhos responsivos
+        foreach ($_POST as $chave => $valor) {
+            if (strpos($chave, 'tamanho_') === 0 && strpos($chave, '_desktop') !== false && !empty($valor)) {
+                $elemento = substr($chave, 8, -8); // Remove 'tamanho_' e '_desktop'
+                
+                $resultado = $visualConfig->setTamanhoFonte($elemento, 'desktop', $valor);
+                if ($resultado) {
+                    $salvas++;
+                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho_desktop = {$valor}";
+                } else {
+                    $debug_info[] = "❌ Falha ao salvar {$chave}";
+                }
+            }
+            
+            if (strpos($chave, 'tamanho_') === 0 && strpos($chave, '_mobile') !== false && !empty($valor)) {
+                $elemento = substr($chave, 8, -7); // Remove 'tamanho_' e '_mobile'
+                
+                $resultado = $visualConfig->setTamanhoFonte($elemento, 'mobile', $valor);
+                if ($resultado) {
+                    $salvas++;
+                    $debug_info[] = "✅ {$chave} -> {$elemento}.tamanho_mobile = {$valor}";
                 } else {
                     $debug_info[] = "❌ Falha ao salvar {$chave}";
                 }
@@ -332,123 +388,237 @@ include 'includes/header.php';
                     <!-- Aba de Fontes -->
                     <div class="tab-pane fade" id="fontes" role="tabpanel">
                         <div class="row">
-                            <div class="col-md-6">
-                                <h4>Fontes Principais</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte Principal (Body)</label>
-                                    <select class="form-select" name="fonte_site">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Courier New, monospace" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Courier New, monospace' ? 'selected' : '' ?>>Courier New</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['site']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte dos Títulos</label>
-                                    <select class="form-select" name="fonte_titulo">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['titulo']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte dos Parágrafos</label>
-                                    <select class="form-select" name="fonte_paragrafo">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['paragrafo']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte dos Cards/Posts</label>
-                                    <select class="form-select" name="fonte_card">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['card']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte da Sidebar</label>
-                                    <select class="form-select" name="fonte_sidebar">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte dos Meta Textos</label>
-                                    <select class="form-select" name="fonte_meta">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['meta']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Fonte dos Botões</label>
-                                    <select class="form-select" name="fonte_botao">
-                                        <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
-                                        <option value="Arial, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
-                                        <option value="Helvetica, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
-                                        <option value="Georgia, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
-                                        <option value="Times New Roman, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
-                                        <option value="Merriweather, serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
-                                        <option value="Inter, sans-serif" <?= ($configs['fontes']['botao']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
-                                    </select>
+                            <div class="col-md-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-cog"></i> Configuração de Fontes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Fonte Geral do Site -->
+                                        <div class="mb-4">
+                                            <h6>Fonte Geral do Site</h6>
+                                            <p class="text-muted">Esta fonte será aplicada em todo o site quando a personalização estiver desabilitada.</p>
+                                            <div class="mb-3">
+                                                <label class="form-label">Fonte Geral</label>
+                                                <select class="form-select" name="fonte_geral" id="fonte_geral">
+                                                    <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                    <option value="Arial, sans-serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                    <option value="Helvetica, sans-serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                    <option value="Georgia, serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                    <option value="Times New Roman, serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                    <option value="Courier New, monospace" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Courier New, monospace' ? 'selected' : '' ?>>Courier New</option>
+                                                    <option value="Merriweather, serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                    <option value="Inter, sans-serif" <?= ($configs['fontes']['site']['fonte_geral'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Checkbox para Personalizar Fontes -->
+                                        <div class="mb-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="personalizar_fontes" id="personalizar_fontes" value="1" 
+                                                       <?= ($configs['fontes']['site']['personalizar_fontes'] ?? '0') === '1' ? 'checked' : '' ?>>
+                                                <label class="form-check-label" for="personalizar_fontes">
+                                                    <strong>Personalizar Fontes do Site</strong>
+                                                </label>
+                                                <small class="form-text text-muted d-block">
+                                                    Quando habilitado, você pode definir fontes específicas para cada elemento do site.
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Seção de Fontes Personalizadas (aparece quando checkbox está marcado) -->
+                                        <div id="fontes_personalizadas" style="display: none;">
+                                            <hr>
+                                            <h6>Fontes Personalizadas por Elemento</h6>
+                                            <p class="text-muted">Configure fontes específicas para cada elemento do site.</p>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte dos Títulos</label>
+                                                        <select class="form-select" name="fonte_titulos">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['titulos']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte dos Parágrafos</label>
+                                                        <select class="form-select" name="fonte_paragrafos">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['paragrafos']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte da Navegação</label>
+                                                        <select class="form-select" name="fonte_navegacao">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['navegacao']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte da Sidebar</label>
+                                                        <select class="form-select" name="fonte_sidebar">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['sidebar']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte dos Cards</label>
+                                                        <select class="form-select" name="fonte_cards">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['cards']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Fonte dos Botões</label>
+                                                        <select class="form-select" name="fonte_botoes">
+                                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                                            <option value="Arial, sans-serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Arial, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                                            <option value="Helvetica, sans-serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Helvetica, sans-serif' ? 'selected' : '' ?>>Helvetica</option>
+                                                            <option value="Georgia, serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                                            <option value="Times New Roman, serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Times New Roman, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                                            <option value="Merriweather, serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Merriweather, serif' ? 'selected' : '' ?>>Merriweather</option>
+                                                            <option value="Inter, sans-serif" <?= ($configs['fontes']['botoes']['fonte'] ?? '') === 'Inter, sans-serif' ? 'selected' : '' ?>>Inter</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
+                            <!-- Seção de Peso das Fontes -->
                             <div class="col-md-6">
-                                <h4>Tamanhos de Fonte</h4>
-                                <div class="mb-3">
-                                    <label class="form-label">Tamanho dos Títulos</label>
-                                    <select class="form-select" name="tamanho_titulo">
-                                        <option value="28px" <?= ($configs['fontes']['titulo']['tamanho'] ?? '') === '28px' ? 'selected' : '' ?>>28px</option>
-                                        <option value="24px" <?= ($configs['fontes']['titulo']['tamanho'] ?? '') === '24px' ? 'selected' : '' ?>>24px</option>
-                                        <option value="20px" <?= ($configs['fontes']['titulo']['tamanho'] ?? '') === '20px' ? 'selected' : '' ?>>20px</option>
-                                        <option value="18px" <?= ($configs['fontes']['titulo']['tamanho'] ?? '') === '18px' ? 'selected' : '' ?>>18px</option>
-                                    </select>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-bold"></i> Peso das Fontes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted">Configure o peso (espessura) das fontes para cada elemento.</p>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Peso dos Títulos</label>
+                                            <select class="form-select" name="peso_titulos">
+                                                <option value="100" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                <option value="300" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                <option value="400" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '400' ? 'selected' : '' ?>>400 - Normal</option>
+                                                <option value="500" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                <option value="600" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                <option value="700" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                                <option value="900" <?= ($configs['fontes']['site']['peso_titulos'] ?? '700') === '900' ? 'selected' : '' ?>>900 - Black</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Peso dos Parágrafos</label>
+                                            <select class="form-select" name="peso_paragrafos">
+                                                <option value="100" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                <option value="300" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                <option value="400" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '400' ? 'selected' : '' ?>>400 - Normal</option>
+                                                <option value="500" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                <option value="600" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                <option value="700" <?= ($configs['fontes']['site']['peso_paragrafos'] ?? '400') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Peso da Navegação</label>
+                                            <select class="form-select" name="peso_navegacao">
+                                                <option value="100" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '100' ? 'selected' : '' ?>>100 - Thin</option>
+                                                <option value="300" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '300' ? 'selected' : '' ?>>300 - Light</option>
+                                                <option value="400" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '400' ? 'selected' : '' ?>>400 - Normal</option>
+                                                <option value="500" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                                <option value="600" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                                <option value="700" <?= ($configs['fontes']['site']['peso_navegacao'] ?? '500') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Tamanho dos Subtítulos</label>
-                                    <select class="form-select" name="tamanho_subtitulo">
-                                        <option value="20px" <?= ($configs['fontes']['subtitulo']['tamanho'] ?? '') === '20px' ? 'selected' : '' ?>>20px</option>
-                                        <option value="18px" <?= ($configs['fontes']['subtitulo']['tamanho'] ?? '') === '18px' ? 'selected' : '' ?>>18px</option>
-                                        <option value="16px" <?= ($configs['fontes']['subtitulo']['tamanho'] ?? '') === '16px' ? 'selected' : '' ?>>16px</option>
-                                        <option value="14px" <?= ($configs['fontes']['subtitulo']['tamanho'] ?? '') === '14px' ? 'selected' : '' ?>>14px</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Tamanho dos Parágrafos</label>
-                                    <select class="form-select" name="tamanho_paragrafo">
-                                        <option value="16px" <?= ($configs['fontes']['paragrafo']['tamanho'] ?? '') === '16px' ? 'selected' : '' ?>>16px</option>
-                                        <option value="14px" <?= ($configs['fontes']['paragrafo']['tamanho'] ?? '') === '14px' ? 'selected' : '' ?>>14px</option>
-                                        <option value="12px" <?= ($configs['fontes']['paragrafo']['tamanho'] ?? '') === '12px' ? 'selected' : '' ?>>12px</option>
-                                        <option value="18px" <?= ($configs['fontes']['paragrafo']['tamanho'] ?? '') === '18px' ? 'selected' : '' ?>>18px</option>
-                                    </select>
+                            </div>
+                            
+                            <!-- Seção de Tamanhos Responsivos -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-mobile-alt"></i> Tamanhos Responsivos</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted">Configure tamanhos de fonte para desktop e mobile.</p>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Tamanho dos Títulos (Desktop)</label>
+                                            <select class="form-select" name="tamanho_titulos_desktop">
+                                                <option value="32px" <?= ($configs['fontes']['titulos']['tamanho_desktop'] ?? '28px') === '32px' ? 'selected' : '' ?>>32px</option>
+                                                <option value="28px" <?= ($configs['fontes']['titulos']['tamanho_desktop'] ?? '28px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                                <option value="24px" <?= ($configs['fontes']['titulos']['tamanho_desktop'] ?? '28px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                <option value="20px" <?= ($configs['fontes']['titulos']['tamanho_desktop'] ?? '28px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Tamanho dos Títulos (Mobile)</label>
+                                            <select class="form-select" name="tamanho_titulos_mobile">
+                                                <option value="28px" <?= ($configs['fontes']['titulos']['tamanho_mobile'] ?? '24px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                                <option value="24px" <?= ($configs['fontes']['titulos']['tamanho_mobile'] ?? '24px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                                <option value="20px" <?= ($configs['fontes']['titulos']['tamanho_mobile'] ?? '24px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                                <option value="18px" <?= ($configs['fontes']['titulos']['tamanho_mobile'] ?? '24px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Tamanho dos Parágrafos (Desktop)</label>
+                                            <select class="form-select" name="tamanho_paragrafos_desktop">
+                                                <option value="18px" <?= ($configs['fontes']['paragrafos']['tamanho_desktop'] ?? '16px') === '18px' ? 'selected' : '' ?>>18px</option>
+                                                <option value="16px" <?= ($configs['fontes']['paragrafos']['tamanho_desktop'] ?? '16px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                <option value="14px" <?= ($configs['fontes']['paragrafos']['tamanho_desktop'] ?? '16px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                <option value="12px" <?= ($configs['fontes']['paragrafos']['tamanho_desktop'] ?? '16px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Tamanho dos Parágrafos (Mobile)</label>
+                                            <select class="form-select" name="tamanho_paragrafos_mobile">
+                                                <option value="16px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '16px' ? 'selected' : '' ?>>16px</option>
+                                                <option value="14px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '14px' ? 'selected' : '' ?>>14px</option>
+                                                <option value="12px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '12px' ? 'selected' : '' ?>>12px</option>
+                                                <option value="10px" <?= ($configs['fontes']['paragrafos']['tamanho_mobile'] ?? '14px') === '10px' ? 'selected' : '' ?>>10px</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -583,6 +753,43 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         showNotification('💡 Dica: Use CTRL+S para salvar rapidamente!', 'info');
     }, 1000);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Controle do checkbox de personalizar fontes
+    const personalizarCheckbox = document.getElementById('personalizar_fontes');
+    const fontesPersonalizadas = document.getElementById('fontes_personalizadas');
+    const fonteGeral = document.getElementById('fonte_geral');
+    
+    function toggleFontesPersonalizadas() {
+        if (personalizarCheckbox.checked) {
+            fontesPersonalizadas.style.display = 'block';
+            fonteGeral.disabled = true;
+        } else {
+            fontesPersonalizadas.style.display = 'none';
+            fonteGeral.disabled = false;
+        }
+    }
+    
+    // Executar na carga da página
+    toggleFontesPersonalizadas();
+    
+    // Adicionar listener para mudanças no checkbox
+    personalizarCheckbox.addEventListener('change', toggleFontesPersonalizadas);
+    
+    // Preview em tempo real das configurações
+    const previewElements = document.querySelectorAll('[data-preview]');
+    previewElements.forEach(element => {
+        element.addEventListener('change', function() {
+            const previewTarget = this.getAttribute('data-preview');
+            const previewElement = document.querySelector(previewTarget);
+            if (previewElement) {
+                previewElement.style.fontFamily = this.value;
+            }
+        });
+    });
 });
 </script>
 

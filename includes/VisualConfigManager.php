@@ -70,6 +70,113 @@ class VisualConfigManager {
         }
     }
     
+    // Novos métodos para gerenciar fonte geral vs personalizada
+    public function getFonteGeral() {
+        return $this->getFonte('site', 'fonte_geral', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
+    }
+    
+    public function setFonteGeral($valor) {
+        return $this->setFonte('site', 'fonte_geral', $valor);
+    }
+    
+    public function usarFonteGeral() {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = 'site' AND propriedade = 'usar_fonte_geral' AND ativo = 1
+        ");
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (bool)$row['valor'] : true;
+    }
+    
+    public function setUsarFonteGeral($valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', 'site', 'usar_fonte_geral', ?, 'boolean')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute([$valor ? '1' : '0']);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar usar_fonte_geral: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function personalizarFontes() {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = 'site' AND propriedade = 'personalizar_fontes' AND ativo = 1
+        ");
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (bool)$row['valor'] : false;
+    }
+    
+    public function setPersonalizarFontes($valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', 'site', 'personalizar_fontes', ?, 'boolean')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute([$valor ? '1' : '0']);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar personalizar_fontes: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    // Métodos para gerenciar peso das fontes
+    public function getPesoFonte($elemento, $padrao = '400') {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = 'site' AND propriedade = ? AND ativo = 1
+        ");
+        $stmt->execute(['peso_' . $elemento]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['valor'] : $padrao;
+    }
+    
+    public function setPesoFonte($elemento, $valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', 'site', ?, ?, 'texto')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute(['peso_' . $elemento, $valor]);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar peso fonte: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    // Métodos para gerenciar tamanhos responsivos
+    public function getTamanhoFonte($elemento, $dispositivo = 'desktop', $padrao = '16px') {
+        $stmt = $this->pdo->prepare("
+            SELECT valor FROM configuracoes_visuais 
+            WHERE categoria = 'fontes' AND elemento = ? AND propriedade = ? AND ativo = 1
+        ");
+        $stmt->execute([$elemento, 'tamanho_' . $dispositivo]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? $row['valor'] : $padrao;
+    }
+    
+    public function setTamanhoFonte($elemento, $dispositivo, $valor) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO configuracoes_visuais (categoria, elemento, propriedade, valor, tipo) 
+                VALUES ('fontes', ?, ?, ?, 'texto')
+                ON DUPLICATE KEY UPDATE valor = VALUES(valor), atualizado_em = NOW()
+            ");
+            return $stmt->execute([$elemento, 'tamanho_' . $dispositivo, $valor]);
+        } catch (Exception $e) {
+            error_log("Exceção ao salvar tamanho fonte: " . $e->getMessage());
+            return false;
+        }
+    }
+    
     // Obter todas as configurações visuais
     public function getAllConfigs() {
         $stmt = $this->pdo->query("
@@ -153,74 +260,155 @@ class VisualConfigManager {
             $css .= ".card {\n";
             if (isset($card['cor_fundo'])) $css .= "  background-color: {$card['cor_fundo']};\n";
             if (isset($card['cor_borda'])) $css .= "  border-color: {$card['cor_borda']};\n";
-            $css .= "}\n\n";
-            
-            $css .= ".card-body {\n";
             if (isset($card['cor_texto'])) $css .= "  color: {$card['cor_texto']};\n";
             $css .= "}\n\n";
         }
         
-        // Fontes
-        if (isset($configs['fontes'])) {
-            // Fonte principal do site
-            if (isset($configs['fontes']['site']['fonte'])) {
-                $css .= "body {\n";
-                $css .= "  font-family: {$configs['fontes']['site']['fonte']};\n";
-                $css .= "}\n\n";
-            }
+        // NOVA LÓGICA DE FONTES
+        $usarFonteGeral = $this->usarFonteGeral();
+        $personalizarFontes = $this->personalizarFontes();
+        
+        if ($usarFonteGeral && !$personalizarFontes) {
+            // Modo: Fonte Geral
+            $fonteGeral = $this->getFonteGeral();
+            $css .= "/* Fonte Geral do Site */\n";
+            $css .= "body, h1, h2, h3, h4, h5, h6, p, div, .navbar, .sidebar, .card, .btn {\n";
+            $css .= "  font-family: {$fonteGeral};\n";
+            $css .= "}\n\n";
+        } else {
+            // Modo: Fontes Personalizadas
+            $css .= "/* Fontes Personalizadas */\n";
             
-            // Fonte dos títulos
-            if (isset($configs['fontes']['titulo']['fonte'])) {
+            // Títulos
+            if (isset($configs['fontes']['titulos']['fonte'])) {
+                $peso = $this->getPesoFonte('titulos', '700');
+                $tamanhoDesktop = $this->getTamanhoFonte('titulos', 'desktop', '28px');
+                $tamanhoMobile = $this->getTamanhoFonte('titulos', 'mobile', '24px');
+                
                 $css .= "h1, h2, h3, h4, h5, h6 {\n";
-                $css .= "  font-family: {$configs['fontes']['titulo']['fonte']};\n";
+                $css .= "  font-family: {$configs['fontes']['titulos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  h1, h2, h3, h4, h5, h6 {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Fonte dos parágrafos
-            if (isset($configs['fontes']['paragrafo']['fonte'])) {
+            // Parágrafos
+            if (isset($configs['fontes']['paragrafos']['fonte'])) {
+                $peso = $this->getPesoFonte('paragrafos', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('paragrafos', 'desktop', '16px');
+                $tamanhoMobile = $this->getTamanhoFonte('paragrafos', 'mobile', '14px');
+                
                 $css .= "p {\n";
-                $css .= "  font-family: {$configs['fontes']['paragrafo']['fonte']};\n";
+                $css .= "  font-family: {$configs['fontes']['paragrafos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  p {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Fonte dos cards/posts
-            if (isset($configs['fontes']['card']['fonte'])) {
-                $css .= ".post-card .card-title, .card-title, .post-title {\n";
-                $css .= "  font-family: {$configs['fontes']['card']['fonte']};\n";
+            // Navegação
+            if (isset($configs['fontes']['navegacao']['fonte'])) {
+                $peso = $this->getPesoFonte('navegacao', '500');
+                $tamanhoDesktop = $this->getTamanhoFonte('navegacao', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('navegacao', 'mobile', '12px');
+                
+                $css .= ".navbar, .navbar-nav .nav-link {\n";
+                $css .= "  font-family: {$configs['fontes']['navegacao']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .navbar, .navbar-nav .nav-link {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Fonte da sidebar
+            // Sidebar
             if (isset($configs['fontes']['sidebar']['fonte'])) {
-                $css .= ".sidebar a, .sidebar .card-title, .sidebar-title {\n";
+                $peso = $this->getPesoFonte('sidebar', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('sidebar', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('sidebar', 'mobile', '12px');
+                
+                $css .= ".sidebar, .sidebar * {\n";
                 $css .= "  font-family: {$configs['fontes']['sidebar']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .sidebar, .sidebar * {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Fonte dos meta textos
-            if (isset($configs['fontes']['meta']['fonte'])) {
-                $css .= ".post-meta, .text-muted, small, .meta-text {\n";
-                $css .= "  font-family: {$configs['fontes']['meta']['fonte']};\n";
+            // Cards
+            if (isset($configs['fontes']['cards']['fonte'])) {
+                $peso = $this->getPesoFonte('cards', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('cards', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('cards', 'mobile', '12px');
+                
+                $css .= ".card, .card * {\n";
+                $css .= "  font-family: {$configs['fontes']['cards']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .card, .card * {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Fonte dos botões
-            if (isset($configs['fontes']['botao']['fonte'])) {
-                $css .= ".btn, button {\n";
-                $css .= "  font-family: {$configs['fontes']['botao']['fonte']};\n";
+            // Botões
+            if (isset($configs['fontes']['botoes']['fonte'])) {
+                $peso = $this->getPesoFonte('botoes', '500');
+                $tamanhoDesktop = $this->getTamanhoFonte('botoes', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('botoes', 'mobile', '12px');
+                
+                $css .= ".btn {\n";
+                $css .= "  font-family: {$configs['fontes']['botoes']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .btn {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
             
-            // Tamanhos de fonte
-            if (isset($configs['fontes']['titulo']['tamanho'])) {
-                $css .= "h1, h2, h3, h4, h5, h6 {\n";
-                $css .= "  font-size: {$configs['fontes']['titulo']['tamanho']};\n";
+            // Meta textos
+            if (isset($configs['fontes']['meta_textos']['fonte'])) {
+                $peso = $this->getPesoFonte('meta_textos', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('meta_textos', 'desktop', '12px');
+                $tamanhoMobile = $this->getTamanhoFonte('meta_textos', 'mobile', '10px');
+                
+                $css .= ".text-muted, .meta-text, small {\n";
+                $css .= "  font-family: {$configs['fontes']['meta_textos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
                 $css .= "}\n\n";
-            }
-            
-            if (isset($configs['fontes']['paragrafo']['tamanho'])) {
-                $css .= "p {\n";
-                $css .= "  font-size: {$configs['fontes']['paragrafo']['tamanho']};\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .text-muted, .meta-text, small {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
                 $css .= "}\n\n";
             }
         }
