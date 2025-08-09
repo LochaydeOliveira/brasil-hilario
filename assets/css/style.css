@@ -811,6 +811,8 @@ footer {
 @media (max-width: 768px) {
     .logo-img {
         height: 60px;
+        left: 55%;
+        position: relative;
     }
 }
 

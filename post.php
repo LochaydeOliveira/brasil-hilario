@@ -25,7 +25,7 @@ try {
     while ($row = $stmt_fonts->fetch()) {
         $font_configs[$row['elemento']][$row['propriedade']] = $row['valor'];
     }
-
+    
     // Buscar o post
     $stmt = $pdo->prepare("
         SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
@@ -188,51 +188,83 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
 }
 
 function applyContentTitleStyles($content, $font_configs) {
-    // Buscar configurações específicas para títulos de conteúdo
-    $titulo_conteudo_config = $font_configs['titulo_conteudo'] ?? [];
+    // Verificar se há configurações para títulos de conteúdo
+    $has_configs = false;
     
-    if (empty($titulo_conteudo_config)) {
+    // Verificar se há configurações básicas (fonte e peso)
+    if (isset($font_configs['titulo_conteudo']['fonte']) || 
+        isset($font_configs['titulo_conteudo']['peso'])) {
+        $has_configs = true;
+    }
+    
+    // Verificar se há configurações de tamanho
+    if (isset($font_configs['titulo_conteudo_h1']['desktop']) || 
+        isset($font_configs['titulo_conteudo_h1']['mobile']) ||
+        isset($font_configs['titulo_conteudo_h2']['desktop']) || 
+        isset($font_configs['titulo_conteudo_h2']['mobile']) ||
+        isset($font_configs['titulo_conteudo_h3']['desktop']) || 
+        isset($font_configs['titulo_conteudo_h3']['mobile'])) {
+        $has_configs = true;
+    }
+    
+    if (!$has_configs) {
         return $content;
     }
     
     // Gerar CSS para títulos de conteúdo
     $css = '<style>';
-    $css .= '.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {';
+    $css .= '/* CSS gerado dinamicamente para títulos de conteúdo */';
     
-    if (isset($titulo_conteudo_config['fonte'])) {
-        $css .= "font-family: {$titulo_conteudo_config['fonte']}; ";
+    // Estilos básicos para todos os títulos (desktop)
+    $css .= 'body .post-content h1, body .post-content h2, body .post-content h3, body .post-content h4, body .post-content h5, body .post-content h6 {';
+    
+    if (isset($font_configs['titulo_conteudo']['fonte'])) {
+        $css .= "font-family: {$font_configs['titulo_conteudo']['fonte']} !important; ";
     }
-    if (isset($titulo_conteudo_config['peso'])) {
-        $css .= "font-weight: {$titulo_conteudo_config['peso']}; ";
+    if (isset($font_configs['titulo_conteudo']['peso'])) {
+        $css .= "font-weight: {$font_configs['titulo_conteudo']['peso']} !important; ";
     }
     
     $css .= '}';
     
-    // Tamanhos específicos para cada nível de título
+    // Tamanhos específicos para cada nível de título (desktop)
     if (isset($font_configs['titulo_conteudo_h1']['desktop'])) {
-        $css .= ".post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['desktop']}; }";
+        $css .= "body .post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['desktop']} !important; }";
     }
     if (isset($font_configs['titulo_conteudo_h2']['desktop'])) {
-        $css .= ".post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['desktop']}; }";
+        $css .= "body .post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['desktop']} !important; }";
     }
     if (isset($font_configs['titulo_conteudo_h3']['desktop'])) {
-        $css .= ".post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['desktop']}; }";
+        $css .= "body .post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['desktop']} !important; }";
     }
     
-    // CSS responsivo para mobile
+    // CSS responsivo para mobile - com maior especificidade
     $css .= '@media (max-width: 768px) {';
+    $css .= '/* Estilos mobile para títulos de conteúdo */';
+    
+    // Aplicar fonte e peso também no mobile
+    if (isset($font_configs['titulo_conteudo']['fonte'])) {
+        $css .= "body .post-content h1, body .post-content h2, body .post-content h3, body .post-content h4, body .post-content h5, body .post-content h6 { font-family: {$font_configs['titulo_conteudo']['fonte']} !important; }";
+    }
+    if (isset($font_configs['titulo_conteudo']['peso'])) {
+        $css .= "body .post-content h1, body .post-content h2, body .post-content h3, body .post-content h4, body .post-content h5, body .post-content h6 { font-weight: {$font_configs['titulo_conteudo']['peso']} !important; }";
+    }
+    
+    // Tamanhos específicos para mobile - com maior especificidade
     if (isset($font_configs['titulo_conteudo_h1']['mobile'])) {
-        $css .= ".post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['mobile']} !important; }";
+        $css .= "body .post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['mobile']} !important; }";
     }
     if (isset($font_configs['titulo_conteudo_h2']['mobile'])) {
-        $css .= ".post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['mobile']} !important; }";
+        $css .= "body .post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['mobile']} !important; }";
     }
     if (isset($font_configs['titulo_conteudo_h3']['mobile'])) {
-        $css .= ".post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['mobile']} !important; }";
+        $css .= "body .post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['mobile']} !important; }";
     }
+    
     $css .= '}';
     
     $css .= '</style>';
+    $css .= '<!-- CSS para títulos de conteúdo aplicado dinamicamente -->';
     
     // Inserir CSS no início do conteúdo
     return $css . $content;
