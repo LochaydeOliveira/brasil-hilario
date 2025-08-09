@@ -318,6 +318,11 @@ include 'includes/header.php';
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="blog-specific-tab" data-bs-toggle="tab" data-bs-target="#blog-specific" type="button" role="tab">
+                        <i class="fas fa-newspaper"></i> Blog Específico
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
                         <i class="fas fa-eye"></i> Preview
                     </button>
