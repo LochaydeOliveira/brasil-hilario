@@ -326,7 +326,8 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
     .title-posts {
-        font-size: 1.7em!important;
+        font-size: 2rem!important;
+        line-height: 2rem!important;
     }
     .post-grid {
         grid-template-columns: 1fr;
@@ -811,7 +812,7 @@ footer {
 @media (max-width: 768px) {
     .logo-img {
         height: 60px;
-        left: 55%;
+        left: 40%;
         position: relative;
     }
 }
@@ -1133,7 +1134,6 @@ footer {
 
 /* Estilos gerais de tipografia */
 h1, h2, h3, h4, h5, h6, .site-title, .post-title {
-    font-family: "Merriweather", serif;
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
