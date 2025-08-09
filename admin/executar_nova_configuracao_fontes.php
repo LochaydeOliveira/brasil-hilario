@@ -63,7 +63,17 @@ try {
         ['fontes', 'ultimas_portal', 'tamanho_titulo_mobile', '20px', 'texto'],
         ['fontes', 'ultimas_portal', 'peso_texto', '400', 'texto'],
         ['fontes', 'ultimas_portal', 'tamanho_texto_desktop', '14px', 'texto'],
-        ['fontes', 'ultimas_portal', 'tamanho_texto_mobile', '12px', 'texto']
+        ['fontes', 'ultimas_portal', 'tamanho_texto_mobile', '12px', 'texto'],
+        
+        // Configurações para títulos de conteúdo
+        ['fontes', 'titulo_conteudo', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', 'fonte'],
+        ['fontes', 'titulo_conteudo', 'peso', '600', 'texto'],
+        ['fontes', 'titulo_conteudo_h1', 'desktop', '32px', 'texto'],
+        ['fontes', 'titulo_conteudo_h1', 'mobile', '28px', 'texto'],
+        ['fontes', 'titulo_conteudo_h2', 'desktop', '28px', 'texto'],
+        ['fontes', 'titulo_conteudo_h2', 'mobile', '24px', 'texto'],
+        ['fontes', 'titulo_conteudo_h3', 'desktop', '24px', 'texto'],
+        ['fontes', 'titulo_conteudo_h3', 'mobile', '20px', 'texto']
     ];
     
     $adicionadas = 0;

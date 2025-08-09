@@ -187,6 +187,57 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
     return $section_html;
 }
 
+function applyContentTitleStyles($content, $font_configs) {
+    // Buscar configurações específicas para títulos de conteúdo
+    $titulo_conteudo_config = $font_configs['titulo_conteudo'] ?? [];
+    
+    if (empty($titulo_conteudo_config)) {
+        return $content;
+    }
+    
+    // Gerar CSS para títulos de conteúdo
+    $css = '<style>';
+    $css .= '.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {';
+    
+    if (isset($titulo_conteudo_config['fonte'])) {
+        $css .= "font-family: {$titulo_conteudo_config['fonte']}; ";
+    }
+    if (isset($titulo_conteudo_config['peso'])) {
+        $css .= "font-weight: {$titulo_conteudo_config['peso']}; ";
+    }
+    
+    $css .= '}';
+    
+    // Tamanhos específicos para cada nível de título
+    if (isset($font_configs['titulo_conteudo_h1']['desktop'])) {
+        $css .= ".post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['desktop']}; }";
+    }
+    if (isset($font_configs['titulo_conteudo_h2']['desktop'])) {
+        $css .= ".post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['desktop']}; }";
+    }
+    if (isset($font_configs['titulo_conteudo_h3']['desktop'])) {
+        $css .= ".post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['desktop']}; }";
+    }
+    
+    // CSS responsivo para mobile
+    $css .= '@media (max-width: 768px) {';
+    if (isset($font_configs['titulo_conteudo_h1']['mobile'])) {
+        $css .= ".post-content h1 { font-size: {$font_configs['titulo_conteudo_h1']['mobile']} !important; }";
+    }
+    if (isset($font_configs['titulo_conteudo_h2']['mobile'])) {
+        $css .= ".post-content h2 { font-size: {$font_configs['titulo_conteudo_h2']['mobile']} !important; }";
+    }
+    if (isset($font_configs['titulo_conteudo_h3']['mobile'])) {
+        $css .= ".post-content h3 { font-size: {$font_configs['titulo_conteudo_h3']['mobile']} !important; }";
+    }
+    $css .= '}';
+    
+    $css .= '</style>';
+    
+    // Inserir CSS no início do conteúdo
+    return $css . $content;
+}
+
 function buildAdSenseHtml($type = 'default') {
     if ($type === 'first') {
         return <<<HTML
@@ -384,6 +435,9 @@ include 'includes/header.php';
                         'point' => $second_injection_point
                     ];
                 }
+
+                // Aplicar estilos aos títulos de conteúdo
+                $content_to_display = applyContentTitleStyles($content_to_display, $font_configs);
 
                 echo injectSections($content_to_display, $sections_to_inject, $font_configs);
                 ?>

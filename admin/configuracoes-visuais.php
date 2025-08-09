@@ -160,6 +160,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $visualConfig->setTamanhoSecao('ultimas_portal', 'texto', 'mobile', $_POST['tamanho_texto_ultimas_portal_mobile']);
         }
         
+        // Processar configurações de títulos de conteúdo
+        if (isset($_POST['fonte_titulo_conteudo'])) {
+            $visualConfig->setFonte('titulo_conteudo', 'fonte', $_POST['fonte_titulo_conteudo']);
+        }
+        if (isset($_POST['peso_titulo_conteudo'])) {
+            $visualConfig->setPesoFonte('titulo_conteudo', $_POST['peso_titulo_conteudo']);
+        }
+        if (isset($_POST['tamanho_h1_desktop'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h1', 'desktop', $_POST['tamanho_h1_desktop']);
+        }
+        if (isset($_POST['tamanho_h1_mobile'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h1', 'mobile', $_POST['tamanho_h1_mobile']);
+        }
+        if (isset($_POST['tamanho_h2_desktop'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h2', 'desktop', $_POST['tamanho_h2_desktop']);
+        }
+        if (isset($_POST['tamanho_h2_mobile'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h2', 'mobile', $_POST['tamanho_h2_mobile']);
+        }
+        if (isset($_POST['tamanho_h3_desktop'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h3', 'desktop', $_POST['tamanho_h3_desktop']);
+        }
+        if (isset($_POST['tamanho_h3_mobile'])) {
+            $visualConfig->setTamanhoFonte('titulo_conteudo_h3', 'mobile', $_POST['tamanho_h3_mobile']);
+        }
+        
         // Gerar CSS dinâmico
         $css_salvo = $visualConfig->saveCSS();
         
@@ -856,6 +882,102 @@ include 'includes/header.php';
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Configurações para Títulos de Conteúdo -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-heading"></i> 
+                                    Títulos de Conteúdo (H1, H2, H3, H4, H5, H6)
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="fonte_titulo_conteudo" class="form-label">Fonte dos Títulos:</label>
+                                        <select class="form-select" id="fonte_titulo_conteudo" name="fonte_titulo_conteudo">
+                                            <option value="Segoe UI, Tahoma, Geneva, Verdana, sans-serif" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif' ? 'selected' : '' ?>>Segoe UI</option>
+                                            <option value="Arial, Helvetica, sans-serif" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Arial, Helvetica, sans-serif' ? 'selected' : '' ?>>Arial</option>
+                                            <option value="Georgia, serif" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Georgia, serif' ? 'selected' : '' ?>>Georgia</option>
+                                            <option value="Times New Roman, Times, serif" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Times New Roman, Times, serif' ? 'selected' : '' ?>>Times New Roman</option>
+                                            <option value="Verdana, Geneva, sans-serif" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Verdana, Geneva, sans-serif' ? 'selected' : '' ?>>Verdana</option>
+                                            <option value="Courier New, Courier, monospace" <?= ($configs['fontes']['titulo_conteudo']['fonte'] ?? 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif') === 'Courier New, Courier, monospace' ? 'selected' : '' ?>>Courier New</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="peso_titulo_conteudo" class="form-label">Peso da Fonte:</label>
+                                        <select class="form-select" id="peso_titulo_conteudo" name="peso_titulo_conteudo">
+                                            <option value="400" <?= ($configs['fontes']['titulo_conteudo']['peso'] ?? '600') === '400' ? 'selected' : '' ?>>400 - Regular</option>
+                                            <option value="500" <?= ($configs['fontes']['titulo_conteudo']['peso'] ?? '600') === '500' ? 'selected' : '' ?>>500 - Medium</option>
+                                            <option value="600" <?= ($configs['fontes']['titulo_conteudo']['peso'] ?? '600') === '600' ? 'selected' : '' ?>>600 - Semi Bold</option>
+                                            <option value="700" <?= ($configs['fontes']['titulo_conteudo']['peso'] ?? '600') === '700' ? 'selected' : '' ?>>700 - Bold</option>
+                                            <option value="800" <?= ($configs['fontes']['titulo_conteudo']['peso'] ?? '600') === '800' ? 'selected' : '' ?>>800 - Extra Bold</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h1_desktop" class="form-label">H1 (Desktop):</label>
+                                        <select class="form-select" id="tamanho_h1_desktop" name="tamanho_h1_desktop">
+                                            <option value="32px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_desktop'] ?? '32px') === '32px' ? 'selected' : '' ?>>32px</option>
+                                            <option value="36px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_desktop'] ?? '32px') === '36px' ? 'selected' : '' ?>>36px</option>
+                                            <option value="40px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_desktop'] ?? '32px') === '40px' ? 'selected' : '' ?>>40px</option>
+                                            <option value="44px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_desktop'] ?? '32px') === '44px' ? 'selected' : '' ?>>44px</option>
+                                            <option value="48px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_desktop'] ?? '32px') === '48px' ? 'selected' : '' ?>>48px</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h2_desktop" class="form-label">H2 (Desktop):</label>
+                                        <select class="form-select" id="tamanho_h2_desktop" name="tamanho_h2_desktop">
+                                            <option value="28px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_desktop'] ?? '28px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                            <option value="30px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_desktop'] ?? '28px') === '30px' ? 'selected' : '' ?>>30px</option>
+                                            <option value="32px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_desktop'] ?? '28px') === '32px' ? 'selected' : '' ?>>32px</option>
+                                            <option value="36px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_desktop'] ?? '28px') === '36px' ? 'selected' : '' ?>>36px</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h3_desktop" class="form-label">H3 (Desktop):</label>
+                                        <select class="form-select" id="tamanho_h3_desktop" name="tamanho_h3_desktop">
+                                            <option value="24px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_desktop'] ?? '24px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                            <option value="26px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_desktop'] ?? '24px') === '26px' ? 'selected' : '' ?>>26px</option>
+                                            <option value="28px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_desktop'] ?? '24px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                            <option value="30px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_desktop'] ?? '24px') === '30px' ? 'selected' : '' ?>>30px</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h1_mobile" class="form-label">H1 (Mobile):</label>
+                                        <select class="form-select" id="tamanho_h1_mobile" name="tamanho_h1_mobile">
+                                            <option value="28px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_mobile'] ?? '28px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                            <option value="30px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_mobile'] ?? '28px') === '30px' ? 'selected' : '' ?>>30px</option>
+                                            <option value="32px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_mobile'] ?? '28px') === '32px' ? 'selected' : '' ?>>32px</option>
+                                            <option value="36px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h1_mobile'] ?? '28px') === '36px' ? 'selected' : '' ?>>36px</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h2_mobile" class="form-label">H2 (Mobile):</label>
+                                        <select class="form-select" id="tamanho_h2_mobile" name="tamanho_h2_mobile">
+                                            <option value="24px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_mobile'] ?? '24px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                            <option value="26px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_mobile'] ?? '24px') === '26px' ? 'selected' : '' ?>>26px</option>
+                                            <option value="28px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_mobile'] ?? '24px') === '28px' ? 'selected' : '' ?>>28px</option>
+                                            <option value="30px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h2_mobile'] ?? '24px') === '30px' ? 'selected' : '' ?>>30px</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="tamanho_h3_mobile" class="form-label">H3 (Mobile):</label>
+                                        <select class="form-select" id="tamanho_h3_mobile" name="tamanho_h3_mobile">
+                                            <option value="20px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_mobile'] ?? '20px') === '20px' ? 'selected' : '' ?>>20px</option>
+                                            <option value="22px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_mobile'] ?? '20px') === '22px' ? 'selected' : '' ?>>22px</option>
+                                            <option value="24px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_mobile'] ?? '20px') === '24px' ? 'selected' : '' ?>>24px</option>
+                                            <option value="26px" <?= ($configs['fontes']['titulo_conteudo']['tamanho_h3_mobile'] ?? '20px') === '26px' ? 'selected' : '' ?>>26px</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
