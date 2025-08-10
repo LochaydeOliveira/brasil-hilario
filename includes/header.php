@@ -108,7 +108,7 @@ try {
     <link rel="apple-touch-icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link rel="shortcut icon" href="<?php echo BLOG_URL; ?>/assets/img/icone-favi-brasil-hilario.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=05" rel="stylesheet">
     <link href="<?php echo BLOG_URL; ?>/assets/css/dynamic.css?v=01" rel="stylesheet">
@@ -161,6 +161,37 @@ try {
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo ADSENSE_CLIENT_ID; ?>" crossorigin="anonymous">
     </script>
+    
+    <script>
+    // Verificar se FontAwesome foi carregado corretamente
+    document.addEventListener('DOMContentLoaded', function() {
+        // Aguardar um pouco para o FontAwesome carregar
+        setTimeout(function() {
+            // Verificar se os ícones estão sendo exibidos corretamente
+            const testIcon = document.createElement('i');
+            testIcon.className = 'fa-solid fa-calendar';
+            testIcon.style.position = 'absolute';
+            testIcon.style.left = '-9999px';
+            document.body.appendChild(testIcon);
+            
+            // Se o ícone não for exibido corretamente, aplicar fallback
+            if (getComputedStyle(testIcon, ':before').content === 'none' || 
+                getComputedStyle(testIcon, ':before').content === 'normal') {
+                
+                // Carregar FontAwesome via JavaScript como fallback
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://use.fontawesome.com/releases/v6.5.1/css/all.css';
+                link.integrity = 'sha384-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==';
+                link.crossOrigin = 'anonymous';
+                link.referrerPolicy = 'no-referrer';
+                document.head.appendChild(link);
+            }
+            
+            document.body.removeChild(testIcon);
+        }, 1000);
+    });
+    </script>
 </head>
 
 <body>
@@ -168,18 +199,18 @@ try {
     <div id="cookie-banner" class="cookie-banner" style="display: none;">
         <div class="cookie-content">
             <div class="cookie-text">
-                <h5><i class="fas fa-cookie-bite me-2"></i>Política de Cookies</h5>
+                <h5><i class="fa-solid fa-cookie-bite me-2"></i>Política de Cookies</h5>
                 <p>Utilizamos cookies para melhorar sua experiência em nosso site, analisar o tráfego e personalizar conteúdo. Ao continuar navegando, você concorda com nossa <a href="<?php echo BLOG_URL; ?>/politica-de-privacidade" target="_blank">Política de Privacidade</a> e uso de cookies.</p>
             </div>
             <div class="cookie-buttons">
                 <button id="accept-cookies" class="btn btn-success btn-sm">
-                    <i class="fas fa-check me-1"></i>Aceitar Todos
+                    <i class="fa-solid fa-check me-1"></i>Aceitar Todos
                 </button>
                 <button id="reject-cookies" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-times me-1"></i>Recusar
+                    <i class="fa-solid fa-times me-1"></i>Recusar
                 </button>
                 <button id="customize-cookies" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-cog me-1"></i>Personalizar
+                    <i class="fa-solid fa-gear me-1"></i>Personalizar
                 </button>
             </div>
         </div>
@@ -191,7 +222,7 @@ try {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="cookieModalLabel">
-                        <i class="fas fa-cog me-2"></i>Configurações de Cookies
+                        <i class="fa-solid fa-gear me-2"></i>Configurações de Cookies
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
