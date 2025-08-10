@@ -1945,10 +1945,10 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 .search-result-title {
     font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 1.1rem;
-    line-height: 1.4;
-    margin-bottom: 0.75rem;
+    font-weight: 700!important;
+    font-size: 1.1rem!important;
+    line-height: 1.4!important;
+    margin-bottom: 0.75rem!important;
     color: var(--black-100-color);
     display: -webkit-box;
     -webkit-line-clamp: 2;

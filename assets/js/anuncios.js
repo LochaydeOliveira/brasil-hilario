@@ -1,20 +1,13 @@
-// Sistema de Anúncios Nativos - ULTRA-SIMPLES
-// Brasil Hilário
-
-// Função para registrar clique em anúncio
 function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
-    // Obter post-id da meta tag
+
     const postIdMeta = document.querySelector('meta[name="post-id"]');
     const postId = postIdMeta ? parseInt(postIdMeta.content) : 0;
-    
-    // Dados básicos
     const dados = {
         anuncio_id: parseInt(anuncioId),
         post_id: postId,
         tipo_clique: tipoClique
     };
     
-    // Fazer requisição simples
     fetch('/api/registrar-clique.php', {
         method: 'POST',
         headers: {
@@ -24,16 +17,15 @@ function registrarCliqueAnuncio(anuncioId, tipoClique = 'imagem') {
     })
     .then(response => response.json())
     .then(data => {
-        // Sempre mostrar sucesso para não quebrar a experiência
         console.log('✅ Clique processado');
     })
     .catch(error => {
-        // Ignorar erros silenciosamente
+
         console.log('✅ Clique processado');
     });
 }
 
-// Função para scroll do carrossel
+
 function scrollCarrossel(grupoId, direction) {
     const carrossel = document.querySelector(`[data-grupo-id="${grupoId}"] .anuncios-carrossel`);
     if (!carrossel) return;
@@ -48,5 +40,4 @@ function scrollCarrossel(grupoId, direction) {
 
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Sistema de anúncios carregado');
 }); 
