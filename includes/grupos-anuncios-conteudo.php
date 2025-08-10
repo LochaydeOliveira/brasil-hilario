@@ -6,8 +6,20 @@ try {
     $gruposManager = new GruposAnunciosManager($pdo);
     
     // Determinar se estamos na página inicial ou em um post específico
-    $isHomePage = !isset($post) || empty($post);
+    // Verificar se estamos na página inicial de forma mais robusta
+    $current_url = $_SERVER['REQUEST_URI'];
+    $isHomePage = (
+        $current_url === '/' || 
+        $current_url === '/index.php' || 
+        preg_match('/^\/\d+$/', $current_url) || // Páginas numeradas como /1, /2, etc.
+        (basename($_SERVER['PHP_SELF']) === 'index.php' && !isset($_GET['slug']))
+    );
     $postId = isset($post['id']) ? $post['id'] : null;
+    
+    // Debug temporário (remover depois)
+    if (isset($_GET['debug_anuncios'])) {
+        error_log("DEBUG ANÚNCIOS - isHomePage: " . ($isHomePage ? 'SIM' : 'NÃO') . ", postId: " . ($postId ?? 'NULL') . ", URL: " . $current_url);
+    }
     
     $gruposConteudo = $gruposManager->getGruposPorLocalizacao('conteudo', $postId, $isHomePage);
     
