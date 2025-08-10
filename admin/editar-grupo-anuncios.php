@@ -37,6 +37,13 @@ if (!$grupo) {
 $anunciosDoGrupo = $gruposManager->getAnunciosDoGrupo($grupoId);
 $anunciosIds = array_column($anunciosDoGrupo, 'anuncio_id');
 
+// Buscar posts do grupo
+$postsDoGrupo = $gruposManager->getPostsDoGrupo($grupoId);
+$postsIds = array_column($postsDoGrupo, 'id');
+
+// Buscar todos os posts disponíveis
+$todosPosts = $gruposManager->getAllPosts();
+
 // Buscar todos os anúncios para seleção
 $todosAnuncios = $anunciosManager->getAllAnunciosComStats();
 
@@ -47,11 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $layout = $_POST['layout'] ?? 'carrossel';
     $marca = $_POST['marca'] ?? '';
     $anuncios = $_POST['anuncios'] ?? [];
+    $postsEspecificos = isset($_POST['posts_especificos']);
+    $aparecerInicio = isset($_POST['aparecer_inicio']);
+    $posts = $_POST['posts'] ?? [];
     
     if (empty($nome)) {
         $erro = 'Nome do grupo é obrigatório.';
     } elseif (empty($anuncios)) {
         $erro = 'Selecione pelo menos um anúncio.';
+    } elseif ($postsEspecificos && empty($posts)) {
+        $erro = 'Se você selecionou "Posts específicos", deve escolher pelo menos um post.';
     } else {
         $dados = [
             'nome' => $nome,
@@ -63,11 +75,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         
         if ($gruposManager->atualizarGrupo($grupoId, $dados)) {
-            $sucesso = 'Grupo atualizado com sucesso!';
-            // Atualizar dados do grupo para exibir no formulário
-            $grupo = $gruposManager->getGrupo($grupoId);
-            $anunciosDoGrupo = $gruposManager->getAnunciosDoGrupo($grupoId);
-            $anunciosIds = array_column($anunciosDoGrupo, 'anuncio_id');
+            // Atualizar configurações de posts
+            if ($gruposManager->atualizarConfiguracoesPosts($grupoId, $postsEspecificos, $aparecerInicio, $posts)) {
+                $sucesso = 'Grupo atualizado com sucesso!';
+                // Atualizar dados do grupo para exibir no formulário
+                $grupo = $gruposManager->getGrupo($grupoId);
+                $anunciosDoGrupo = $gruposManager->getAnunciosDoGrupo($grupoId);
+                $anunciosIds = array_column($anunciosDoGrupo, 'anuncio_id');
+                $postsDoGrupo = $gruposManager->getPostsDoGrupo($grupoId);
+                $postsIds = array_column($postsDoGrupo, 'id');
+            } else {
+                $erro = 'Erro ao atualizar configurações de posts.';
+            }
         } else {
             $erro = 'Erro ao atualizar grupo.';
         }
@@ -203,6 +222,71 @@ include 'includes/header.php';
                             <?php endif; ?>
                         </div>
 
+                        <!-- Configuração de Posts Específicos -->
+                        <div class="mb-3">
+                            <label class="form-label">Configuração de Exibição</label>
+                            <div class="form-text mb-2">Defina onde este grupo de anúncios será exibido</div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="posts_especificos" name="posts_especificos"
+                                               <?php echo ($grupo['posts_especificos'] ?? false) ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="posts_especificos">
+                                            <strong>Posts específicos</strong>
+                                        </label>
+                                        <div class="form-text">Se marcado, o grupo aparecerá apenas nos posts selecionados</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="aparecer_inicio" name="aparecer_inicio"
+                                               <?php echo ($grupo['aparecer_inicio'] ?? true) ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="aparecer_inicio">
+                                            <strong>Aparecer na página inicial</strong>
+                                        </label>
+                                        <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Seleção de Posts (aparece apenas se "Posts específicos" estiver marcado) -->
+                            <div id="selecao_posts" class="mt-3" style="display: <?php echo ($grupo['posts_especificos'] ?? false) ? 'block' : 'none'; ?>;">
+                                <label class="form-label">Selecionar Posts *</label>
+                                <div class="form-text mb-2">Selecione os posts onde este grupo será exibido</div>
+                                
+                                <?php if (empty($todosPosts)): ?>
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Nenhum post encontrado.
+                                    </div>
+                                <?php else: ?>
+                                    <div class="row">
+                                        <?php foreach ($todosPosts as $post): ?>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" 
+                                                           name="posts[]" 
+                                                           value="<?php echo $post['id']; ?>" 
+                                                           id="post_<?php echo $post['id']; ?>"
+                                                           <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="post_<?php echo $post['id']; ?>">
+                                                        <strong><?php echo htmlspecialchars($post['titulo']); ?></strong>
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                                        </small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between">
                             <a href="grupos-anuncios.php" class="btn btn-outline-secondary">
                                 <i class="fas fa-times"></i> Cancelar
@@ -292,6 +376,39 @@ document.querySelectorAll('input[name="anuncios[]"]').forEach(function(checkbox)
             this.checked = false;
         }
     });
+});
+
+// Controlar exibição da seleção de posts
+document.getElementById('posts_especificos').addEventListener('change', function() {
+    const selecaoPosts = document.getElementById('selecao_posts');
+    const postsCheckboxes = document.querySelectorAll('input[name="posts[]"]');
+    
+    if (this.checked) {
+        selecaoPosts.style.display = 'block';
+        // Marcar todos os posts como obrigatórios
+        postsCheckboxes.forEach(function(checkbox) {
+            checkbox.required = true;
+        });
+    } else {
+        selecaoPosts.style.display = 'none';
+        // Desmarcar todos os posts e remover obrigatoriedade
+        postsCheckboxes.forEach(function(checkbox) {
+            checkbox.checked = false;
+            checkbox.required = false;
+        });
+    }
+});
+
+// Validação do formulário
+document.querySelector('form').addEventListener('submit', function(e) {
+    const postsEspecificos = document.getElementById('posts_especificos').checked;
+    const postsSelecionados = document.querySelectorAll('input[name="posts[]"]:checked');
+    
+    if (postsEspecificos && postsSelecionados.length === 0) {
+        e.preventDefault();
+        alert('Se você selecionou "Posts específicos", deve escolher pelo menos um post.');
+        return false;
+    }
 });
 </script>
 

@@ -10,17 +10,32 @@ class GruposAnunciosManager {
     /**
      * Buscar grupos de anúncios por localização
      */
-    public function getGruposPorLocalizacao($localizacao) {
+    public function getGruposPorLocalizacao($localizacao, $postId = null, $isHomePage = false) {
         $sql = "SELECT g.*, COUNT(gi.anuncio_id) as total_anuncios
                 FROM grupos_anuncios g 
                 LEFT JOIN grupos_anuncios_items gi ON g.id = gi.grupo_id
-                WHERE g.localizacao = ? AND g.ativo = 1
-                GROUP BY g.id 
-                ORDER BY g.criado_em DESC";
+                WHERE g.localizacao = ? AND g.ativo = 1";
+        
+        $params = [$localizacao];
+        
+        // Filtro para posts específicos
+        if ($postId !== null) {
+            $sql .= " AND (g.posts_especificos = 0 OR g.id IN (
+                SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
+            ))";
+            $params[] = $postId;
+        }
+        
+        // Filtro para página inicial
+        if ($isHomePage) {
+            $sql .= " AND g.aparecer_inicio = 1";
+        }
+        
+        $sql .= " GROUP BY g.id ORDER BY g.criado_em DESC";
         
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$localizacao]);
+            $stmt->execute($params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             error_log("Erro ao buscar grupos de anúncios: " . $e->getMessage());
@@ -52,7 +67,7 @@ class GruposAnunciosManager {
      * Criar novo grupo de anúncios
      */
     public function criarGrupo($dados) {
-        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca, posts_especificos, aparecer_inicio) VALUES (?, ?, ?, ?, ?, ?)";
         
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -60,7 +75,9 @@ class GruposAnunciosManager {
                 $dados['nome'],
                 $dados['localizacao'],
                 $dados['layout'] ?? 'carrossel',
-                $dados['marca'] ?? ''
+                $dados['marca'] ?? '',
+                $dados['posts_especificos'] ?? false,
+                $dados['aparecer_inicio'] ?? true
             ]);
             
             $grupoId = $this->pdo->lastInsertId();
@@ -195,6 +212,111 @@ class GruposAnunciosManager {
             return $stmt->execute([$id]);
         } catch (Exception $e) {
             error_log("Erro ao excluir grupo: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Buscar posts associados a um grupo
+     */
+    public function getPostsDoGrupo($grupoId) {
+        $sql = "SELECT p.id, p.titulo, p.slug 
+                FROM posts p 
+                JOIN grupos_anuncios_posts gap ON p.id = gap.post_id
+                WHERE gap.grupo_id = ? AND p.publicado = 1
+                ORDER BY p.titulo ASC";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$grupoId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar posts do grupo: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Buscar todos os posts disponíveis para seleção
+     */
+    public function getAllPosts() {
+        $sql = "SELECT id, titulo, slug, data_publicacao 
+                FROM posts 
+                WHERE publicado = 1 
+                ORDER BY titulo ASC";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar posts: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Associar posts a um grupo
+     */
+    public function associarPostsAoGrupo($grupoId, $postsIds) {
+        // Primeiro, remover todas as associações existentes
+        $this->removerPostsDoGrupo($grupoId);
+        
+        if (empty($postsIds)) {
+            return true;
+        }
+        
+        $sql = "INSERT INTO grupos_anuncios_posts (grupo_id, post_id) VALUES (?, ?)";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            foreach ($postsIds as $postId) {
+                $stmt->execute([$grupoId, $postId]);
+            }
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao associar posts ao grupo: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Remover todas as associações de posts de um grupo
+     */
+    public function removerPostsDoGrupo($grupoId) {
+        $sql = "DELETE FROM grupos_anuncios_posts WHERE grupo_id = ?";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$grupoId]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao remover posts do grupo: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Atualizar configurações de posts de um grupo
+     */
+    public function atualizarConfiguracoesPosts($grupoId, $postsEspecificos, $aparecerInicio, $postsIds = []) {
+        $sql = "UPDATE grupos_anuncios SET posts_especificos = ?, aparecer_inicio = ? WHERE id = ?";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$postsEspecificos, $aparecerInicio, $grupoId]);
+            
+            // Se posts específicos estiver ativo, associar os posts selecionados
+            if ($postsEspecificos && !empty($postsIds)) {
+                $this->associarPostsAoGrupo($grupoId, $postsIds);
+            } elseif ($postsEspecificos && empty($postsIds)) {
+                // Se posts específicos estiver ativo mas nenhum post selecionado, remover todas as associações
+                $this->removerPostsDoGrupo($grupoId);
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao atualizar configurações de posts: " . $e->getMessage());
             return false;
         }
     }

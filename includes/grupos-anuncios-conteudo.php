@@ -4,7 +4,12 @@ require_once __DIR__ . '/GruposAnunciosManager.php';
 
 try {
     $gruposManager = new GruposAnunciosManager($pdo);
-    $gruposConteudo = $gruposManager->getGruposPorLocalizacao('conteudo');
+    
+    // Determinar se estamos na página inicial ou em um post específico
+    $isHomePage = !isset($post) || empty($post);
+    $postId = isset($post['id']) ? $post['id'] : null;
+    
+    $gruposConteudo = $gruposManager->getGruposPorLocalizacao('conteudo', $postId, $isHomePage);
     
     if (!empty($gruposConteudo)) {
         foreach ($gruposConteudo as $grupo) {

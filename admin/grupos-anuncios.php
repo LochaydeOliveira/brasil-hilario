@@ -33,6 +33,18 @@ if (isset($_POST['excluir_grupo'])) {
 // Buscar grupos
 $grupos = $gruposManager->getAllGruposComStats();
 
+// Buscar informações de posts específicos para cada grupo
+foreach ($grupos as &$grupo) {
+    if ($grupo['posts_especificos']) {
+        $postsDoGrupo = $gruposManager->getPostsDoGrupo($grupo['id']);
+        $grupo['posts_info'] = count($postsDoGrupo) . ' post(s) específico(s)';
+        $grupo['posts_list'] = array_slice(array_column($postsDoGrupo, 'titulo'), 0, 3); // Primeiros 3 títulos
+    } else {
+        $grupo['posts_info'] = 'Todos os posts';
+        $grupo['posts_list'] = [];
+    }
+}
+
 include 'includes/header.php';
 ?>
 
@@ -71,6 +83,7 @@ include 'includes/header.php';
                                 <th>Layout</th>
                                 <th>Marca</th>
                                 <th>Anúncios</th>
+                                <th>Posts</th>
                                 <th>Status</th>
                                 <th>Criado em</th>
                                 <th>Ações</th>
@@ -105,6 +118,23 @@ include 'includes/header.php';
                                         <span class="badge bg-secondary">
                                             <?php echo $grupo['total_anuncios']; ?> anúncio(s)
                                         </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($grupo['posts_especificos']): ?>
+                                            <span class="badge bg-warning" title="<?php echo htmlspecialchars(implode(', ', $grupo['posts_list'])); ?>">
+                                                <?php echo $grupo['posts_info']; ?>
+                                            </span>
+                                            <?php if (!$grupo['aparecer_inicio']): ?>
+                                                <br><small class="text-muted">Não aparece na home</small>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span class="badge bg-success">
+                                                <?php echo $grupo['posts_info']; ?>
+                                            </span>
+                                            <?php if (!$grupo['aparecer_inicio']): ?>
+                                                <br><small class="text-muted">Não aparece na home</small>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <?php if ($grupo['ativo']): ?>
