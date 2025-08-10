@@ -112,7 +112,7 @@ $suggestions = get_search_suggestions($search_term);
                     <div class="list-group">
                         <?php foreach ($_SESSION['search_history'] as $history_term): ?>
                             <a href="?q=<?php echo urlencode($history_term); ?>" class="list-group-item list-group-item-action">
-                                <i class="fas fa-history me-2"></i>
+                                <i class="fa-solid fa-clock-rotate-left me-2"></i>
                                 <?php echo htmlspecialchars($history_term); ?>
                             </a>
                         <?php endforeach; ?>
@@ -124,47 +124,49 @@ $suggestions = get_search_suggestions($search_term);
     
     <?php if (empty($posts)): ?>
         <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>
+            <i class="fa-solid fa-circle-info me-2"></i>
             Nenhum resultado encontrado para sua busca. Tente outros termos.
         </div>
     <?php else: ?>
         <div class="row">
             <?php foreach ($posts as $post): ?>
                 <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card search-result-card h-100 shadow-sm">
                         <?php if (!empty($post['imagem_destacada'])): ?>
                             <img src="<?php echo BLOG_URL . '/uploads/images/' . $post['imagem_destacada']; ?>" 
-                                 class="card-img-top" 
+                                 class="card-img-top search-result-img" 
                                  alt="<?php echo htmlspecialchars($post['titulo']); ?>">
                         <?php endif; ?>
-                        <div class="card-body">
-                            <h5 class="card-title">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title search-result-title">
                                 <a href="<?php echo BLOG_URL . '/post/' . $post['slug']; ?>" class="text-decoration-none text-dark">
                                     <?php echo highlight_search_term(htmlspecialchars($post['titulo']), $search_term); ?>
                                 </a>
                             </h5>
-                            <p class="card-text">
+                            <p class="card-text search-result-excerpt flex-grow-1">
                                 <?php 
                                 $excerpt = !empty($post['resumo']) ? $post['resumo'] : generate_excerpt($post['conteudo']);
                                 echo highlight_search_term(htmlspecialchars($excerpt), $search_term); 
                                 ?>
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">
-                                    <i class="far fa-calendar-alt me-1"></i>
-                                    <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                                </small>
-                                <span class="badge bg-primary">
-                                    <i class="fas fa-folder me-1"></i>
-                                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
-                                </span>
+                            <div class="search-result-meta mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">
+                                        <i class="fa-regular fa-calendar me-1"></i>
+                                        <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                    </small>
+                                    <span class="badge bg-primary">
+                                        <i class="fa-solid fa-folder me-1"></i>
+                                        <?php echo htmlspecialchars($post['categoria_nome']); ?>
+                                    </span>
+                                </div>
+                                <?php if (!empty($post['autor_nome'])): ?>
+                                    <small class="text-muted d-block">
+                                        <i class="fa-solid fa-user me-1"></i>
+                                        Por: <?php echo htmlspecialchars($post['autor_nome']); ?>
+                                    </small>
+                                <?php endif; ?>
                             </div>
-                            <?php if (!empty($post['autor_nome'])): ?>
-                                <small class="text-muted mt-2 d-block">
-                                    <i class="fas fa-user me-1"></i>
-                                    Por: <?php echo htmlspecialchars($post['autor_nome']); ?>
-                                </small>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -1924,3 +1924,113 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     }
 }
 
+/* Cards de Resultados de Busca */
+.search-result-card {
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.search-result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--primary-color);
+}
+
+.search-result-img {
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.search-result-title {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    color: var(--black-100-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.search-result-title a {
+    color: var(--black-100-color) !important;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.search-result-title a:hover {
+    color: var(--primary-color) !important;
+}
+
+.search-result-excerpt {
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #666;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.search-result-meta {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 0.75rem;
+    margin-top: auto;
+}
+
+.search-result-meta small {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.search-result-meta .badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Destaque para termos de busca */
+.search-result-card mark {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.2rem;
+    font-weight: 600;
+}
+
+/* Responsividade para cards de busca */
+@media (max-width: 768px) {
+    .search-result-title {
+        font-size: 1rem;
+        -webkit-line-clamp: 2;
+    }
+    
+    .search-result-excerpt {
+        font-size: 0.85rem;
+        -webkit-line-clamp: 2;
+    }
+    
+    .search-result-img {
+        height: 150px;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-result-card {
+        margin-bottom: 1rem;
+    }
+    
+    .search-result-title {
+        font-size: 0.95rem;
+    }
+    
+    .search-result-excerpt {
+        font-size: 0.8rem;
+    }
+}
+
