@@ -2032,7 +2032,7 @@ body .container .row .col-lg-4 .search-result-card .search-result-title a {
 
 body .container .row .col-md-6 .search-result-card .search-result-title a:hover,
 body .container .row .col-lg-4 .search-result-card .search-result-title a:hover {
-    color: var(--primary-color) !important;
+    color: #0b8103 !important;
 }
 
 body .container .row .col-md-6 .search-result-card .search-result-excerpt,
