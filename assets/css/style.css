@@ -1935,7 +1935,6 @@ body .container .row .col-lg-4 .search-result-card * {
 /* Forçar estilos específicos para títulos dos cards de busca */
 body .container .row .col-md-6 .search-result-card .search-result-title,
 body .container .row .col-lg-4 .search-result-card .search-result-title {
-    font-family: var(--font-primary) !important;
     font-weight: 700 !important;
     font-size: 1.1rem !important;
     line-height: 1.4 !important;
@@ -1950,7 +1949,6 @@ body .container .row .col-lg-4 .search-result-card .search-result-title {
 /* Forçar estilos específicos para parágrafos dos cards de busca */
 body .container .row .col-md-6 .search-result-card .search-result-excerpt,
 body .container .row .col-lg-4 .search-result-card .search-result-excerpt {
-    font-family: var(--font-secondary) !important;
     font-size: 0.9rem !important;
     line-height: 1.5 !important;
     color: #666 !important;
@@ -1971,9 +1969,7 @@ body .container .row .col-lg-4 .search-result-card {
 
 body .container .row .col-md-6 .search-result-card:hover,
 body .container .row .col-lg-4 .search-result-card:hover {
-    transform: translateY(-3px) !important;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-    border-color: var(--primary-color) !important;
 }
 
 body .container .row .col-md-6 .search-result-card .search-result-img,
@@ -1985,7 +1981,6 @@ body .container .row .col-lg-4 .search-result-card .search-result-img {
 
 body .container .row .col-md-6 .search-result-card .search-result-title,
 body .container .row .col-lg-4 .search-result-card .search-result-title {
-    font-family: var(--font-primary) !important;
     font-weight: 700 !important;
     font-size: 1.1rem !important;
     line-height: 1.4 !important;
