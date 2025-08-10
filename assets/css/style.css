@@ -1924,113 +1924,167 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     }
 }
 
-/* Cards de Resultados de Busca */
-.search-result-card {
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-    background: #fff;
+/* Sobrescrever CSS dinâmico para cards de busca */
+body .container .row .col-md-6 .search-result-card *,
+body .container .row .col-lg-4 .search-result-card * {
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
 }
 
-.search-result-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-    border-color: var(--primary-color);
-}
-
-.search-result-img {
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.search-result-title {
-    font-family: var(--font-primary);
-    font-weight: 700!important;
-    font-size: 1.1rem!important;
-    line-height: 1.4!important;
-    margin-bottom: 0.75rem!important;
-    color: var(--black-100-color);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.search-result-title a {
+/* Forçar estilos específicos para títulos dos cards de busca */
+body .container .row .col-md-6 .search-result-card .search-result-title,
+body .container .row .col-lg-4 .search-result-card .search-result-title {
+    font-family: var(--font-primary) !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.75rem !important;
     color: var(--black-100-color) !important;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
 }
 
-.search-result-title a:hover {
+/* Forçar estilos específicos para parágrafos dos cards de busca */
+body .container .row .col-md-6 .search-result-card .search-result-excerpt,
+body .container .row .col-lg-4 .search-result-card .search-result-excerpt {
+    font-family: var(--font-secondary) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    color: #666 !important;
+    margin-bottom: 1rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+/* Cards de Resultados de Busca - Especificidade Máxima */
+body .container .row .col-md-6 .search-result-card,
+body .container .row .col-lg-4 .search-result-card {
+    border: 1px solid #e9ecef !important;
+    transition: all 0.3s ease !important;
+    background: #fff !important;
+}
+
+body .container .row .col-md-6 .search-result-card:hover,
+body .container .row .col-lg-4 .search-result-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--primary-color) !important;
+}
+
+body .container .row .col-md-6 .search-result-card .search-result-img,
+body .container .row .col-lg-4 .search-result-card .search-result-img {
+    height: 200px !important;
+    object-fit: cover !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+body .container .row .col-md-6 .search-result-card .search-result-title,
+body .container .row .col-lg-4 .search-result-card .search-result-title {
+    font-family: var(--font-primary) !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--black-100-color) !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+body .container .row .col-md-6 .search-result-card .search-result-title a,
+body .container .row .col-lg-4 .search-result-card .search-result-title a {
+    color: var(--black-100-color) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+body .container .row .col-md-6 .search-result-card .search-result-title a:hover,
+body .container .row .col-lg-4 .search-result-card .search-result-title a:hover {
     color: var(--primary-color) !important;
 }
 
-.search-result-excerpt {
-    font-family: var(--font-secondary);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #666;
-    margin-bottom: 1rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+body .container .row .col-md-6 .search-result-card .search-result-excerpt,
+body .container .row .col-lg-4 .search-result-card .search-result-excerpt {
+    font-family: var(--font-secondary) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    color: #666 !important;
+    margin-bottom: 1rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
 }
 
-.search-result-meta {
-    border-top: 1px solid #f0f0f0;
-    padding-top: 0.75rem;
-    margin-top: auto;
+body .container .row .col-md-6 .search-result-card .search-result-meta,
+body .container .row .col-lg-4 .search-result-card .search-result-meta {
+    border-top: 1px solid #f0f0f0 !important;
+    padding-top: 0.75rem !important;
+    margin-top: auto !important;
 }
 
-.search-result-meta small {
-    font-size: 0.8rem;
-    font-weight: 500;
+body .container .row .col-md-6 .search-result-card .search-result-meta small,
+body .container .row .col-lg-4 .search-result-card .search-result-meta small {
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
 }
 
-.search-result-meta .badge {
-    font-size: 0.75rem;
-    font-weight: 600;
+body .container .row .col-md-6 .search-result-card .search-result-meta .badge,
+body .container .row .col-lg-4 .search-result-card .search-result-meta .badge {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
 }
 
 /* Destaque para termos de busca */
-.search-result-card mark {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 0.1rem 0.2rem;
-    border-radius: 0.2rem;
-    font-weight: 600;
+body .container .row .col-md-6 .search-result-card mark,
+body .container .row .col-lg-4 .search-result-card mark {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    padding: 0.1rem 0.2rem !important;
+    border-radius: 0.2rem !important;
+    font-weight: 600 !important;
 }
 
 /* Responsividade para cards de busca */
 @media (max-width: 768px) {
-    .search-result-title {
-        font-size: 1rem;
-        -webkit-line-clamp: 2;
+    body .container .row .col-md-6 .search-result-card .search-result-title,
+    body .container .row .col-lg-4 .search-result-card .search-result-title {
+        font-size: 1rem !important;
+        -webkit-line-clamp: 2 !important;
     }
     
-    .search-result-excerpt {
-        font-size: 0.85rem;
-        -webkit-line-clamp: 2;
+    body .container .row .col-md-6 .search-result-card .search-result-excerpt,
+    body .container .row .col-lg-4 .search-result-card .search-result-excerpt {
+        font-size: 0.85rem !important;
+        -webkit-line-clamp: 2 !important;
     }
     
-    .search-result-img {
-        height: 150px;
+    body .container .row .col-md-6 .search-result-card .search-result-img,
+    body .container .row .col-lg-4 .search-result-card .search-result-img {
+        height: 150px !important;
     }
 }
 
 @media (max-width: 576px) {
-    .search-result-card {
-        margin-bottom: 1rem;
+    body .container .row .col-md-6 .search-result-card,
+    body .container .row .col-lg-4 .search-result-card {
+        margin-bottom: 1rem !important;
     }
     
-    .search-result-title {
-        font-size: 0.95rem;
+    body .container .row .col-md-6 .search-result-card .search-result-title,
+    body .container .row .col-lg-4 .search-result-card .search-result-title {
+        font-size: 0.95rem !important;
     }
     
-    .search-result-excerpt {
-        font-size: 0.8rem;
+    body .container .row .col-md-6 .search-result-card .search-result-excerpt,
+    body .container .row .col-lg-4 .search-result-card .search-result-excerpt {
+        font-size: 0.8rem !important;
     }
 }
 
