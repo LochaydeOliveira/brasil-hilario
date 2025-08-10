@@ -263,25 +263,55 @@ include 'includes/header.php';
                                         Nenhum post encontrado.
                                     </div>
                                 <?php else: ?>
-                                    <div class="row">
-                                        <?php foreach ($todosPosts as $post): ?>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" 
-                                                           name="posts[]" 
-                                                           value="<?php echo $post['id']; ?>" 
-                                                           id="post_<?php echo $post['id']; ?>"
-                                                           <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="post_<?php echo $post['id']; ?>">
-                                                        <strong><?php echo htmlspecialchars($post['titulo']); ?></strong>
-                                                        <br>
-                                                        <small class="text-muted">
-                                                            <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                                                        </small>
-                                                    </label>
+                                    <!-- Barra de busca -->
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="busca_posts" 
+                                               placeholder="Digite para buscar posts..." 
+                                               onkeyup="filtrarPosts()">
+                                    </div>
+                                    
+                                    <!-- Controles rápidos -->
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="selecionarTodosPosts()">
+                                            <i class="fas fa-check-double"></i> Selecionar Todos
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="limparSelecaoPosts()">
+                                            <i class="fas fa-times"></i> Limpar Seleção
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-info" onclick="selecionarRecentes()">
+                                            <i class="fas fa-clock"></i> Últimos 10 Posts
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Lista de posts com scroll -->
+                                    <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                                        <div class="row" id="lista_posts">
+                                            <?php foreach ($todosPosts as $post): ?>
+                                                <div class="col-md-6 mb-2 post-item" data-titulo="<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" 
+                                                               name="posts[]" 
+                                                               value="<?php echo $post['id']; ?>" 
+                                                               id="post_<?php echo $post['id']; ?>"
+                                                               <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="post_<?php echo $post['id']; ?>">
+                                                            <strong><?php echo htmlspecialchars($post['titulo']); ?></strong>
+                                                            <br>
+                                                            <small class="text-muted">
+                                                                <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                                            </small>
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        <?php endforeach; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Contador -->
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <span id="contador_posts">0</span> de <?php echo count($todosPosts); ?> posts selecionados
+                                        </small>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -389,6 +419,8 @@ document.getElementById('posts_especificos').addEventListener('change', function
         postsCheckboxes.forEach(function(checkbox) {
             checkbox.required = true;
         });
+        // Atualizar contador
+        setTimeout(atualizarContador, 100);
     } else {
         selecaoPosts.style.display = 'none';
         // Desmarcar todos os posts e remover obrigatoriedade
@@ -396,7 +428,20 @@ document.getElementById('posts_especificos').addEventListener('change', function
             checkbox.checked = false;
             checkbox.required = false;
         });
+        atualizarContador();
     }
+});
+
+// Atualizar contador quando checkboxes mudarem
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'posts[]') {
+        atualizarContador();
+    }
+});
+
+// Inicializar contador
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(atualizarContador, 100);
 });
 
 // Validação do formulário
@@ -410,6 +455,59 @@ document.querySelector('form').addEventListener('submit', function(e) {
         return false;
     }
 });
+
+// Funções para seleção de posts
+function filtrarPosts() {
+    const busca = document.getElementById('busca_posts').value.toLowerCase();
+    const posts = document.querySelectorAll('#lista_posts .post-item');
+    posts.forEach(function(post) {
+        const titulo = post.getAttribute('data-titulo');
+        if (titulo.includes(busca)) {
+            post.style.display = 'block';
+        } else {
+            post.style.display = 'none';
+        }
+    });
+}
+
+function selecionarTodosPosts() {
+    const postsCheckboxes = document.querySelectorAll('input[name="posts[]"]');
+    postsCheckboxes.forEach(function(checkbox) {
+        checkbox.checked = true;
+    });
+    atualizarContador();
+}
+
+function limparSelecaoPosts() {
+    const postsCheckboxes = document.querySelectorAll('input[name="posts[]"]');
+    postsCheckboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+    });
+    atualizarContador();
+}
+
+function selecionarRecentes() {
+    const posts = document.querySelectorAll('#lista_posts .post-item');
+    const recentes = Array.from(posts).sort((a, b) => {
+        const dataA = new Date(a.getAttribute('data-data_publicacao'));
+        const dataB = new Date(b.getAttribute('data-data_publicacao'));
+        return dataB - dataA; // Ordena de mais recente para mais antigo
+    });
+
+    // Limpar seleção anterior
+    limparSelecaoPosts();
+
+    // Selecionar os 10 mais recentes
+    for (let i = 0; i < Math.min(10, recentes.length); i++) {
+        recentes[i].querySelector('input[type="checkbox"]').checked = true;
+    }
+    atualizarContador();
+}
+
+function atualizarContador() {
+    const postsSelecionados = document.querySelectorAll('input[name="posts[]"]:checked');
+    document.getElementById('contador_posts').textContent = postsSelecionados.length;
+}
 </script>
 
 <?php include 'includes/footer.php'; ?> 

@@ -320,5 +320,72 @@ class GruposAnunciosManager {
             return false;
         }
     }
+    
+    /**
+     * Debug: Verificar configurações de um grupo
+     */
+    public function debugGrupo($grupoId) {
+        $sql = "SELECT g.*, 
+                       COUNT(gap.post_id) as total_posts_especificos,
+                       GROUP_CONCAT(p.titulo SEPARATOR ', ') as posts_titulos
+                FROM grupos_anuncios g 
+                LEFT JOIN grupos_anuncios_posts gap ON g.id = gap.grupo_id
+                LEFT JOIN posts p ON gap.post_id = p.id
+                WHERE g.id = ?
+                GROUP BY g.id";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$grupoId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao debug grupo: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Debug: Verificar se um grupo deve aparecer em um post específico
+     */
+    public function debugGrupoParaPost($grupoId, $postId, $isHomePage = false) {
+        $grupo = $this->getGrupo($grupoId);
+        if (!$grupo) return false;
+        
+        $result = [
+            'grupo_id' => $grupoId,
+            'post_id' => $postId,
+            'is_home_page' => $isHomePage,
+            'posts_especificos' => $grupo['posts_especificos'],
+            'aparecer_inicio' => $grupo['aparecer_inicio'],
+            'deve_aparecer' => false,
+            'motivo' => ''
+        ];
+        
+        // Se é página inicial e não deve aparecer na inicial
+        if ($isHomePage && !$grupo['aparecer_inicio']) {
+            $result['motivo'] = 'Não aparece na página inicial';
+            return $result;
+        }
+        
+        // Se não é posts específicos, aparece em todos
+        if (!$grupo['posts_especificos']) {
+            $result['deve_aparecer'] = true;
+            $result['motivo'] = 'Aparece em todos os posts';
+            return $result;
+        }
+        
+        // Se é posts específicos, verificar se está na lista
+        $postsDoGrupo = $this->getPostsDoGrupo($grupoId);
+        $postsIds = array_column($postsDoGrupo, 'id');
+        
+        if (in_array($postId, $postsIds)) {
+            $result['deve_aparecer'] = true;
+            $result['motivo'] = 'Post está na lista de posts específicos';
+        } else {
+            $result['motivo'] = 'Post não está na lista de posts específicos';
+        }
+        
+        return $result;
+    }
 }
 ?> 

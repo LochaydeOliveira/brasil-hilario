@@ -50,9 +50,14 @@ include 'includes/header.php';
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0">Grupos de Anúncios</h1>
-    <a href="novo-grupo-anuncios.php" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Novo Grupo
-    </a>
+    <div>
+        <a href="debug-grupos.php" class="btn btn-outline-info me-2">
+            <i class="fas fa-bug"></i> Debug
+        </a>
+        <a href="novo-grupo-anuncios.php" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Novo Grupo
+        </a>
+    </div>
 </div>
 
     <?php if (isset($mensagem)): ?>
