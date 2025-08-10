@@ -122,36 +122,51 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
         
         // Estilo para o título da seção (desktop)
         if (isset($config['fonte'])) {
-            $title_style .= "font-family: {$config['fonte']}; ";
+            $title_style .= "font-family: {$config['fonte']} !important; ";
         }
         if (isset($config['peso_titulo'])) {
-            $title_style .= "font-weight: {$config['peso_titulo']}; ";
+            $title_style .= "font-weight: {$config['peso_titulo']} !important; ";
         }
         if (isset($config['tamanho_titulo_desktop'])) {
-            $title_style .= "font-size: {$config['tamanho_titulo_desktop']}; ";
+            $title_style .= "font-size: {$config['tamanho_titulo_desktop']} !important; ";
         }
         
         // Estilo para o texto dos posts (desktop)
         if (isset($config['fonte'])) {
-            $text_style .= "font-family: {$config['fonte']}; ";
+            $text_style .= "font-family: {$config['fonte']} !important; ";
         }
         if (isset($config['peso_texto'])) {
-            $text_style .= "font-weight: {$config['peso_texto']}; ";
+            $text_style .= "font-weight: {$config['peso_texto']} !important; ";
         }
         if (isset($config['tamanho_texto_desktop'])) {
-            $text_style .= "font-size: {$config['tamanho_texto_desktop']}; ";
+            $text_style .= "font-size: {$config['tamanho_texto_desktop']} !important; ";
         }
         
-        // Gerar CSS responsivo para mobile
-        if (isset($config['tamanho_titulo_mobile']) || isset($config['tamanho_texto_mobile'])) {
+        // Gerar CSS responsivo para mobile com maior especificidade
+        if (isset($config['tamanho_titulo_mobile']) || isset($config['tamanho_texto_mobile']) || isset($config['fonte']) || isset($config['peso_titulo']) || isset($config['peso_texto'])) {
             $mobile_css = '<style>';
             $mobile_css .= '@media (max-width: 768px) {';
             
+            // Aplicar fonte e peso do título no mobile
+            if (isset($config['fonte'])) {
+                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-family: {$config['fonte']} !important; }";
+            }
+            if (isset($config['peso_titulo'])) {
+                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-weight: {$config['peso_titulo']} !important; }";
+            }
             if (isset($config['tamanho_titulo_mobile'])) {
-                $mobile_css .= ".related-posts-title { font-size: {$config['tamanho_titulo_mobile']} !important; }";
+                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-size: {$config['tamanho_titulo_mobile']} !important; }";
+            }
+            
+            // Aplicar fonte e peso do texto no mobile
+            if (isset($config['fonte'])) {
+                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-family: {$config['fonte']} !important; }";
+            }
+            if (isset($config['peso_texto'])) {
+                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-weight: {$config['peso_texto']} !important; }";
             }
             if (isset($config['tamanho_texto_mobile'])) {
-                $mobile_css .= ".related-post-title { font-size: {$config['tamanho_texto_mobile']} !important; }";
+                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-size: {$config['tamanho_texto_mobile']} !important; }";
             }
             
             $mobile_css .= '}';
