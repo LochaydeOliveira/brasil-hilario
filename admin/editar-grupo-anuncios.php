@@ -415,18 +415,14 @@ document.getElementById('posts_especificos').addEventListener('change', function
     
     if (this.checked) {
         selecaoPosts.style.display = 'block';
-        // Marcar todos os posts como obrigatórios
-        postsCheckboxes.forEach(function(checkbox) {
-            checkbox.required = true;
-        });
+        // NÃO marcar como required - usar apenas validação customizada
         // Atualizar contador
         setTimeout(atualizarContador, 100);
     } else {
         selecaoPosts.style.display = 'none';
-        // Desmarcar todos os posts e remover obrigatoriedade
+        // Desmarcar todos os posts
         postsCheckboxes.forEach(function(checkbox) {
             checkbox.checked = false;
-            checkbox.required = false;
         });
         atualizarContador();
     }
@@ -453,6 +449,16 @@ document.querySelector('form').addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Se você selecionou "Posts específicos", deve escolher pelo menos um post.');
         return false;
+    }
+    
+    // Se posts específicos está marcado e há posts selecionados, permitir envio
+    if (postsEspecificos && postsSelecionados.length > 0) {
+        return true;
+    }
+    
+    // Se posts específicos não está marcado, permitir envio
+    if (!postsEspecificos) {
+        return true;
     }
 });
 
