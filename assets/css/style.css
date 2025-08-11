@@ -716,10 +716,9 @@ footer {
 
 .badge {
     border-radius: 0px!important;
-    background: #fcbd07 !important;
-    color: #000000 !important;
+    background: #f5f5f5 !important;
+    color: #838383 !important;
     text-transform: uppercase!important;
-    font-size: 10px;
 }
 
 .header-pg-ctt {
