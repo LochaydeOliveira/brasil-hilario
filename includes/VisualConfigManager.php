@@ -325,6 +325,15 @@ class VisualConfigManager {
         $usarFonteGeral = $this->usarFonteGeral();
         $personalizarFontes = $this->personalizarFontes();
         
+        // Definir variáveis CSS para fontes principais
+        $fontePrimaria = $this->getFonte('site', 'fonte_primaria', '"Merriweather", serif');
+        $fonteSecundaria = $this->getFonte('site', 'fonte_secundaria', '"Inter", sans-serif');
+        
+        $css .= ":root {\n";
+        $css .= "  --font-primary: {$fontePrimaria};\n";
+        $css .= "  --font-secondary: {$fonteSecundaria};\n";
+        $css .= "}\n\n";
+        
         if ($usarFonteGeral && !$personalizarFontes) {
             // Modo: Fonte Geral
             $fonteGeral = $this->getFonteGeral();
@@ -464,6 +473,25 @@ class VisualConfigManager {
                 
                 $css .= "@media (max-width: 768px) {\n";
                 $css .= "  .text-muted, .meta-text, small {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Anúncios
+            if (isset($configs['fontes']['anuncios']['fonte'])) {
+                $peso = $this->getPesoFonte('anuncios', '600');
+                $tamanhoDesktop = $this->getTamanhoFonte('anuncios', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('anuncios', 'mobile', '12px');
+                
+                $css .= ".anuncio-titulo-sidebar, .anuncio-titulo-conteudo, .anuncio-titulo-grade, .anuncio-titulo-carrossel {\n";
+                $css .= "  font-family: {$configs['fontes']['anuncios']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .anuncio-titulo-sidebar, .anuncio-titulo-conteudo, .anuncio-titulo-grade, .anuncio-titulo-carrossel {\n";
                 $css .= "    font-size: {$tamanhoMobile};\n";
                 $css .= "  }\n";
                 $css .= "}\n\n";

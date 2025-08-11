@@ -32,7 +32,7 @@ footer a {
 }
 
 body {
-  font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-secondary);
 }
 
 h3 {
@@ -40,12 +40,12 @@ h3 {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-primary);
   color: var(--cor_secundaria)!important;
 }
 
 p, div {
-  font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-secondary);
 }
 
 .titulo {
