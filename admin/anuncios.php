@@ -11,10 +11,8 @@ require_once 'includes/auth.php';
 
 $anunciosManager = new AnunciosManager($pdo);
 
-// Buscar top anúncios
 $topAnuncios = $anunciosManager->getTopAnuncios(5);
 
-// Buscar todos os anúncios com stats
 $todosAnuncios = $anunciosManager->getAllAnunciosComStats();
 
 $page_title = 'Anúncios';
@@ -37,7 +35,6 @@ include 'includes/header.php';
                 </div>
             <?php endif; ?>
             
-            <!-- Dashboard - Top 5 Anúncios -->
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="fas fa-chart-line"></i> Top 5 Anúncios Mais Clicados</h5>
@@ -112,7 +109,7 @@ include 'includes/header.php';
                 </div>
             </div>
             
-            <!-- Estatísticas Gerais -->
+ 
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="card bg-primary text-white">
@@ -191,7 +188,6 @@ include 'includes/header.php';
                 </div>
             </div>
             
-            <!-- Listagem Rápida -->
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="fas fa-list"></i> Todos os Anúncios</h5>

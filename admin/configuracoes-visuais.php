@@ -13,17 +13,13 @@ $visualConfig = new VisualConfigManager($pdo);
 $mensagem = '';
 $tipo_mensagem = 'success';
 
-// Processar formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     try {
         $salvas = 0;
         $debug_info = [];
         
-        // Processar todas as configurações de cores
         foreach ($_POST as $chave => $valor) {
             if (strpos($chave, 'cor_') === 0 && !empty($valor)) {
-                // Extrair elemento e propriedade do nome do campo
-                // Exemplo: cor_header_link -> elemento: header, propriedade: cor_link
                 $partes = explode('_', $chave, 3);
                 if (count($partes) >= 3) {
                     $elemento = $partes[1];
@@ -40,11 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar todas as configurações de fontes
         foreach ($_POST as $chave => $valor) {
             if (strpos($chave, 'fonte_') === 0 && !empty($valor)) {
-                // Exemplo: fonte_site -> elemento: site, propriedade: fonte
-                $elemento = substr($chave, 6); // Remove 'fonte_'
+
+                $elemento = substr($chave, 6);
                 
                 $resultado = $visualConfig->setFonte($elemento, 'fonte', $valor);
                 if ($resultado) {
@@ -56,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar fonte geral
+
         if (isset($_POST['fonte_geral']) && !empty($_POST['fonte_geral'])) {
             $resultado = $visualConfig->setFonteGeral($_POST['fonte_geral']);
             if ($resultado) {
@@ -67,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar personalização de fontes
+
         if (isset($_POST['personalizar_fontes'])) {
             $resultado = $visualConfig->setPersonalizarFontes(true);
             if ($resultado) {
@@ -86,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar pesos de fonte
+
         foreach ($_POST as $chave => $valor) {
             if (strpos($chave, 'peso_') === 0 && !empty($valor)) {
-                $elemento = substr($chave, 5); // Remove 'peso_'
+                $elemento = substr($chave, 5);
                 
                 $resultado = $visualConfig->setPesoFonte($elemento, $valor);
                 if ($resultado) {
@@ -101,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar tamanhos responsivos
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'tamanho_') === 0) {
                 $parts = explode('_', $key);
@@ -113,8 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             }
         }
         
-        // Processar configurações das seções específicas do blog
-        // Seção "Leia Também"
+
         if (isset($_POST['fonte_leia_tambem'])) {
             $visualConfig->setFonteSecao('leia_tambem', $_POST['fonte_leia_tambem']);
         }
@@ -137,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $visualConfig->setTamanhoSecao('leia_tambem', 'texto', 'mobile', $_POST['tamanho_texto_leia_tambem_mobile']);
         }
         
-        // Seção "Últimas do Portal"
+
         if (isset($_POST['fonte_ultimas_portal'])) {
             $visualConfig->setFonteSecao('ultimas_portal', $_POST['fonte_ultimas_portal']);
         }
@@ -160,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $visualConfig->setTamanhoSecao('ultimas_portal', 'texto', 'mobile', $_POST['tamanho_texto_ultimas_portal_mobile']);
         }
         
-        // Processar configurações de títulos de conteúdo
+
         if (isset($_POST['fonte_titulo_conteudo'])) {
             $visualConfig->setFonte('titulo_conteudo', 'fonte', $_POST['fonte_titulo_conteudo']);
         }
@@ -186,16 +179,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $visualConfig->setTamanhoFonte('titulo_conteudo_h3', 'mobile', $_POST['tamanho_h3_mobile']);
         }
         
-        // Gerar CSS dinâmico
-        // $css_salvo = $visualConfig->saveCSS(); // DESABILITADO PARA EVITAR SOBRESCRITA
+
         
         $mensagem = "Configurações visuais salvas com sucesso! ({$salvas} configurações atualizadas)";
-        // if (!$css_salvo) {
-        //     $mensagem .= " ⚠️ CSS não foi atualizado";
-        // }
+
         $tipo_mensagem = 'success';
         
-        // Debug temporário (remover depois)
         if (!empty($debug_info)) {
             $mensagem .= "\n\nDebug:\n" . implode("\n", $debug_info);
         }
@@ -206,18 +195,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-// Obter configurações atuais
 $configs = $visualConfig->getAllConfigs();
 
-// Aplicar configurações padrão de fontes se não existirem
 if (empty($configs['fontes']['site'])) {
     $visualConfig->setFonte('site', 'fonte', 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif');
     $visualConfig->setFonte('titulo', 'fonte', 'Merriweather, serif');
     $visualConfig->setFonte('paragrafo', 'fonte', 'Inter, sans-serif');
-    $configs = $visualConfig->getAllConfigs(); // Recarregar configurações
+    $configs = $visualConfig->getAllConfigs();
     
-    // Forçar regeneração do CSS
-    // $visualConfig->saveCSS(); // DESABILITADO PARA EVITAR SOBRESCRITA
 }
 
 $page_title = 'Configurações Visuais';
@@ -225,7 +210,7 @@ include 'includes/header.php';
 ?>
 
     <style>
-        /* CSS copiado da página de configurações que funciona */
+
         .nav-tabs .nav-link {
             color: #495057!important;
             border: none;
@@ -305,7 +290,6 @@ include 'includes/header.php';
                 </div>
             <?php endif; ?>
             
-            <!-- Abas de Configurações -->
             <ul class="nav nav-tabs mb-4" id="visualTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="cores-tab" data-bs-toggle="tab" data-bs-target="#cores" type="button" role="tab">
@@ -332,7 +316,7 @@ include 'includes/header.php';
             <form method="POST">
                 <input type="hidden" name="submit" value="1">
                 
-                <!-- Aba de Cores -->
+
                 <div class="tab-content" id="visualTabsContent">
                     <div class="tab-pane fade show active" id="cores" role="tabpanel">
                         <div class="row">
@@ -448,7 +432,6 @@ include 'includes/header.php';
                         </div>
                     </div>
                     
-                    <!-- Aba de Fontes -->
                     <div class="tab-pane fade" id="fontes" role="tabpanel">
                         <div class="row">
                             <div class="col-md-12 mb-4">
@@ -476,7 +459,6 @@ include 'includes/header.php';
                                             </div>
                                         </div>
 
-                                        <!-- Checkbox para Personalizar Fontes -->
                                         <div class="mb-4">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="personalizar_fontes" id="personalizar_fontes" value="1" 
@@ -490,7 +472,7 @@ include 'includes/header.php';
                                             </div>
                                         </div>
 
-                                        <!-- Seção de Fontes Personalizadas (aparece quando checkbox está marcado) -->
+                                        
                                         <div id="fontes_personalizadas" style="display: none;">
                                             <hr>
                                             <h6>Fontes Personalizadas por Elemento</h6>
@@ -584,7 +566,6 @@ include 'includes/header.php';
                                 </div>
                             </div>
                             
-                            <!-- Seção de Peso das Fontes -->
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
@@ -633,7 +614,6 @@ include 'includes/header.php';
                                 </div>
                             </div>
                             
-                            <!-- Seção de Tamanhos Responsivos -->
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
@@ -687,14 +667,14 @@ include 'includes/header.php';
                         </div>
                     </div>
                     
-                    <!-- Seções Específicas do Blog -->
+
                     <div class="tab-pane fade" id="blog-specific" role="tabpanel">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5 class="mb-0"><i class="fas fa-cog"></i> Configuração de Fontes para Seções Específicas do Blog</h5>
                             </div>
                             <div class="card-body">
-                                <!-- Seção Leia Também -->
+ 
                                 <div class="mb-4">
                                     <h6>Seção "Leia Também"</h6>
                                     <div class="row">
@@ -892,7 +872,6 @@ include 'includes/header.php';
                             </div>
                         </div>
                         
-                        <!-- Configurações para Títulos de Conteúdo -->
                         <div class="card mt-4">
                             <div class="card-header">
                                 <h5 class="mb-0">
@@ -989,7 +968,6 @@ include 'includes/header.php';
                         </div>
                     </div>
                     
-                    <!-- Aba de Preview -->
                     <div class="tab-pane fade" id="preview" role="tabpanel">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i> 
@@ -1052,42 +1030,34 @@ include 'includes/header.php';
 
 
 <script>
-// Atualizar preview em tempo real
 document.querySelectorAll('input[type="color"], select').forEach(input => {
     input.addEventListener('change', function() {
-        // Aqui você pode adicionar JavaScript para atualizar o preview em tempo real
         console.log('Configuração alterada:', this.name, this.value);
     });
 });
 
-// Atalho de teclado CTRL+S para salvar
 document.addEventListener('keydown', function(e) {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault(); // Previne o comportamento padrão do navegador
+        e.preventDefault();
         
-        // Mostrar feedback visual
         const submitBtn = document.querySelector('button[type="submit"]');
         if (submitBtn) {
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
             submitBtn.disabled = true;
             
-            // Simular clique no botão
             submitBtn.click();
             
-            // Restaurar botão após 2 segundos
             setTimeout(() => {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             }, 2000);
         }
         
-        // Mostrar notificação
         showNotification('Salvando configurações...', 'info');
     }
 });
 
-// Função para mostrar notificações
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
@@ -1099,7 +1069,6 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
-    // Remover automaticamente após 3 segundos
     setTimeout(() => {
         if (notification.parentNode) {
             notification.remove();
@@ -1107,14 +1076,13 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Mostrar dica sobre o atalho
+
 document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.querySelector('button[type="submit"]');
     if (submitBtn) {
         submitBtn.title = 'Pressione CTRL+S para salvar rapidamente';
     }
     
-    // Mostrar dica inicial
     setTimeout(() => {
         showNotification('💡 Dica: Use CTRL+S para salvar rapidamente!', 'info');
     }, 1000);
@@ -1123,7 +1091,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Controle do checkbox de personalizar fontes
+
     const personalizarCheckbox = document.getElementById('personalizar_fontes');
     const fontesPersonalizadas = document.getElementById('fontes_personalizadas');
     const fonteGeral = document.getElementById('fonte_geral');
@@ -1138,13 +1106,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Executar na carga da página
+
     toggleFontesPersonalizadas();
     
-    // Adicionar listener para mudanças no checkbox
     personalizarCheckbox.addEventListener('change', toggleFontesPersonalizadas);
     
-    // Preview em tempo real das configurações
     const previewElements = document.querySelectorAll('[data-preview]');
     previewElements.forEach(element => {
         element.addEventListener('change', function() {

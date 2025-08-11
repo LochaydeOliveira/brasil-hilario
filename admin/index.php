@@ -5,10 +5,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../config/config.php';
-require_once '../includes/db.php'; // aqui o $pdo deve estar disponível
+require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
-// Buscar estatísticas
 $total_posts = 0;
 $posts_publicados = 0;
 $total_usuarios = 0;
@@ -16,19 +15,16 @@ $posts_recentes = [];
 $error = null;
 
 try {
-    // Total de posts
+
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts");
     $total_posts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Posts publicados
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM posts WHERE publicado = 1");
     $posts_publicados = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Total de usuários
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM usuarios");
     $total_usuarios = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // Posts recentes
     $stmt = $pdo->query("
         SELECT p.id, p.titulo, p.data_publicacao, p.publicado, p.visualizacoes, u.nome as autor 
         FROM posts p 
@@ -57,7 +53,6 @@ include 'includes/header.php';
 <?php endif; ?>
             
             <div class="row">
-                <!-- Cards de Estatísticas -->
                 <div class="col-md-4 mb-4">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
