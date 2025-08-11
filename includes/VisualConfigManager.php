@@ -326,7 +326,7 @@ class VisualConfigManager {
         $personalizarFontes = $this->personalizarFontes();
         
         // Definir variáveis CSS para fontes principais
-        $fontePrimaria = $this->getFonte('site', 'fonte_primaria', '"Merriweather", serif');
+        $fontePrimaria = $this->getFonte('site', 'fonte_primaria', '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif');
         $fonteSecundaria = $this->getFonte('site', 'fonte_secundaria', '"Inter", sans-serif');
         
         $css .= ":root {\n";
