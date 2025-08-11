@@ -78,6 +78,7 @@ if (!isset($_SESSION['usuario_id'])) {
         .col-md-9.ms-sm-auto.col-lg-10.px-md-4 {
             padding-left: 2rem !important;
             padding-right: 2rem !important;
+            padding-bottom: 4rem !important;
         }
         
         /* Garantir que o conteúdo preencha toda a largura */
