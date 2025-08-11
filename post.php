@@ -103,102 +103,73 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
     if (empty($posts)) {
         return '';
     }
-
-    // Determinar qual seção estamos construindo para aplicar as configurações corretas
-    $section_type = '';
-    if (stripos($title, 'Leia Também') !== false) {
-        $section_type = 'leia_tambem';
-    } elseif (stripos($title, 'Últimas do Portal') !== false) {
-        $section_type = 'ultimas_portal';
-    }
-
-    // Buscar configurações específicas da seção
-    $title_style = '';
-    $text_style = '';
-    $mobile_css = '';
     
-    if ($section_type && isset($font_configs[$section_type])) {
-        $config = $font_configs[$section_type];
-        
-        // Estilo para o título da seção (desktop)
-        if (isset($config['fonte'])) {
-            $title_style .= "font-family: {$config['fonte']} !important; ";
-        }
-        if (isset($config['peso_titulo'])) {
-            $title_style .= "font-weight: {$config['peso_titulo']} !important; ";
-        }
-        if (isset($config['tamanho_titulo_desktop'])) {
-            $title_style .= "font-size: {$config['tamanho_titulo_desktop']} !important; ";
-        }
-        
-        // Estilo para o texto dos posts (desktop)
-        if (isset($config['fonte'])) {
-            $text_style .= "font-family: {$config['fonte']} !important; ";
-        }
-        if (isset($config['peso_texto'])) {
-            $text_style .= "font-weight: {$config['peso_texto']} !important; ";
-        }
-        if (isset($config['tamanho_texto_desktop'])) {
-            $text_style .= "font-size: {$config['tamanho_texto_desktop']} !important; ";
-        }
-        
-        // Gerar CSS responsivo para mobile com maior especificidade
-        if (isset($config['tamanho_titulo_mobile']) || isset($config['tamanho_texto_mobile']) || isset($config['fonte']) || isset($config['peso_titulo']) || isset($config['peso_texto'])) {
-            $mobile_css = '<style>';
-            $mobile_css .= '@media (max-width: 768px) {';
-            
-            // Aplicar fonte e peso do título no mobile
-            if (isset($config['fonte'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-family: {$config['fonte']} !important; }";
-            }
-            if (isset($config['peso_titulo'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-weight: {$config['peso_titulo']} !important; }";
-            }
-            if (isset($config['tamanho_titulo_mobile'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-posts-title { font-size: {$config['tamanho_titulo_mobile']} !important; }";
-            }
-            
-            // Aplicar fonte e peso do texto no mobile
-            if (isset($config['fonte'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-family: {$config['fonte']} !important; }";
-            }
-            if (isset($config['peso_texto'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-weight: {$config['peso_texto']} !important; }";
-            }
-            if (isset($config['tamanho_texto_mobile'])) {
-                $mobile_css .= "body .post-content .related-posts-block .related-post-title { font-size: {$config['tamanho_texto_mobile']} !important; }";
-            }
-            
-            $mobile_css .= '}';
-            $mobile_css .= '</style>';
-        }
+    $section_html = '';
+    
+    // Determinar o tipo de seção para aplicar as classes corretas
+    $section_type = '';
+    if (strpos($title, 'Leia Também') !== false) {
+        $section_type = 'leia_tambem';
+        $section_class = 'related-posts-block';
+        $title_class = 'related-posts-title';
+        $post_title_class = 'related-post-title';
+        $post_meta_class = 'related-post-meta';
+    } elseif (strpos($title, 'Últimas') !== false) {
+        $section_type = 'ultimas_portal';
+        $section_class = 'latest-posts-block';
+        $title_class = 'latest-posts-title';
+        $post_title_class = 'latest-post-title';
+        $post_meta_class = 'latest-post-meta';
+    } else {
+        // Seção genérica
+        $section_type = 'generic';
+        $section_class = 'posts-section';
+        $title_class = 'section-title';
+        $post_title_class = 'post-title';
+        $post_meta_class = 'post-meta';
     }
-
-    $section_html = $mobile_css; // CSS responsivo primeiro
-    $section_html .= '<section class="related-posts-block my-5">';
-    $section_html .= '<h4 class="related-posts-title" style="' . $title_style . '">' . htmlspecialchars($title) . '</h4>';
+    
+    $section_html .= '<section class="' . $section_class . ' my-5">';
+    $section_html .= '<div class="container">';
     $section_html .= '<div class="row">';
-
-    foreach ($posts as $p) {
-        $post_url = BLOG_URL . '/post/' . htmlspecialchars($p['slug']);
-        $image_path = !empty($p['imagem_destacada']) ? BLOG_URL . '/uploads/images/' . htmlspecialchars($p['imagem_destacada']) : BLOG_URL . '/assets/img/logo-brasil-hilario-para-og.png';
-
-        $section_html .= '<div class="col-lg-3 col-md-6 mb-4">';
-        $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
-        $section_html .= '<div class="card h-100 related-post-card">';
-        $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
-        $section_html .= '<div class="pad-01 d-flex flex-column ">';
-        $section_html .= '<h6 class="card-title related-post-title mt-auto" style="' . $text_style . '">' . htmlspecialchars($p['titulo']) . '</h6>';
-        $section_html .= '<div><span class="badge mb-2">' . htmlspecialchars($p['categoria_nome']) . '</span></div>';
-        $section_html .= '</div>';
-        $section_html .= '</div>';
+    $section_html .= '<div class="col-12">';
+    $section_html .= '<h2 class="' . $title_class . ' mb-4">' . htmlspecialchars($title) . '</h2>';
+    $section_html .= '<div class="row">';
+    
+    foreach ($posts as $post) {
+        $section_html .= '<div class="col-md-6 col-lg-3 mb-4">';
+        $section_html .= '<div class="card h-100">';
+        
+        if (!empty($post['imagem_destacada'])) {
+            $section_html .= '<img src="uploads/images/' . htmlspecialchars($post['imagem_destacada']) . '" class="card-img-top" alt="' . htmlspecialchars($post['titulo']) . '">';
+        }
+        
+        $section_html .= '<div class="card-body">';
+        $section_html .= '<h5 class="' . $post_title_class . '">';
+        $section_html .= '<a href="post/' . htmlspecialchars($post['slug']) . '" class="text-decoration-none">';
+        $section_html .= htmlspecialchars($post['titulo']);
         $section_html .= '</a>';
-        $section_html .= '</div>';
+        $section_html .= '</h5>';
+        
+        // Adicionar tag da categoria para seções específicas
+        if ($section_type === 'ultimas_portal' && !empty($post['categoria_nome'])) {
+            $section_html .= '<span class="category-tag badge">' . htmlspecialchars($post['categoria_nome']) . '</span>';
+        }
+        
+        $section_html .= '<p class="' . $post_meta_class . ' text-muted small">';
+        $section_html .= '<i class="fas fa-folder me-1"></i>' . htmlspecialchars($post['categoria_nome']);
+        $section_html .= '</p>';
+        $section_html .= '</div>'; // card-body
+        $section_html .= '</div>'; // card
+        $section_html .= '</div>'; // col
     }
-
-    $section_html .= '</div>';
+    
+    $section_html .= '</div>'; // row
+    $section_html .= '</div>'; // col-12
+    $section_html .= '</div>'; // row
+    $section_html .= '</div>'; // container
     $section_html .= '</section>';
-
+    
     return $section_html;
 }
 

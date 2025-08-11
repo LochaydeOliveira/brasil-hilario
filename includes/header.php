@@ -279,11 +279,12 @@ try {
         </div>
     </div>
 
-    <header class="bg-light shadow-sm">
+    <header class="header bg-light shadow-sm">
         <nav class="navbar navbar-expand-lg navbar-light ht-custom">
             <div class="container bg-nav-custom">
                 <a class="navbar-brand d-flex align-items-center" href="<?php echo BLOG_URL; ?>">
                     <img src="<?php echo BLOG_URL; ?>/assets/img/logo-brasil-hilario-quadrada-svg.svg" alt="<?php echo BLOG_TITLE; ?>" class="logo-img me-2">
+                    <span class="site-logo"><?php echo BLOG_TITLE; ?></span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Alternar navegação">
                     <span class="navbar-toggler-icon"></span>
@@ -312,8 +313,8 @@ try {
         </nav>
     </header>
 
-    <nav class="category-navbar">
-        <button class="arrow left" aria-label="Categorias anteriores">
+    <nav class="category-navbar navbar">
+        <button class="arrow left nav-arrow" aria-label="Categorias anteriores">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="25" height="25" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             </svg>
@@ -322,14 +323,14 @@ try {
             <ul class="nav">
                 <?php foreach ($categories as $category): ?>
                     <li class="nav-item">
-                        <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                        <a class="category-nav-link nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
                             <?php echo htmlspecialchars($category['nome']); ?>
                         </a>
                     </li>
                 <?php endforeach; ?>
             </ul>
         </div>
-        <button class="arrow right" aria-label="Próximas categorias">
+        <button class="arrow right nav-arrow" aria-label="Próximas categorias">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  width="25" height="25" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>

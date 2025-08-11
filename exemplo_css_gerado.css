@@ -1,0 +1,501 @@
+/* =====================================================
+   CSS GERADO DINAMICAMENTE - SISTEMA COMPLETO
+   Brasil Hilário - Configurações Visuais
+   ===================================================== */
+
+:root {
+  /* Cores principais do site */
+  --cor_primaria: #0b8103;
+  --cor_secundaria: #000000;
+  --cor_sucesso: #28a745;
+  --cor_perigo: #dc3545;
+  --cor_aviso: #ffc107;
+  --cor_info: #17a2b8;
+}
+
+/* =====================================================
+   HEADER - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .header {
+  background-color: #f8f9f4 !important;
+}
+
+body .site-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #333333 !important;
+}
+
+body .site-logo {
+  font-family: "Merriweather", serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #0b8103 !important;
+}
+
+@media (max-width: 768px) {
+  body .site-title {
+    font-size: 24px !important;
+  }
+  
+  body .site-logo {
+    font-size: 20px !important;
+  }
+}
+
+/* =====================================================
+   NAVBAR - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .navbar {
+  background-color: #ffffff !important;
+}
+
+body .navbar .nav-link {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #5c5c5c !important;
+}
+
+body .navbar .nav-link:hover {
+  color: #0b8103 !important;
+}
+
+body .navbar .nav-arrow {
+  color: #0b8103 !important;
+  font-size: 16px !important;
+}
+
+@media (max-width: 768px) {
+  body .navbar .nav-link {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   MAIN - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .post-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .post-content p {
+  font-family: "Inter", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+}
+
+body .post-meta {
+  font-family: "Inter", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #6c757d !important;
+}
+
+@media (max-width: 768px) {
+  body .post-title {
+    font-size: 24px !important;
+  }
+  
+  body .post-content p {
+    font-size: 14px !important;
+  }
+  
+  body .post-meta {
+    font-size: 10px !important;
+  }
+}
+
+/* =====================================================
+   SIDEBAR - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .sidebar {
+  background-color: #f8f9fa !important;
+}
+
+body .sidebar .widget-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .sidebar .card-title {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
+}
+
+body .sidebar a {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0b8103 !important;
+}
+
+body .sidebar a:hover {
+  color: #0a6b02 !important;
+}
+
+@media (max-width: 768px) {
+  body .sidebar .widget-title {
+    font-size: 16px !important;
+  }
+  
+  body .sidebar .card-title {
+    font-size: 12px !important;
+  }
+  
+  body .sidebar a {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   LEIA TAMBÉM - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .related-posts-block {
+  background-color: #ffffff !important;
+}
+
+body .related-posts-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .related-post-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
+}
+
+body .related-post-meta {
+  font-family: "Inter", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #6c757d !important;
+}
+
+@media (max-width: 768px) {
+  body .related-posts-title {
+    font-size: 20px !important;
+  }
+  
+  body .related-post-title {
+    font-size: 14px !important;
+  }
+  
+  body .related-post-meta {
+    font-size: 10px !important;
+  }
+}
+
+/* =====================================================
+   ÚLTIMAS DO PORTAL - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .latest-posts-block {
+  background-color: #ffffff !important;
+}
+
+body .latest-posts-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .latest-post-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
+}
+
+body .category-tag {
+  background-color: #0b8103 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  border-radius: 15px !important;
+}
+
+@media (max-width: 768px) {
+  body .latest-posts-title {
+    font-size: 20px !important;
+  }
+  
+  body .latest-post-title {
+    font-size: 14px !important;
+  }
+  
+  body .category-tag {
+    font-size: 8px !important;
+  }
+}
+
+/* =====================================================
+   FOOTER - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .footer {
+  background-color: #f8f9fa !important;
+}
+
+body .footer .section-title {
+  font-family: "Inter", sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .footer .footer-text {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #6c757d !important;
+}
+
+body .footer a {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #0b8103 !important;
+}
+
+body .footer a:hover {
+  color: #0a6b02 !important;
+}
+
+@media (max-width: 768px) {
+  body .footer .section-title {
+    font-size: 16px !important;
+  }
+  
+  body .footer .footer-text {
+    font-size: 12px !important;
+  }
+  
+  body .footer a {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CARDS - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .card {
+  background-color: #ffffff !important;
+  border-color: #dee2e6 !important;
+}
+
+body .card .card-title {
+  font-family: "Merriweather", serif !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+body .card .card-text {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+}
+
+@media (max-width: 768px) {
+  body .card .card-title {
+    font-size: 18px !important;
+  }
+  
+  body .card .card-text {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   BOTÕES - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .btn-primary {
+  background-color: #0b8103 !important;
+  color: #ffffff !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+body .btn-secondary {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+  body .btn-primary,
+  body .btn-secondary {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   BADGES - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .badge-category {
+  background-color: #0b8103 !important;
+  color: #ffffff !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  border-radius: 15px !important;
+}
+
+body .badge-highlight {
+  background-color: #ffc107 !important;
+  color: #000000 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  border-radius: 15px !important;
+}
+
+@media (max-width: 768px) {
+  body .badge-category,
+  body .badge-highlight {
+    font-size: 8px !important;
+  }
+}
+
+/* =====================================================
+   PAGINAÇÃO - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .pagination {
+  background-color: #ffffff !important;
+}
+
+body .pagination .page-link {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #007bff !important;
+}
+
+body .pagination .page-link:hover {
+  color: #0056b3 !important;
+}
+
+body .pagination .page-item.active .page-link {
+  background-color: #007bff !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+  body .pagination .page-link {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   FORMULÁRIOS - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .form-control {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+  border-color: #ced4da !important;
+}
+
+body .form-control:focus {
+  border-color: #0b8103 !important;
+}
+
+body .form-label {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #495057 !important;
+}
+
+@media (max-width: 768px) {
+  body .form-control,
+  body .form-label {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   ANÚNCIOS - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+body .ad-container {
+  background-color: #f8f9fa !important;
+}
+
+body .ad-title {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
+}
+
+body .ad-sponsored-badge {
+  background-color: #ff6b35 !important;
+  color: #ffffff !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+}
+
+@media (max-width: 768px) {
+  body .ad-title {
+    font-size: 12px !important;
+  }
+  
+  body .ad-sponsored-badge {
+    font-size: 8px !important;
+  }
+}
+
+/* =====================================================
+   RESPONSIVIDADE - CONFIGURAÇÕES COMPLETAS
+   ===================================================== */
+@media (max-width: 768px) {
+  body .container,
+  body .container-fluid {
+    padding: 15px !important;
+  }
+  
+  body .row {
+    margin: 10px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  body .container,
+  body .container-fluid {
+    padding: 30px !important;
+  }
+  
+  body .row {
+    margin: 20px !important;
+  }
+}
+
+/* =====================================================
+   PRIORIDADE MÁXIMA - !important EM TODOS OS ELEMENTOS
+   ===================================================== */
+
+/* Este CSS tem prioridade máxima sobre todos os outros estilos */
+/* Todas as configurações são aplicadas com !important */
+/* O prefixo 'body' garante especificidade máxima */
+/* Responsividade completa para mobile e desktop */ 

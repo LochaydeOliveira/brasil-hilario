@@ -23,7 +23,7 @@ try {
          (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <footer class="bg-white py-5 mt-5">
+    <footer class="footer bg-white py-5 mt-5">
         <div class="container pd-cst-ftr">
             <div class="row">
                 <div class="col-md-3 mb-4">
@@ -54,7 +54,7 @@ try {
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" aria-expanded="false" aria-controls="institucionalMenu">
+                    <button class="footer-title section-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#institucionalMenu" aria-expanded="false" aria-controls="institucionalMenu">
                         INSTITUCIONAL
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </button>
@@ -67,7 +67,7 @@ try {
                     </ul>
                 </div>
                 <div class="col-md-3 mb-4">
-                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" aria-expanded="false" aria-controls="categoriasMenu">
+                    <button class="footer-title section-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMenu" aria-expanded="false" aria-controls="categoriasMenu">
                         CATEGORIAS
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </button>
@@ -79,7 +79,7 @@ try {
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <button class="footer-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" aria-expanded="false" aria-controls="usuariosMenu">
+                    <button class="footer-title section-title btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-decoration-none text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosMenu" aria-expanded="false" aria-controls="usuariosMenu">
                         USUÁRIOS
                         <i class="fas fa-chevron-down d-md-none"></i>
                     </button>
@@ -93,7 +93,7 @@ try {
             <hr class="my-4">
             <div class="row align-items-center">
                 <div class="col-md-9 text-md-start text-center mb-3 mb-md-0">
-                    <p class="mb-0 footer-copyright-text">&copy; <?php echo date('Y'); ?> <?php echo BLOG_TITLE; ?>. Todos os direitos reservados.</p>
+                    <p class="mb-0 footer-copyright-text footer-text">&copy; <?php echo date('Y'); ?> <?php echo BLOG_TITLE; ?>. Todos os direitos reservados.</p>
                 </div>
                 <div class="col-md-3 text-md-end text-center">
 
