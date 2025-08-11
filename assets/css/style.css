@@ -1956,12 +1956,26 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 .fa-solid.fa-times::before { content: "\f00d"; }
 .fa-solid.fa-gear::before { content: "\f013"; }
 
-/* Sobrescrever CSS dinâmico para cards de busca */
-body .container .row .col-md-6 .search-result-card *,
-body .container .row .col-lg-4 .search-result-card * {
+/* Sobrescrever CSS dinâmico para cards de busca - EXCLUINDO ÍCONES */
+body .container .row .col-md-6 .search-result-card *:not(i),
+body .container .row .col-lg-4 .search-result-card *:not(i) {
     font-family: inherit !important;
     font-weight: inherit !important;
     font-size: inherit !important;
+}
+
+/* Proteger especificamente os ícones FontAwesome */
+body .container .row .col-md-6 .search-result-card i,
+body .container .row .col-lg-4 .search-result-card i {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-size: inherit !important;
+}
+
+/* Proteger ícones específicos */
+body .container .row .col-md-6 .search-result-card .far,
+body .container .row .col-lg-4 .search-result-card .far {
+    font-weight: 400 !important;
 }
 
 /* Forçar estilos específicos para títulos dos cards de busca */
