@@ -258,7 +258,7 @@ class VisualConfigManager {
         // =====================================================
         // VARIÁVEIS CSS ROOT
         // =====================================================
-        $css .= ":root {\n";
+            $css .= ":root {\n";
         $css .= "  /* Cores principais do site */\n";
         $css .= "  --cor_primaria: #0b8103;\n";
         $css .= "  --cor_secundaria: #000000;\n";
@@ -313,14 +313,14 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoLogoDesktop} !important;\n";
         $css .= "  font-weight: {$pesoLogo} !important;\n";
         $css .= "  color: {$corLogo} !important;\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .site-logo {\n";
         $css .= "    font-size: {$tamanhoLogoMobile} !important;\n";
         $css .= "  }\n";
-        $css .= "}\n\n";
-        
+            $css .= "}\n\n";
+            
         // =====================================================
         // NAVBAR - CONFIGURAÇÕES COMPLETAS
         // =====================================================
@@ -332,8 +332,8 @@ class VisualConfigManager {
         $corNavbarBg = $this->getConfigValue('navbar', 'navbar', 'cor_background', '#ffffff');
         $css .= "body .navbar {\n";
         $css .= "  background-color: {$corNavbarBg} !important;\n";
-        $css .= "}\n\n";
-        
+            $css .= "}\n\n";
+            
         // Links da navbar
         $fonteLinks = $this->getConfigValue('navbar', 'navbar', 'fonte_links', '"Inter", sans-serif');
         $tamanhoLinksDesktop = $this->getConfigValue('navbar', 'navbar', 'tamanho_links_desktop', '14px');
@@ -347,17 +347,17 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoLinksDesktop} !important;\n";
         $css .= "  font-weight: {$pesoLinks} !important;\n";
         $css .= "  color: {$corLinks} !important;\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         $css .= "body .navbar .nav-link:hover {\n";
         $css .= "  color: {$corLinksHover} !important;\n";
-        $css .= "}\n\n";
-        
+            $css .= "}\n\n";
+            
         $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .navbar .nav-link {\n";
         $css .= "    font-size: {$tamanhoLinksMobile} !important;\n";
         $css .= "  }\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         // =====================================================
         // MAIN - CONFIGURAÇÕES COMPLETAS
@@ -378,14 +378,14 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTitulosDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTitulosPosts} !important;\n";
         $css .= "  color: {$corTitulosPosts} !important;\n";
-        $css .= "}\n\n";
-        
+            $css .= "}\n\n";
+            
         $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .post-title {\n";
         $css .= "    font-size: {$tamanhoTitulosMobile} !important;\n";
         $css .= "  }\n";
-        $css .= "}\n\n";
-        
+            $css .= "}\n\n";
+            
         // Parágrafos dos posts
         $fonteParagrafos = $this->getConfigValue('main', 'paragrafos_posts', 'fonte', '"Inter", sans-serif');
         $tamanhoParagrafosDesktop = $this->getConfigValue('main', 'paragrafos_posts', 'tamanho_desktop', '16px');
@@ -398,13 +398,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoParagrafosDesktop} !important;\n";
         $css .= "  font-weight: {$pesoParagrafos} !important;\n";
         $css .= "  color: {$corParagrafos} !important;\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .post-content p {\n";
         $css .= "    font-size: {$tamanhoParagrafosMobile} !important;\n";
         $css .= "  }\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         // =====================================================
         // SIDEBAR - CONFIGURAÇÕES COMPLETAS
@@ -417,7 +417,7 @@ class VisualConfigManager {
         $corSidebarBg = $this->getConfigValue('sidebar', 'sidebar', 'cor_background', '#f8f9fa');
         $css .= "body .sidebar {\n";
         $css .= "  background-color: {$corSidebarBg} !important;\n";
-        $css .= "}\n\n";
+            $css .= "}\n\n";
         
         // Títulos das seções da sidebar
         $fonteTitulosSecoes = $this->getConfigValue('sidebar', 'titulos_secoes', 'fonte', '"Merriweather", serif');
@@ -431,13 +431,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTitulosSecoesDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTitulosSecoes} !important;\n";
         $css .= "  color: {$corTitulosSecoes} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .sidebar .widget-title {\n";
         $css .= "    font-size: {$tamanhoTitulosSecoesMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // =====================================================
         // LEIA TAMBÉM - CONFIGURAÇÕES COMPLETAS
@@ -464,13 +464,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTituloLeiaTambemDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTituloLeiaTambem} !important;\n";
         $css .= "  color: {$corTituloLeiaTambem} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .related-posts-title {\n";
         $css .= "    font-size: {$tamanhoTituloLeiaTambemMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // Títulos dos posts relacionados
         $fonteTitulosPostsLeia = $this->getConfigValue('leia_tambem', 'titulos_posts', 'fonte', '"Merriweather", serif');
@@ -484,13 +484,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTitulosPostsLeiaDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTitulosPostsLeia} !important;\n";
         $css .= "  color: {$corTitulosPostsLeia} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .related-post-title {\n";
         $css .= "    font-size: {$tamanhoTitulosPostsLeiaMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // =====================================================
         // ÚLTIMAS DO PORTAL - CONFIGURAÇÕES COMPLETAS
@@ -517,13 +517,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTituloUltimasPortalDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTituloUltimasPortal} !important;\n";
         $css .= "  color: {$corTituloUltimasPortal} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .latest-posts-title {\n";
         $css .= "    font-size: {$tamanhoTituloUltimasPortalMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // Tag da categoria
         $corTagCategoriaBg = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'cor_background', '#0b8103');
@@ -541,13 +541,13 @@ class VisualConfigManager {
         $css .= "  font-weight: {$pesoTagCategoria} !important;\n";
         $css .= "  color: {$corTagCategoriaTexto} !important;\n";
         $css .= "  border-radius: {$bordaTagCategoria} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .category-tag {\n";
         $css .= "    font-size: {$tamanhoTagCategoriaMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // =====================================================
         // FOOTER - CONFIGURAÇÕES COMPLETAS
@@ -574,13 +574,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTitulosFooterDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTitulosFooter} !important;\n";
         $css .= "  color: {$corTitulosFooter} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .footer .section-title {\n";
         $css .= "    font-size: {$tamanhoTitulosFooterMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // =====================================================
         // CARDS - CONFIGURAÇÕES COMPLETAS
@@ -609,13 +609,13 @@ class VisualConfigManager {
         $css .= "  font-size: {$tamanhoTitulosCardsDesktop} !important;\n";
         $css .= "  font-weight: {$pesoTitulosCards} !important;\n";
         $css .= "  color: {$corTitulosCards} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
         $css .= "  body .card .card-title {\n";
         $css .= "    font-size: {$tamanhoTitulosCardsMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
         
         // =====================================================
         // BOTÕES - CONFIGURAÇÕES COMPLETAS
@@ -741,10 +741,10 @@ class VisualConfigManager {
     }
     
     public function saveCSS($filepath = null) {
-        if (!$filepath) {
-            $filepath = __DIR__ . '/../assets/css/dynamic.css';
-        }
-        
+            if (!$filepath) {
+                $filepath = __DIR__ . '/../assets/css/dynamic.css';
+            }
+            
         $css = $this->generateCSS();
         
         try {

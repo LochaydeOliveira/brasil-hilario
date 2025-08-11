@@ -5,8 +5,10 @@ require_once '../includes/VisualConfigManager.php';
 // Verificar se é uma requisição POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Usar a conexão $pdo já estabelecida em database.php
+        if (!isset($pdo)) {
+            throw new Exception("Conexão com banco de dados não disponível");
+        }
         
         // Ler e executar o arquivo SQL
         $sqlFile = '../sql/sistema_configuracoes_visuais_completo.sql';
@@ -64,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $messageType = 'danger';
         }
         
-    } catch (PDOException $e) {
-        $message = "❌ <strong>Erro de conexão:</strong> " . htmlspecialchars($e->getMessage());
+    } catch (Exception $e) {
+        $message = "❌ <strong>Erro:</strong> " . htmlspecialchars($e->getMessage());
         $messageType = 'danger';
     }
 }
