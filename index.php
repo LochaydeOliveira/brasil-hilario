@@ -79,7 +79,7 @@ include 'includes/header.php';
                 foreach ($posts as $post): 
                     $post_count++;
                 ?>
-                    <article class="blog-post card mb-4" data-aos="fade-up">
+                    <article class="blog-post mb-4" data-aos="fade-up">
                         <?php if (!empty($post['imagem_destacada'])): ?>
                             <div class="post-image mb-3">
                                 <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>">
@@ -90,48 +90,39 @@ include 'includes/header.php';
                             </div>
                         <?php endif; ?>
 
-                        <div class="card-body">
-                            <h2 class="post-title display-6 fw-bold mb-3">
-                                <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="text-decoration-none text-dark">
-                                    <?php echo htmlspecialchars($post['titulo']); ?>
-                                </a>
-                            </h2>
-                            
-                            <div class="post-meta mb-2">
-                                <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>
-                                    <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
-                                    <i class="fas fa-folder ms-3 me-1"></i>
-                                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-decoration-none">
-                                        <?php echo htmlspecialchars($post['categoria_nome']); ?>
-                                    </a>
-                                </small>
-                            </div>
-                            
-                            <?php if (!empty($post['resumo'])): ?>
-                                <p class="post-content lead">
-                                    <?php echo htmlspecialchars($post['resumo']); ?>
-                                </p>
-                            <?php else: ?>
-                                <p class="post-content lead">
-                                    <?php echo htmlspecialchars(generate_excerpt($post['conteudo'], 200)); ?>
-                                </p>
-                            <?php endif; ?>
-                            
-                            <?php if (!empty($post['tags'])): ?>
-                                <div class="post-tags mb-3">
-                                    <?php foreach ($post['tags'] as $tag): ?>
-                                        <a href="<?php echo BLOG_URL; ?>/tag/<?php echo htmlspecialchars($tag['slug']); ?>" class="badge badge-category me-1">
-                                            <?php echo htmlspecialchars($tag['nome']); ?>
-                                        </a>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="btn btn-primary">
-                                Ler mais
+                        <h2 class="display-6 fw-bold mb-3">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="text-decoration-none text-dark">
+                                <?php echo htmlspecialchars($post['titulo']); ?>
                             </a>
+                        </h2>
+                        
+                        <div class="post-meta mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                                <i class="fas fa-folder ms-2"></i> 
+                                <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
+                                    <?php echo htmlspecialchars($post['categoria_nome']); ?>
+                                </a>
+                            </small>
                         </div>
+                        
+                        <?php if (!empty($post['tags'])): ?>
+                            <div class="post-tags mb-3">
+                                <?php foreach ($post['tags'] as $tag): ?>
+                                    <span class="badge bg-info text-dark me-1">
+                                        <i class="fas fa-tag"></i> <?php echo htmlspecialchars($tag['nome']); ?>
+                                    </span>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="post-excerpt mb-3">
+                            <?php echo htmlspecialchars($post['resumo']); ?>
+                        </div>
+                        
+                        <a href="<?php echo BLOG_URL; ?>/post/<?php echo htmlspecialchars($post['slug']); ?>" class="lead">
+                            Ler mais
+                        </a>
                     </article>
                     
                     <?php 

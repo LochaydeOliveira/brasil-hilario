@@ -253,498 +253,561 @@ class VisualConfigManager {
     // Gerar CSS dinâmico
     public function generateCSS() {
         $configs = $this->getAllConfigs();
-        $css = "/* CSS Gerado Dinamicamente - Sistema Completo de Configurações Visuais */\n\n";
+        $css = "/* CSS Gerado Dinamicamente */\n\n";
         
-        // =====================================================
-        // VARIÁVEIS CSS ROOT
-        // =====================================================
+        // Cores principais
+        if (isset($configs['cores']['site'])) {
+            $cores = $configs['cores']['site'];
             $css .= ":root {\n";
-        $css .= "  /* Cores principais do site */\n";
-        $css .= "  --cor_primaria: #0b8103;\n";
-        $css .= "  --cor_secundaria: #000000;\n";
-        $css .= "  --cor_sucesso: #28a745;\n";
-        $css .= "  --cor_perigo: #dc3545;\n";
-        $css .= "  --cor_aviso: #ffc107;\n";
-        $css .= "  --cor_info: #17a2b8;\n";
-        $css .= "}\n\n";
-        
-        // =====================================================
-        // HEADER - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   HEADER - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Background do header
-        $corHeaderBg = $this->getConfigValue('header', 'header', 'cor_background', '#f8f9f4');
-        $css .= "body .header {\n";
-        $css .= "  background-color: {$corHeaderBg} !important;\n";
-        $css .= "}\n\n";
-        
-        // Título do site
-        $fonteTitulo = $this->getConfigValue('header', 'header', 'fonte_titulo', '"Merriweather", serif');
-        $tamanhoTituloDesktop = $this->getConfigValue('header', 'header', 'tamanho_titulo_desktop', '28px');
-        $tamanhoTituloMobile = $this->getConfigValue('header', 'header', 'tamanho_titulo_mobile', '24px');
-        $pesoTitulo = $this->getConfigValue('header', 'header', 'peso_titulo', '700');
-        $corTitulo = $this->getConfigValue('header', 'header', 'cor_titulo', '#333333');
-        
-        $css .= "body .site-title {\n";
-        $css .= "  font-family: {$fonteTitulo} !important;\n";
-        $css .= "  font-size: {$tamanhoTituloDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulo} !important;\n";
-        $css .= "  color: {$corTitulo} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .site-title {\n";
-        $css .= "    font-size: {$tamanhoTituloMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
-        
-        // Logo
-        $fonteLogo = $this->getConfigValue('header', 'header', 'fonte_logo', '"Merriweather", serif');
-        $tamanhoLogoDesktop = $this->getConfigValue('header', 'header', 'tamanho_logo_desktop', '24px');
-        $tamanhoLogoMobile = $this->getConfigValue('header', 'header', 'tamanho_logo_mobile', '20px');
-        $pesoLogo = $this->getConfigValue('header', 'header', 'peso_logo', '700');
-        $corLogo = $this->getConfigValue('header', 'header', 'cor_logo', '#0b8103');
-        
-        $css .= "body .site-logo {\n";
-        $css .= "  font-family: {$fonteLogo} !important;\n";
-        $css .= "  font-size: {$tamanhoLogoDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoLogo} !important;\n";
-        $css .= "  color: {$corLogo} !important;\n";
+            foreach ($cores as $prop => $valor) {
+                $css .= "  --{$prop}: {$valor};\n";
+            }
             $css .= "}\n\n";
+        }
         
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .site-logo {\n";
-        $css .= "    font-size: {$tamanhoLogoMobile} !important;\n";
-        $css .= "  }\n";
+        // Cores do header
+        if (isset($configs['cores']['header'])) {
+            $header = $configs['cores']['header'];
+            $css .= ".navbar {\n";
+            if (isset($header['cor_fundo'])) $css .= "  background-color: {$header['cor_fundo']};\n";
+            if (isset($header['cor_texto'])) $css .= "  color: {$header['cor_texto']};\n";
             $css .= "}\n\n";
             
-        // =====================================================
-        // NAVBAR - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   NAVBAR - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Background da navbar
-        $corNavbarBg = $this->getConfigValue('navbar', 'navbar', 'cor_background', '#ffffff');
-        $css .= "body .navbar {\n";
-        $css .= "  background-color: {$corNavbarBg} !important;\n";
+            $css .= ".navbar-nav .nav-link {\n";
+            if (isset($header['cor_link'])) $css .= "  color: {$header['cor_link']};\n";
             $css .= "}\n\n";
             
-        // Links da navbar
-        $fonteLinks = $this->getConfigValue('navbar', 'navbar', 'fonte_links', '"Inter", sans-serif');
-        $tamanhoLinksDesktop = $this->getConfigValue('navbar', 'navbar', 'tamanho_links_desktop', '14px');
-        $tamanhoLinksMobile = $this->getConfigValue('navbar', 'navbar', 'tamanho_links_mobile', '12px');
-        $pesoLinks = $this->getConfigValue('navbar', 'navbar', 'peso_links', '500');
-        $corLinks = $this->getConfigValue('navbar', 'navbar', 'cor_links', '#5c5c5c');
-        $corLinksHover = $this->getConfigValue('navbar', 'navbar', 'cor_links_hover', '#0b8103');
-        
-        $css .= "body .navbar .nav-link {\n";
-        $css .= "  font-family: {$fonteLinks} !important;\n";
-        $css .= "  font-size: {$tamanhoLinksDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoLinks} !important;\n";
-        $css .= "  color: {$corLinks} !important;\n";
+            $css .= ".navbar-nav .nav-link:hover {\n";
+            if (isset($header['cor_link_hover'])) $css .= "  color: {$header['cor_link_hover']};\n";
             $css .= "}\n\n";
+        }
         
-        $css .= "body .navbar .nav-link:hover {\n";
-        $css .= "  color: {$corLinksHover} !important;\n";
+        // Cores do footer
+        if (isset($configs['cores']['footer'])) {
+            $footer = $configs['cores']['footer'];
+            $css .= "footer {\n";
+            if (isset($footer['cor_fundo'])) $css .= "  background-color: {$footer['cor_fundo']};\n";
+            if (isset($footer['cor_texto'])) $css .= "  color: {$footer['cor_texto']};\n";
             $css .= "}\n\n";
             
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .navbar .nav-link {\n";
-        $css .= "    font-size: {$tamanhoLinksMobile} !important;\n";
-        $css .= "  }\n";
+            $css .= "footer a {\n";
+            if (isset($footer['cor_link'])) $css .= "  color: {$footer['cor_link']};\n";
             $css .= "}\n\n";
+        }
         
-        // =====================================================
-        // MAIN - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   MAIN - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Títulos dos posts
-        $fonteTitulosPosts = $this->getConfigValue('main', 'titulos_posts', 'fonte', '"Merriweather", serif');
-        $tamanhoTitulosDesktop = $this->getConfigValue('main', 'titulos_posts', 'tamanho_desktop', '28px');
-        $tamanhoTitulosMobile = $this->getConfigValue('main', 'titulos_posts', 'tamanho_mobile', '24px');
-        $pesoTitulosPosts = $this->getConfigValue('main', 'titulos_posts', 'peso', '700');
-        $corTitulosPosts = $this->getConfigValue('main', 'titulos_posts', 'cor', '#000000');
-        
-        $css .= "body .post-title {\n";
-        $css .= "  font-family: {$fonteTitulosPosts} !important;\n";
-        $css .= "  font-size: {$tamanhoTitulosDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulosPosts} !important;\n";
-        $css .= "  color: {$corTitulosPosts} !important;\n";
+        // Cores dos botões
+        if (isset($configs['cores']['botao'])) {
+            $botao = $configs['cores']['botao'];
+            $css .= ".btn-primary {\n";
+            if (isset($botao['cor_primario'])) $css .= "  background-color: {$botao['cor_primario']};\n";
             $css .= "}\n\n";
             
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .post-title {\n";
-        $css .= "    font-size: {$tamanhoTitulosMobile} !important;\n";
-        $css .= "  }\n";
+            $css .= ".btn-secondary {\n";
+            if (isset($botao['cor_secundario'])) $css .= "  background-color: {$botao['cor_secundario']};\n";
             $css .= "}\n\n";
             
-        // Parágrafos dos posts
-        $fonteParagrafos = $this->getConfigValue('main', 'paragrafos_posts', 'fonte', '"Inter", sans-serif');
-        $tamanhoParagrafosDesktop = $this->getConfigValue('main', 'paragrafos_posts', 'tamanho_desktop', '16px');
-        $tamanhoParagrafosMobile = $this->getConfigValue('main', 'paragrafos_posts', 'tamanho_mobile', '14px');
-        $pesoParagrafos = $this->getConfigValue('main', 'paragrafos_posts', 'peso', '400');
-        $corParagrafos = $this->getConfigValue('main', 'paragrafos_posts', 'cor', '#333333');
-        
-        $css .= "body .post-content p {\n";
-        $css .= "  font-family: {$fonteParagrafos} !important;\n";
-        $css .= "  font-size: {$tamanhoParagrafosDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoParagrafos} !important;\n";
-        $css .= "  color: {$corParagrafos} !important;\n";
+            $css .= ".btn-success {\n";
+            if (isset($botao['cor_sucesso'])) $css .= "  background-color: {$botao['cor_sucesso']};\n";
             $css .= "}\n\n";
+        }
         
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .post-content p {\n";
-        $css .= "    font-size: {$tamanhoParagrafosMobile} !important;\n";
-        $css .= "  }\n";
+        // Cores dos cards
+        if (isset($configs['cores']['card'])) {
+            $card = $configs['cores']['card'];
+            $css .= ".card {\n";
+            if (isset($card['cor_fundo'])) $css .= "  background-color: {$card['cor_fundo']};\n";
+            if (isset($card['cor_borda'])) $css .= "  border-color: {$card['cor_borda']};\n";
+            if (isset($card['cor_texto'])) $css .= "  color: {$card['cor_texto']};\n";
             $css .= "}\n\n";
+        }
         
-        // =====================================================
-        // SIDEBAR - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   SIDEBAR - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
+        // NOVA LÓGICA DE FONTES
+        $usarFonteGeral = $this->usarFonteGeral();
+        $personalizarFontes = $this->personalizarFontes();
         
-        // Background da sidebar
-        $corSidebarBg = $this->getConfigValue('sidebar', 'sidebar', 'cor_background', '#f8f9fa');
-        $css .= "body .sidebar {\n";
-        $css .= "  background-color: {$corSidebarBg} !important;\n";
+        // Definir variáveis CSS para fontes principais
+        $fontePrimaria = $this->getFonte('site', 'fonte_primaria', '"Merriweather", serif');
+        $fonteSecundaria = $this->getFonte('site', 'fonte_secundaria', '"Inter", sans-serif');
+        
+        $css .= ":root {\n";
+        $css .= "  --font-primary: {$fontePrimaria};\n";
+        $css .= "  --font-secondary: {$fonteSecundaria};\n";
+        $css .= "}\n\n";
+        
+        if ($usarFonteGeral && !$personalizarFontes) {
+            // Modo: Fonte Geral
+            $fonteGeral = $this->getFonteGeral();
+            $css .= "/* Fonte Geral do Site */\n";
+            $css .= "body, h1, h2, h3, h4, h5, h6, p, div, .navbar, .sidebar, .card, .btn {\n";
+            $css .= "  font-family: {$fonteGeral};\n";
             $css .= "}\n\n";
-        
-        // Títulos das seções da sidebar
-        $fonteTitulosSecoes = $this->getConfigValue('sidebar', 'titulos_secoes', 'fonte', '"Merriweather", serif');
-        $tamanhoTitulosSecoesDesktop = $this->getConfigValue('sidebar', 'titulos_secoes', 'tamanho_desktop', '18px');
-        $tamanhoTitulosSecoesMobile = $this->getConfigValue('sidebar', 'titulos_secoes', 'tamanho_mobile', '16px');
-        $pesoTitulosSecoes = $this->getConfigValue('sidebar', 'titulos_secoes', 'peso', '700');
-        $corTitulosSecoes = $this->getConfigValue('sidebar', 'titulos_secoes', 'cor', '#000000');
-        
-        $css .= "body .sidebar .widget-title {\n";
-        $css .= "  font-family: {$fonteTitulosSecoes} !important;\n";
-        $css .= "  font-size: {$tamanhoTitulosSecoesDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulosSecoes} !important;\n";
-        $css .= "  color: {$corTitulosSecoes} !important;\n";
+        } else {
+            // Modo: Fontes Personalizadas
+            $css .= "/* Fontes Personalizadas */\n";
+            
+            // Títulos
+            if (isset($configs['fontes']['titulos']['fonte'])) {
+                $peso = $this->getPesoFonte('titulos', '700');
+                $tamanhoDesktop = $this->getTamanhoFonte('titulos', 'desktop', '28px');
+                $tamanhoMobile = $this->getTamanhoFonte('titulos', 'mobile', '24px');
+                
+                $css .= "h1, h2, h3, h4, h5, h6 {\n";
+                $css .= "  font-family: {$configs['fontes']['titulos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
                 $css .= "}\n\n";
                 
                 $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .sidebar .widget-title {\n";
-        $css .= "    font-size: {$tamanhoTitulosSecoesMobile} !important;\n";
+                $css .= "  h1, h2, h3, h4, h5, h6 {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
                 $css .= "  }\n";
                 $css .= "}\n\n";
+            }
+            
+            // Parágrafos
+            if (isset($configs['fontes']['paragrafos']['fonte'])) {
+                $peso = $this->getPesoFonte('paragrafos', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('paragrafos', 'desktop', '16px');
+                $tamanhoMobile = $this->getTamanhoFonte('paragrafos', 'mobile', '14px');
+                
+                $css .= "p {\n";
+                $css .= "  font-family: {$configs['fontes']['paragrafos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  p {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Navegação
+            if (isset($configs['fontes']['navegacao']['fonte'])) {
+                $peso = $this->getPesoFonte('navegacao', '500');
+                $tamanhoDesktop = $this->getTamanhoFonte('navegacao', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('navegacao', 'mobile', '12px');
+                
+                $css .= ".navbar, .navbar-nav .nav-link {\n";
+                $css .= "  font-family: {$configs['fontes']['navegacao']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .navbar, .navbar-nav .nav-link {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Sidebar
+            if (isset($configs['fontes']['sidebar']['fonte'])) {
+                $peso = $this->getPesoFonte('sidebar', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('sidebar', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('sidebar', 'mobile', '12px');
+                
+                $css .= ".sidebar, .sidebar * {\n";
+                $css .= "  font-family: {$configs['fontes']['sidebar']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .sidebar, .sidebar * {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Cards
+            if (isset($configs['fontes']['cards']['fonte'])) {
+                $peso = $this->getPesoFonte('cards', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('cards', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('cards', 'mobile', '12px');
+                
+                $css .= ".card, .card * {\n";
+                $css .= "  font-family: {$configs['fontes']['cards']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .card, .card * {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Botões
+            if (isset($configs['fontes']['botoes']['fonte'])) {
+                $peso = $this->getPesoFonte('botoes', '500');
+                $tamanhoDesktop = $this->getTamanhoFonte('botoes', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('botoes', 'mobile', '12px');
+                
+                $css .= ".btn {\n";
+                $css .= "  font-family: {$configs['fontes']['botoes']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .btn {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Meta textos
+            if (isset($configs['fontes']['meta_textos']['fonte'])) {
+                $peso = $this->getPesoFonte('meta_textos', '400');
+                $tamanhoDesktop = $this->getTamanhoFonte('meta_textos', 'desktop', '12px');
+                $tamanhoMobile = $this->getTamanhoFonte('meta_textos', 'mobile', '10px');
+                
+                $css .= ".text-muted, .meta-text, small {\n";
+                $css .= "  font-family: {$configs['fontes']['meta_textos']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .text-muted, .meta-text, small {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+            
+            // Anúncios
+            if (isset($configs['fontes']['anuncios']['fonte'])) {
+                $peso = $this->getPesoFonte('anuncios', '600');
+                $tamanhoDesktop = $this->getTamanhoFonte('anuncios', 'desktop', '14px');
+                $tamanhoMobile = $this->getTamanhoFonte('anuncios', 'mobile', '12px');
+                
+                $css .= ".anuncio-titulo-sidebar, .anuncio-titulo-conteudo, .anuncio-titulo-grade, .anuncio-titulo-carrossel {\n";
+                $css .= "  font-family: {$configs['fontes']['anuncios']['fonte']};\n";
+                $css .= "  font-weight: {$peso};\n";
+                $css .= "  font-size: {$tamanhoDesktop};\n";
+                $css .= "}\n\n";
+                
+                $css .= "@media (max-width: 768px) {\n";
+                $css .= "  .anuncio-titulo-sidebar, .anuncio-titulo-conteudo, .anuncio-titulo-grade, .anuncio-titulo-carrossel {\n";
+                $css .= "    font-size: {$tamanhoMobile};\n";
+                $css .= "  }\n";
+                $css .= "}\n\n";
+            }
+        }
         
-        // =====================================================
-        // LEIA TAMBÉM - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   LEIA TAMBÉM - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
+        // CSS para seções específicas do blog (independente do modo de fonte)
+        $css .= "/* Seções Específicas do Blog */\n";
         
-        // Background da seção
-        $corLeiaTambemBg = $this->getConfigValue('leia_tambem', 'leia_tambem', 'cor_background', '#ffffff');
-        $css .= "body .related-posts-block {\n";
-        $css .= "  background-color: {$corLeiaTambemBg} !important;\n";
+        // Seção "Leia Também"
+        $fonteLeiaTambem = $this->getFonteSecao('leia_tambem');
+        $pesoTituloLeiaTambem = $this->getPesoSecao('leia_tambem', 'titulo', '600');
+        $tamanhoTituloLeiaTambemDesktop = $this->getTamanhoSecao('leia_tambem', 'titulo', 'desktop', '22px');
+        $tamanhoTituloLeiaTambemMobile = $this->getTamanhoSecao('leia_tambem', 'titulo', 'mobile', '20px');
+        $pesoTextoLeiaTambem = $this->getPesoSecao('leia_tambem', 'texto', '400');
+        $tamanhoTextoLeiaTambemDesktop = $this->getTamanhoSecao('leia_tambem', 'texto', 'desktop', '14px');
+        $tamanhoTextoLeiaTambemMobile = $this->getTamanhoSecao('leia_tambem', 'texto', 'mobile', '12px');
+        
+        $css .= ".related-posts-title {\n";
+        $css .= "  font-family: {$fonteLeiaTambem};\n";
+        $css .= "  font-weight: {$pesoTituloLeiaTambem};\n";
+        $css .= "  font-size: {$tamanhoTituloLeiaTambemDesktop};\n";
         $css .= "}\n\n";
         
-        // Título da seção
-        $fonteTituloLeiaTambem = $this->getConfigValue('leia_tambem', 'titulo_secao', 'fonte', '"Merriweather", serif');
-        $tamanhoTituloLeiaTambemDesktop = $this->getConfigValue('leia_tambem', 'titulo_secao', 'tamanho_desktop', '22px');
-        $tamanhoTituloLeiaTambemMobile = $this->getConfigValue('leia_tambem', 'titulo_secao', 'tamanho_mobile', '20px');
-        $pesoTituloLeiaTambem = $this->getConfigValue('leia_tambem', 'titulo_secao', 'peso', '700');
-        $corTituloLeiaTambem = $this->getConfigValue('leia_tambem', 'titulo_secao', 'cor', '#000000');
-        
-        $css .= "body .related-posts-title {\n";
-        $css .= "  font-family: {$fonteTituloLeiaTambem} !important;\n";
-        $css .= "  font-size: {$tamanhoTituloLeiaTambemDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTituloLeiaTambem} !important;\n";
-        $css .= "  color: {$corTituloLeiaTambem} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .related-posts-title {\n";
-        $css .= "    font-size: {$tamanhoTituloLeiaTambemMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // Títulos dos posts relacionados
-        $fonteTitulosPostsLeia = $this->getConfigValue('leia_tambem', 'titulos_posts', 'fonte', '"Merriweather", serif');
-        $tamanhoTitulosPostsLeiaDesktop = $this->getConfigValue('leia_tambem', 'titulos_posts', 'tamanho_desktop', '16px');
-        $tamanhoTitulosPostsLeiaMobile = $this->getConfigValue('leia_tambem', 'titulos_posts', 'tamanho_mobile', '14px');
-        $pesoTitulosPostsLeia = $this->getConfigValue('leia_tambem', 'titulos_posts', 'peso', '600');
-        $corTitulosPostsLeia = $this->getConfigValue('leia_tambem', 'titulos_posts', 'cor', '#333333');
-        
-        $css .= "body .related-post-title {\n";
-        $css .= "  font-family: {$fonteTitulosPostsLeia} !important;\n";
-        $css .= "  font-size: {$tamanhoTitulosPostsLeiaDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulosPostsLeia} !important;\n";
-        $css .= "  color: {$corTitulosPostsLeia} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .related-post-title {\n";
-        $css .= "    font-size: {$tamanhoTitulosPostsLeiaMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // =====================================================
-        // ÚLTIMAS DO PORTAL - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   ÚLTIMAS DO PORTAL - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Background da seção
-        $corUltimasPortalBg = $this->getConfigValue('ultimas_portal', 'ultimas_portal', 'cor_background', '#ffffff');
-        $css .= "body .latest-posts-block {\n";
-        $css .= "  background-color: {$corUltimasPortalBg} !important;\n";
-        $css .= "}\n\n";
-        
-        // Título da seção
-        $fonteTituloUltimasPortal = $this->getConfigValue('ultimas_portal', 'titulo_secao', 'fonte', '"Merriweather", serif');
-        $tamanhoTituloUltimasPortalDesktop = $this->getConfigValue('ultimas_portal', 'titulo_secao', 'tamanho_desktop', '22px');
-        $tamanhoTituloUltimasPortalMobile = $this->getConfigValue('ultimas_portal', 'titulo_secao', 'tamanho_mobile', '20px');
-        $pesoTituloUltimasPortal = $this->getConfigValue('ultimas_portal', 'titulo_secao', 'peso', '700');
-        $corTituloUltimasPortal = $this->getConfigValue('ultimas_portal', 'titulo_secao', 'cor', '#000000');
-        
-        $css .= "body .latest-posts-title {\n";
-        $css .= "  font-family: {$fonteTituloUltimasPortal} !important;\n";
-        $css .= "  font-size: {$tamanhoTituloUltimasPortalDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTituloUltimasPortal} !important;\n";
-        $css .= "  color: {$corTituloUltimasPortal} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .latest-posts-title {\n";
-        $css .= "    font-size: {$tamanhoTituloUltimasPortalMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // Tag da categoria
-        $corTagCategoriaBg = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'cor_background', '#0b8103');
-        $fonteTagCategoria = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'fonte', '"Inter", sans-serif');
-        $tamanhoTagCategoriaDesktop = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'tamanho_desktop', '10px');
-        $tamanhoTagCategoriaMobile = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'tamanho_mobile', '8px');
-        $pesoTagCategoria = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'peso', '500');
-        $corTagCategoriaTexto = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'cor_texto', '#ffffff');
-        $bordaTagCategoria = $this->getConfigValue('ultimas_portal', 'tag_categoria', 'borda_arredondada', '15px');
-        
-        $css .= "body .category-tag {\n";
-        $css .= "  background-color: {$corTagCategoriaBg} !important;\n";
-        $css .= "  font-family: {$fonteTagCategoria} !important;\n";
-        $css .= "  font-size: {$tamanhoTagCategoriaDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTagCategoria} !important;\n";
-        $css .= "  color: {$corTagCategoriaTexto} !important;\n";
-        $css .= "  border-radius: {$bordaTagCategoria} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .category-tag {\n";
-        $css .= "    font-size: {$tamanhoTagCategoriaMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // =====================================================
-        // FOOTER - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   FOOTER - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Background do footer
-        $corFooterBg = $this->getConfigValue('footer', 'footer', 'cor_background', '#f8f9fa');
-        $css .= "body .footer {\n";
-        $css .= "  background-color: {$corFooterBg} !important;\n";
-        $css .= "}\n\n";
-        
-        // Títulos das seções do footer
-        $fonteTitulosFooter = $this->getConfigValue('footer', 'titulos_secoes', 'fonte', '"Inter", sans-serif');
-        $tamanhoTitulosFooterDesktop = $this->getConfigValue('footer', 'titulos_secoes', 'tamanho_desktop', '18px');
-        $tamanhoTitulosFooterMobile = $this->getConfigValue('footer', 'titulos_secoes', 'tamanho_mobile', '16px');
-        $pesoTitulosFooter = $this->getConfigValue('footer', 'titulos_secoes', 'peso', '700');
-        $corTitulosFooter = $this->getConfigValue('footer', 'titulos_secoes', 'cor', '#000000');
-        
-        $css .= "body .footer .section-title {\n";
-        $css .= "  font-family: {$fonteTitulosFooter} !important;\n";
-        $css .= "  font-size: {$tamanhoTitulosFooterDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulosFooter} !important;\n";
-        $css .= "  color: {$corTitulosFooter} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .footer .section-title {\n";
-        $css .= "    font-size: {$tamanhoTitulosFooterMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // =====================================================
-        // CARDS - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   CARDS - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Background dos cards
-        $corCardsBg = $this->getConfigValue('cards', 'cards', 'cor_background', '#ffffff');
-        $corCardsBorda = $this->getConfigValue('cards', 'cards', 'cor_borda', '#dee2e6');
-        $css .= "body .card {\n";
-        $css .= "  background-color: {$corCardsBg} !important;\n";
-        $css .= "  border-color: {$corCardsBorda} !important;\n";
-        $css .= "}\n\n";
-        
-        // Títulos dos cards
-        $fonteTitulosCards = $this->getConfigValue('cards', 'titulos_cards', 'fonte', '"Merriweather", serif');
-        $tamanhoTitulosCardsDesktop = $this->getConfigValue('cards', 'titulos_cards', 'tamanho_desktop', '20px');
-        $tamanhoTitulosCardsMobile = $this->getConfigValue('cards', 'titulos_cards', 'tamanho_mobile', '18px');
-        $pesoTitulosCards = $this->getConfigValue('cards', 'titulos_cards', 'peso', '700');
-        $corTitulosCards = $this->getConfigValue('cards', 'titulos_cards', 'cor', '#000000');
-        
-        $css .= "body .card .card-title {\n";
-        $css .= "  font-family: {$fonteTitulosCards} !important;\n";
-        $css .= "  font-size: {$tamanhoTitulosCardsDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoTitulosCards} !important;\n";
-        $css .= "  color: {$corTitulosCards} !important;\n";
-                $css .= "}\n\n";
-                
-                $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .card .card-title {\n";
-        $css .= "    font-size: {$tamanhoTitulosCardsMobile} !important;\n";
-                $css .= "  }\n";
-                $css .= "}\n\n";
-        
-        // =====================================================
-        // BOTÕES - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   BOTÕES - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
-        
-        // Botões primários
-        $corBotaoPrimarioBg = $this->getConfigValue('botoes', 'botao_primario', 'cor_background', '#0b8103');
-        $corBotaoPrimarioTexto = $this->getConfigValue('botoes', 'botao_primario', 'cor_texto', '#ffffff');
-        $fonteBotaoPrimario = $this->getConfigValue('botoes', 'botao_primario', 'fonte', '"Inter", sans-serif');
-        $tamanhoBotaoPrimarioDesktop = $this->getConfigValue('botoes', 'botao_primario', 'tamanho_desktop', '14px');
-        $tamanhoBotaoPrimarioMobile = $this->getConfigValue('botoes', 'botao_primario', 'tamanho_mobile', '12px');
-        $pesoBotaoPrimario = $this->getConfigValue('botoes', 'botao_primario', 'peso', '500');
-        
-        $css .= "body .btn-primary {\n";
-        $css .= "  background-color: {$corBotaoPrimarioBg} !important;\n";
-        $css .= "  color: {$corBotaoPrimarioTexto} !important;\n";
-        $css .= "  font-family: {$fonteBotaoPrimario} !important;\n";
-        $css .= "  font-size: {$tamanhoBotaoPrimarioDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoBotaoPrimario} !important;\n";
+        $css .= ".related-post-title {\n";
+        $css .= "  font-family: {$fonteLeiaTambem};\n";
+        $css .= "  font-weight: {$pesoTextoLeiaTambem};\n";
+        $css .= "  font-size: {$tamanhoTextoLeiaTambemDesktop};\n";
         $css .= "}\n\n";
         
         $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .btn-primary {\n";
-        $css .= "    font-size: {$tamanhoBotaoPrimarioMobile} !important;\n";
+        $css .= "  .related-posts-title {\n";
+        $css .= "    font-size: {$tamanhoTituloLeiaTambemMobile};\n";
+        $css .= "  }\n";
+        $css .= "  .related-post-title {\n";
+        $css .= "    font-size: {$tamanhoTextoLeiaTambemMobile};\n";
         $css .= "  }\n";
         $css .= "}\n\n";
         
-        // =====================================================
-        // BADGES - CONFIGURAÇÕES COMPLETAS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   BADGES - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
+        // Seção "Últimas do Portal" (usa as mesmas classes CSS)
+        $fonteUltimasPortal = $this->getFonteSecao('ultimas_portal');
+        $pesoTituloUltimasPortal = $this->getPesoSecao('ultimas_portal', 'titulo', '600');
+        $tamanhoTituloUltimasPortalDesktop = $this->getTamanhoSecao('ultimas_portal', 'titulo', 'desktop', '22px');
+        $tamanhoTituloUltimasPortalMobile = $this->getTamanhoSecao('ultimas_portal', 'titulo', 'mobile', '20px');
+        $pesoTextoUltimasPortal = $this->getPesoSecao('ultimas_portal', 'texto', '400');
+        $tamanhoTextoUltimasPortalDesktop = $this->getTamanhoSecao('ultimas_portal', 'texto', 'desktop', '14px');
+        $tamanhoTextoUltimasPortalMobile = $this->getTamanhoSecao('ultimas_portal', 'texto', 'mobile', '12px');
         
-        // Badges de categoria
-        $corBadgeCategoriaBg = $this->getConfigValue('badges', 'badge_categoria', 'cor_background', '#0b8103');
-        $corBadgeCategoriaTexto = $this->getConfigValue('badges', 'badge_categoria', 'cor_texto', '#ffffff');
-        $fonteBadgeCategoria = $this->getConfigValue('badges', 'badge_categoria', 'fonte', '"Inter", sans-serif');
-        $tamanhoBadgeCategoriaDesktop = $this->getConfigValue('badges', 'badge_categoria', 'tamanho_desktop', '10px');
-        $tamanhoBadgeCategoriaMobile = $this->getConfigValue('badges', 'badge_categoria', 'tamanho_mobile', '8px');
-        $pesoBadgeCategoria = $this->getConfigValue('badges', 'badge_categoria', 'peso', '500');
-        $bordaBadgeCategoria = $this->getConfigValue('badges', 'badge_categoria', 'borda_arredondada', '15px');
-        
-        $css .= "body .badge-category {\n";
-        $css .= "  background-color: {$corBadgeCategoriaBg} !important;\n";
-        $css .= "  color: {$corBadgeCategoriaTexto} !important;\n";
-        $css .= "  font-family: {$fonteBadgeCategoria} !important;\n";
-        $css .= "  font-size: {$tamanhoBadgeCategoriaDesktop} !important;\n";
-        $css .= "  font-weight: {$pesoBadgeCategoria} !important;\n";
-        $css .= "  border-radius: {$bordaBadgeCategoria} !important;\n";
-        $css .= "}\n\n";
-        
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .badge-category {\n";
-        $css .= "    font-size: {$tamanhoBadgeCategoriaMobile} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+        // Como ambas as seções usam as mesmas classes CSS, vamos sobrescrever com as configurações específicas
+        // quando necessário. Por padrão, elas herdam as configurações da seção "Leia Também"
         
         // =====================================================
-        // RESPONSIVIDADE - CONFIGURAÇÕES COMPLETAS
+        // CONFIGURAÇÕES ESPECÍFICAS PARA CONTROLE TOTAL
         // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   RESPONSIVIDADE - CONFIGURAÇÕES COMPLETAS\n";
-        $css .= "   ===================================================== */\n";
         
-        $mobilePadding = $this->getConfigValue('responsividade', 'espacamentos', 'mobile_padding', '15px');
-        $desktopPadding = $this->getConfigValue('responsividade', 'espacamentos', 'desktop_padding', '30px');
-        $mobileMargin = $this->getConfigValue('responsividade', 'espacamentos', 'mobile_margin', '10px');
-        $desktopMargin = $this->getConfigValue('responsividade', 'espacamentos', 'desktop_margin', '20px');
+        // Header específico
+        if (isset($configs['fontes']['header']['fonte'])) {
+            $fonteHeader = $configs['fontes']['header']['fonte'];
+            $pesoHeader = $this->getPesoFonte('header', '700');
+            $tamanhoHeaderDesktop = $this->getTamanhoFonte('header', 'desktop', '28px');
+            $tamanhoHeaderMobile = $this->getTamanhoFonte('header', 'mobile', '24px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - HEADER */\n";
+            $css .= "body .site-title {\n";
+            $css .= "  font-family: {$fonteHeader} !important;\n";
+            $css .= "  font-weight: {$pesoHeader} !important;\n";
+            $css .= "  font-size: {$tamanhoHeaderDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .site-title {\n";
+            $css .= "    font-size: {$tamanhoHeaderMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
         
-        $css .= "@media (max-width: 768px) {\n";
-        $css .= "  body .container,\n";
-        $css .= "  body .container-fluid {\n";
-        $css .= "    padding: {$mobilePadding} !important;\n";
-        $css .= "  }\n\n";
-        $css .= "  body .row {\n";
-        $css .= "    margin: {$mobileMargin} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+        // Sidebar específica - CONTROLE TOTAL COM ESPECIFICIDADE MÁXIMA
+        if (isset($configs['fontes']['sidebar']['fonte'])) {
+            $fonteSidebar = $configs['fontes']['sidebar']['fonte'];
+            $pesoSidebar = $this->getPesoFonte('sidebar', '400');
+            $tamanhoSidebarDesktop = $this->getTamanhoFonte('sidebar', 'desktop', '14px');
+            $tamanhoSidebarMobile = $this->getTamanhoFonte('sidebar', 'mobile', '12px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - SIDEBAR GERAL */\n";
+            $css .= "body .sidebar {\n";
+            $css .= "  font-family: {$fonteSidebar} !important;\n";
+            $css .= "  font-weight: {$pesoSidebar} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .sidebar {\n";
+            $css .= "    font-size: {$tamanhoSidebarMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
         
-        $css .= "@media (min-width: 769px) {\n";
-        $css .= "  body .container,\n";
-        $css .= "  body .container-fluid {\n";
-        $css .= "    padding: {$desktopPadding} !important;\n";
-        $css .= "  }\n\n";
-        $css .= "  body .row {\n";
-        $css .= "    margin: {$desktopMargin} !important;\n";
-        $css .= "  }\n";
-        $css .= "}\n\n";
+        // Títulos da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
+        if (isset($configs['fontes']['sidebar_titulo']['fonte'])) {
+            $fonteSidebarTitulo = $configs['fontes']['sidebar_titulo']['fonte'];
+            $pesoSidebarTitulo = $this->getPesoFonte('sidebar_titulo', '700');
+            $tamanhoSidebarTituloDesktop = $this->getTamanhoFonte('sidebar_titulo', 'desktop', '18px');
+            $tamanhoSidebarTituloMobile = $this->getTamanhoFonte('sidebar_titulo', 'mobile', '16px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS SIDEBAR */\n";
+            $css .= "body .sidebar .sidebar-title {\n";
+            $css .= "  font-family: {$fonteSidebarTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarTituloDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .sidebar .sidebar-title {\n";
+            $css .= "    font-size: {$tamanhoSidebarTituloMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
         
-        // =====================================================
-        // PRIORIDADE MÁXIMA - !important EM TODOS OS ELEMENTOS
-        // =====================================================
-        $css .= "/* =====================================================\n";
-        $css .= "   PRIORIDADE MÁXIMA - !important EM TODOS OS ELEMENTOS\n";
-        $css .= "   ===================================================== */\n\n";
+        // Links da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
+        if (isset($configs['fontes']['sidebar_links']['fonte'])) {
+            $fonteSidebarLinks = $configs['fontes']['sidebar_links']['fonte'];
+            $pesoSidebarLinks = $this->getPesoFonte('sidebar_links', '700');
+            $tamanhoSidebarLinksDesktop = $this->getTamanhoFonte('sidebar_links', 'desktop', '14px');
+            $tamanhoSidebarLinksMobile = $this->getTamanhoFonte('sidebar_links', 'mobile', '12px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - LINKS SIDEBAR */\n";
+            $css .= "body .sidebar a {\n";
+            $css .= "  font-family: {$fonteSidebarLinks} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarLinks} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarLinksDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            // ESPECIFICIDADE MÁXIMA para links de posts na sidebar
+            $css .= "body .sidebar .card .card-body .list-unstyled li a {\n";
+            $css .= "  font-family: {$fonteSidebarLinks} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarLinks} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarLinksDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .sidebar a {\n";
+            $css .= "    font-size: {$tamanhoSidebarLinksMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "  body .sidebar .card .card-body .list-unstyled li a {\n";
+            $css .= "    font-size: {$tamanhoSidebarLinksMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
         
-        $css .= "/* Este CSS tem prioridade máxima sobre todos os outros estilos */\n";
-        $css .= "/* Todas as configurações são aplicadas com !important */\n";
-        $css .= "/* O prefixo 'body' garante especificidade máxima */\n";
-        $css .= "/* Responsividade completa para mobile e desktop */\n";
+        // Widgets da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
+        if (isset($configs['fontes']['sidebar_widget']['fonte'])) {
+            $fonteSidebarWidget = $configs['fontes']['sidebar_widget']['fonte'];
+            $pesoSidebarWidget = $this->getPesoFonte('sidebar_widget', '600');
+            $tamanhoSidebarWidgetDesktop = $this->getTamanhoFonte('sidebar_widget', 'desktop', '19px');
+            $tamanhoSidebarWidgetMobile = $this->getTamanhoFonte('sidebar_widget', 'mobile', '17px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - WIDGETS SIDEBAR */\n";
+            $css .= "body .sidebar .sidebar-widget h3 {\n";
+            $css .= "  font-family: {$fonteSidebarWidget} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarWidget} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarWidgetDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .sidebar .sidebar-widget h3 {\n";
+            $css .= "    font-size: {$tamanhoSidebarWidgetMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Conteúdo principal
+        if (isset($configs['fontes']['conteudo']['fonte'])) {
+            $fonteConteudo = $configs['fontes']['conteudo']['fonte'];
+            $pesoConteudo = $this->getPesoFonte('conteudo', '400');
+            $tamanhoConteudoDesktop = $this->getTamanhoFonte('conteudo', 'desktop', '16px');
+            $tamanhoConteudoMobile = $this->getTamanhoFonte('conteudo', 'mobile', '14px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - CONTEÚDO */\n";
+            $css .= "body .post-content {\n";
+            $css .= "  font-family: {$fonteConteudo} !important;\n";
+            $css .= "  font-weight: {$pesoConteudo} !important;\n";
+            $css .= "  font-size: {$tamanhoConteudoDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .post-content {\n";
+            $css .= "    font-size: {$tamanhoConteudoMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Títulos de conteúdo específicos
+        if (isset($configs['fontes']['titulo_conteudo']['fonte'])) {
+            $fonteTituloConteudo = $configs['fontes']['titulo_conteudo']['fonte'];
+            $pesoTituloConteudo = $this->getPesoFonte('titulo_conteudo', '700');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS CONTEÚDO */\n";
+            $css .= "body .post-content h2 {\n";
+            $css .= "  font-family: {$fonteTituloConteudo} !important;\n";
+            $css .= "  font-weight: {$pesoTituloConteudo} !important;\n";
+            $css .= "}\n\n";
+        }
+        
+        // Cards específicos
+        if (isset($configs['fontes']['card_titulo']['fonte'])) {
+            $fonteCardTitulo = $configs['fontes']['card_titulo']['fonte'];
+            $pesoCardTitulo = $this->getPesoFonte('card_titulo', '700');
+            $tamanhoCardTituloDesktop = $this->getTamanhoFonte('card_titulo', 'desktop', '20px');
+            $tamanhoCardTituloMobile = $this->getTamanhoFonte('card_titulo', 'mobile', '18px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS CARDS */\n";
+            $css .= "body .post-card .card-title, body .featured-post .card-title {\n";
+            $css .= "  font-family: {$fonteCardTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoCardTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoCardTituloDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .post-card .card-title, body .featured-post .card-title {\n";
+            $css .= "    font-size: {$tamanhoCardTituloMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Headers de cards
+        if (isset($configs['fontes']['card_header']['fonte'])) {
+            $fonteCardHeader = $configs['fontes']['card_header']['fonte'];
+            $pesoCardHeader = $this->getPesoFonte('card_header', '700');
+            $tamanhoCardHeaderDesktop = $this->getTamanhoFonte('card_header', 'desktop', '22px');
+            $tamanhoCardHeaderMobile = $this->getTamanhoFonte('card_header', 'mobile', '20px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - HEADERS CARDS */\n";
+            $css .= "body .card-header h3 {\n";
+            $css .= "  font-family: {$fonteCardHeader} !important;\n";
+            $css .= "  font-weight: {$pesoCardHeader} !important;\n";
+            $css .= "  font-size: {$tamanhoCardHeaderDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .card-header h3 {\n";
+            $css .= "    font-size: {$tamanhoCardHeaderMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Badges
+        if (isset($configs['fontes']['badges']['fonte'])) {
+            $fonteBadges = $configs['fontes']['badges']['fonte'];
+            $pesoBadges = $this->getPesoFonte('badges', '500');
+            $tamanhoBadgesDesktop = $this->getTamanhoFonte('badges', 'desktop', '12px');
+            $tamanhoBadgesMobile = $this->getTamanhoFonte('badges', 'mobile', '10px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - BADGES */\n";
+            $css .= "body .badge, body .category-badge {\n";
+            $css .= "  font-family: {$fonteBadges} !important;\n";
+            $css .= "  font-weight: {$pesoBadges} !important;\n";
+            $css .= "  font-size: {$tamanhoBadgesDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .badge, body .category-badge {\n";
+            $css .= "    font-size: {$tamanhoBadgesMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Footer específico
+        if (isset($configs['fontes']['footer_titulo']['fonte'])) {
+            $fonteFooterTitulo = $configs['fontes']['footer_titulo']['fonte'];
+            $pesoFooterTitulo = $this->getPesoFonte('footer_titulo', '700');
+            $tamanhoFooterTituloDesktop = $this->getTamanhoFonte('footer_titulo', 'desktop', '18px');
+            $tamanhoFooterTituloMobile = $this->getTamanhoFonte('footer_titulo', 'mobile', '16px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS FOOTER */\n";
+            $css .= "body .footer-title {\n";
+            $css .= "  font-family: {$fonteFooterTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoFooterTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoFooterTituloDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .footer-title {\n";
+            $css .= "    font-size: {$tamanhoFooterTituloMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
+        
+        // Breadcrumb
+        if (isset($configs['fontes']['breadcrumb']['fonte'])) {
+            $fonteBreadcrumb = $configs['fontes']['breadcrumb']['fonte'];
+            $pesoBreadcrumb = $this->getPesoFonte('breadcrumb', '400');
+            $tamanhoBreadcrumbDesktop = $this->getTamanhoFonte('breadcrumb', 'desktop', '12px');
+            $tamanhoBreadcrumbMobile = $this->getTamanhoFonte('breadcrumb', 'mobile', '10px');
+            
+            $css .= "/* CONFIGURAÇÃO ADMIN - BREADCRUMB */\n";
+            $css .= "body .breadcrumb, body .breadcrumb-item {\n";
+            $css .= "  font-family: {$fonteBreadcrumb} !important;\n";
+            $css .= "  font-weight: {$pesoBreadcrumb} !important;\n";
+            $css .= "  font-size: {$tamanhoBreadcrumbDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            $css .= "@media (max-width: 768px) {\n";
+            $css .= "  body .breadcrumb, body .breadcrumb-item {\n";
+            $css .= "    font-size: {$tamanhoBreadcrumbMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "}\n\n";
+        }
         
         return $css;
     }
     
-    // Método auxiliar para obter valores de configuração
-    private function getConfigValue($categoria, $elemento, $propriedade, $padrao = '') {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT valor FROM configuracoes_visuais 
-                WHERE categoria = ? AND elemento = ? AND propriedade = ? AND ativo = 1
-            ");
-            $stmt->execute([$categoria, $elemento, $propriedade]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $row ? $row['valor'] : $padrao;
-        } catch (Exception $e) {
-            error_log("Erro ao obter configuração: {$categoria}.{$elemento}.{$propriedade} - " . $e->getMessage());
-            return $padrao;
-        }
-    }
-    
     public function saveCSS($filepath = null) {
-            if (!$filepath) {
-                $filepath = __DIR__ . '/../assets/css/dynamic.css';
-            }
-            
+        if (!$filepath) {
+            $filepath = __DIR__ . '/../assets/css/dynamic.css';
+        }
+        
         $css = $this->generateCSS();
         
         try {

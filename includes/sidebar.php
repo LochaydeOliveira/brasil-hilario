@@ -40,9 +40,10 @@ try {
 
 <div class="sidebar">
 
+
     <div class="card mb-4" data-aos="fade-left">
         <div class="card-header">
-            <h3 class="widget-title mb-0">Mais Recentes</h3>
+            <h3 class="mb-0">Mais Recentes</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
@@ -59,7 +60,7 @@ try {
                         </div>
                     <?php endif; ?>
                     <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
-                        <h6 class="card-title"><?php echo htmlspecialchars($post['titulo']); ?></h6>
+                        <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
                         <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
@@ -68,6 +69,7 @@ try {
                 <?php endforeach; ?>
                 
                 <?php 
+
                 include 'anuncios-sidebar.php';
                 ?>
             </ul>
@@ -87,9 +89,22 @@ try {
         </div>
     </div>
 
-    <div class="card mb-4" data-aos="fade-left">
+    <div style="margin: 2rem 0;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
+        <!-- Ads de Display - Google -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-8313157699231074"
+            data-ad-slot="6450653464"
+            data-ad-format="auto"
+            data-full-width-responsive="true">            
+        </ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="card mb-4" data-aos="fade-left" data-aos-delay="100">
         <div class="card-header">
-            <h3 class="widget-title mb-0">Categorias</h3>
+            <h3 class="mb-0">Categorias</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
@@ -104,23 +119,67 @@ try {
         </div>
     </div>
 
-    <div class="card mb-4" data-aos="fade-left">
+    <div style="margin: 2rem 0;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
+        <!-- Ads de Display - Google -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-8313157699231074"
+            data-ad-slot="6450653464"
+            data-ad-format="auto"
+            data-full-width-responsive="true">
+        </ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
         <div class="card-header">
-            <h3 class="widget-title mb-0">Mais Lidos</h3>
+            <h3 class="mb-0">Mais Lidos</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
                 <?php foreach ($posts_populares as $post): ?>
                 <li class="mb-3">
+                    <?php if (!empty($post['imagem_destacada'])): ?>
+                        <div class="post-thumbnail mb-2">
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
+                                <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                                     class="img-fluid rounded" 
+                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                                     >
+                            </a>
+                        </div>
+                    <?php endif; ?>
                     <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
-                        <h6 class="card-title"><?php echo htmlspecialchars($post['titulo']); ?></h6>
+                        <?php echo htmlspecialchars($post['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
-                        <i class="fas fa-eye me-1"></i><?php echo number_format($post['visualizacoes']); ?> visualizações
+                        <?php echo number_format($post['visualizacoes']); ?> visualizações
                     </small>
                 </li>
                 <?php endforeach; ?>
             </ul>
         </div>
     </div>
+
+    <div style="margin: 2rem 0;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8313157699231074" crossorigin="anonymous"></script>
+        <!-- Ads de Display - Google -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-8313157699231074"
+            data-ad-slot="6450653464"
+            data-ad-format="auto"
+            data-full-width-responsive="true">
+        </ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+
+    <div class="card mb-4" data-aos="fade-left" data-aos-delay="300">
+        <div class="card-body"></div>
+    </div>
+
 </div>
