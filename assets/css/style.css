@@ -183,7 +183,7 @@ body {
 
 /* Links da Sidebar */
 .sidebar a {
-    font-family: var(--font-primaary);
+    font-family: var(--font-primary);
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
@@ -519,6 +519,7 @@ body {
 }
 
 .sidebar-widget h3 {
+    font-family: var(--font-primary);
     font-size: 1.2rem;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
