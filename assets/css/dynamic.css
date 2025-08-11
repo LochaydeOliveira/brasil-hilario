@@ -7,6 +7,10 @@
   --cor_perigo: #dc3545;
   --cor_aviso: #fcbd07;
   --cor_info: #17a2b8;
+  
+  /* VARIÁVEIS DE FONTES - ADICIONADAS */
+  --font-primary: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-secondary: "Inter", sans-serif;
 }
 
 /* =====================================================
