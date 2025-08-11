@@ -111,7 +111,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="<?php echo BLOG_URL; ?>/assets/css/style.css?v=05" rel="stylesheet">
-    <link href="<?php echo BLOG_URL; ?>/assets/css/dynamic.css?v=01" rel="stylesheet">
+    <link href="<?php echo BLOG_URL; ?>/assets/css/dynamic.css?v=1.01" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
