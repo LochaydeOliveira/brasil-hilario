@@ -142,7 +142,6 @@ body .featured-post .card-title {
    CONFIGURAÇÕES ADMIN - HEADERS CARDS
    ===================================================== */
 body .card-header h3 {
-  font-family: var(--font-primary) !important;
   font-weight: 700 !important;
   font-size: 22px !important;
 }
