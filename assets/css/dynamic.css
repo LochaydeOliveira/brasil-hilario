@@ -1,4 +1,4 @@
-/* CSS Gerado Dinamicamente */
+/* CSS Gerado Dinamicamente - Configurações de Fontes com Prioridade Máxima */
 
 :root {
   --cor_primaria: #0b8103;
@@ -7,8 +7,322 @@
   --cor_perigo: #dc3545;
   --cor_aviso: #fcbd07;
   --cor_info: #17a2b8;
+  
+  /* Variáveis de fontes principais */
+  --font-primary: "Merriweather", serif;
+  --font-secondary: "Inter", sans-serif;
 }
 
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - HEADER
+   ===================================================== */
+body .site-title {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+  font-size: 28px !important;
+}
+
+@media (max-width: 768px) {
+  body .site-title {
+    font-size: 24px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - SIDEBAR GERAL
+   ===================================================== */
+body .sidebar {
+  font-family: var(--font-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  body .sidebar {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - TÍTULOS SIDEBAR
+   ===================================================== */
+body .sidebar .sidebar-title {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+}
+
+@media (max-width: 768px) {
+  body .sidebar .sidebar-title {
+    font-size: 16px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - LINKS SIDEBAR
+   ===================================================== */
+body .sidebar a {
+  font-family: var(--font-secondary) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+}
+
+/* ESPECIFICIDADE MÁXIMA para links de posts na sidebar */
+body .sidebar .card .card-body .list-unstyled li a {
+  font-family: var(--font-secondary) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  body .sidebar a {
+    font-size: 12px !important;
+  }
+  body .sidebar .card .card-body .list-unstyled li a {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - WIDGETS SIDEBAR
+   ===================================================== */
+body .sidebar .sidebar-widget h3 {
+  font-family: var(--font-primary) !important;
+  font-weight: 600 !important;
+  font-size: 19px !important;
+}
+
+@media (max-width: 768px) {
+  body .sidebar .sidebar-widget h3 {
+    font-size: 17px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - CONTEÚDO
+   ===================================================== */
+body .post-content {
+  font-family: var(--font-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+}
+
+@media (max-width: 768px) {
+  body .post-content {
+    font-size: 14px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - TÍTULOS CONTEÚDO
+   ===================================================== */
+body .post-content h2 {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - TÍTULOS CARDS
+   ===================================================== */
+body .post-card .card-title, 
+body .featured-post .card-title {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+}
+
+@media (max-width: 768px) {
+  body .post-card .card-title, 
+  body .featured-post .card-title {
+    font-size: 18px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - HEADERS CARDS
+   ===================================================== */
+body .card-header h3 {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+  font-size: 22px !important;
+}
+
+@media (max-width: 768px) {
+  body .card-header h3 {
+    font-size: 20px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - BADGES
+   ===================================================== */
+body .badge, 
+body .category-badge {
+  font-family: var(--font-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+@media (max-width: 768px) {
+  body .badge, 
+  body .category-badge {
+    font-size: 10px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - TÍTULOS FOOTER
+   ===================================================== */
+body .footer-title {
+  font-family: var(--font-secondary) !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+}
+
+@media (max-width: 768px) {
+  body .footer-title {
+    font-size: 16px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - BREADCRUMB
+   ===================================================== */
+body .breadcrumb, 
+body .breadcrumb-item {
+  font-family: var(--font-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+}
+
+@media (max-width: 768px) {
+  body .breadcrumb, 
+  body .breadcrumb-item {
+    font-size: 10px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - SEÇÕES ESPECÍFICAS
+   ===================================================== */
+/* Seção "Leia Também" */
+.related-posts-title {
+  font-family: var(--font-primary) !important;
+  font-weight: 700 !important;
+  font-size: 22px !important;
+}
+
+.related-post-title {
+  font-family: var(--font-primary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  .related-posts-title {
+    font-size: 20px !important;
+  }
+  .related-post-title {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - ANÚNCIOS
+   ===================================================== */
+body .anuncio-titulo-sidebar,
+body .anuncio-titulo-conteudo,
+body .anuncio-titulo-grade,
+body .anuncio-titulo-carrossel {
+  font-family: var(--font-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  body .anuncio-titulo-sidebar,
+  body .anuncio-titulo-conteudo,
+  body .anuncio-titulo-grade,
+  body .anuncio-titulo-carrossel {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - NAVEGAÇÃO
+   ===================================================== */
+body .navbar,
+body .navbar-nav .nav-link {
+  font-family: var(--font-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  body .navbar,
+  body .navbar-nav .nav-link {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - BOTÕES
+   ===================================================== */
+body .btn {
+  font-family: var(--font-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  body .btn {
+    font-size: 12px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - META TEXTOS
+   ===================================================== */
+body .text-muted,
+body .meta-text,
+body small {
+  font-family: var(--font-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+}
+
+@media (max-width: 768px) {
+  body .text-muted,
+  body .meta-text,
+  body small {
+    font-size: 10px !important;
+  }
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - TÍTULOS GERAIS
+   ===================================================== */
+body h1, 
+body h2, 
+body h3, 
+body h4, 
+body h5, 
+body h6 {
+  font-family: var(--font-primary) !important;
+  color: var(--cor_secundaria) !important;
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - PARÁGRAFOS E CONTEÚDO
+   ===================================================== */
+body p, 
+body div {
+  font-family: var(--font-secondary) !important;
+}
+
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - CORES
+   ===================================================== */
 .navbar {
   background-color: #ffffff;
   color: #333333;
@@ -31,23 +345,9 @@ footer a {
   color: #0b8103;
 }
 
-body {
-  font-family: var(--font-secondary);
-}
-
-h3 {
-  color: var(--cor_secundaria)!important;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-primary);
-  color: var(--cor_secundaria)!important;
-}
-
-p, div {
-  font-family: var(--font-secondary);
-}
-
+/* =====================================================
+   CONFIGURAÇÕES ADMIN - UTILITÁRIOS
+   ===================================================== */
 .titulo {
   font-size: 28px;
 }

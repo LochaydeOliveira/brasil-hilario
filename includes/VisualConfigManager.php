@@ -554,95 +554,110 @@ class VisualConfigManager {
             $tamanhoHeaderDesktop = $this->getTamanhoFonte('header', 'desktop', '28px');
             $tamanhoHeaderMobile = $this->getTamanhoFonte('header', 'mobile', '24px');
             
-            $css .= ".site-title {\n";
-            $css .= "  font-family: {$fonteHeader};\n";
-            $css .= "  font-weight: {$pesoHeader};\n";
-            $css .= "  font-size: {$tamanhoHeaderDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - HEADER */\n";
+            $css .= "body .site-title {\n";
+            $css .= "  font-family: {$fonteHeader} !important;\n";
+            $css .= "  font-weight: {$pesoHeader} !important;\n";
+            $css .= "  font-size: {$tamanhoHeaderDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .site-title {\n";
-            $css .= "    font-size: {$tamanhoHeaderMobile};\n";
+            $css .= "  body .site-title {\n";
+            $css .= "    font-size: {$tamanhoHeaderMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
         
-        // Sidebar específica - CONTROLE TOTAL
+        // Sidebar específica - CONTROLE TOTAL COM ESPECIFICIDADE MÁXIMA
         if (isset($configs['fontes']['sidebar']['fonte'])) {
             $fonteSidebar = $configs['fontes']['sidebar']['fonte'];
             $pesoSidebar = $this->getPesoFonte('sidebar', '400');
             $tamanhoSidebarDesktop = $this->getTamanhoFonte('sidebar', 'desktop', '14px');
             $tamanhoSidebarMobile = $this->getTamanhoFonte('sidebar', 'mobile', '12px');
             
-            $css .= ".sidebar {\n";
-            $css .= "  font-family: {$fonteSidebar};\n";
-            $css .= "  font-weight: {$pesoSidebar};\n";
-            $css .= "  font-size: {$tamanhoSidebarDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - SIDEBAR GERAL */\n";
+            $css .= "body .sidebar {\n";
+            $css .= "  font-family: {$fonteSidebar} !important;\n";
+            $css .= "  font-weight: {$pesoSidebar} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .sidebar {\n";
-            $css .= "    font-size: {$tamanhoSidebarMobile};\n";
+            $css .= "  body .sidebar {\n";
+            $css .= "    font-size: {$tamanhoSidebarMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
         
-        // Títulos da Sidebar - CONTROLE ESPECÍFICO
+        // Títulos da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
         if (isset($configs['fontes']['sidebar_titulo']['fonte'])) {
             $fonteSidebarTitulo = $configs['fontes']['sidebar_titulo']['fonte'];
             $pesoSidebarTitulo = $this->getPesoFonte('sidebar_titulo', '700');
             $tamanhoSidebarTituloDesktop = $this->getTamanhoFonte('sidebar_titulo', 'desktop', '18px');
             $tamanhoSidebarTituloMobile = $this->getTamanhoFonte('sidebar_titulo', 'mobile', '16px');
             
-            $css .= ".sidebar-title {\n";
-            $css .= "  font-family: {$fonteSidebarTitulo};\n";
-            $css .= "  font-weight: {$pesoSidebarTitulo};\n";
-            $css .= "  font-size: {$tamanhoSidebarTituloDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS SIDEBAR */\n";
+            $css .= "body .sidebar .sidebar-title {\n";
+            $css .= "  font-family: {$fonteSidebarTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarTituloDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .sidebar-title {\n";
-            $css .= "    font-size: {$tamanhoSidebarTituloMobile};\n";
+            $css .= "  body .sidebar .sidebar-title {\n";
+            $css .= "    font-size: {$tamanhoSidebarTituloMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
         
-        // Links da Sidebar - CONTROLE ESPECÍFICO
+        // Links da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
         if (isset($configs['fontes']['sidebar_links']['fonte'])) {
             $fonteSidebarLinks = $configs['fontes']['sidebar_links']['fonte'];
             $pesoSidebarLinks = $this->getPesoFonte('sidebar_links', '700');
             $tamanhoSidebarLinksDesktop = $this->getTamanhoFonte('sidebar_links', 'desktop', '14px');
             $tamanhoSidebarLinksMobile = $this->getTamanhoFonte('sidebar_links', 'mobile', '12px');
             
-            $css .= ".sidebar a {\n";
-            $css .= "  font-family: {$fonteSidebarLinks};\n";
-            $css .= "  font-weight: {$pesoSidebarLinks};\n";
-            $css .= "  font-size: {$tamanhoSidebarLinksDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - LINKS SIDEBAR */\n";
+            $css .= "body .sidebar a {\n";
+            $css .= "  font-family: {$fonteSidebarLinks} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarLinks} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarLinksDesktop} !important;\n";
+            $css .= "}\n\n";
+            
+            // ESPECIFICIDADE MÁXIMA para links de posts na sidebar
+            $css .= "body .sidebar .card .card-body .list-unstyled li a {\n";
+            $css .= "  font-family: {$fonteSidebarLinks} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarLinks} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarLinksDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .sidebar a {\n";
-            $css .= "    font-size: {$tamanhoSidebarLinksMobile};\n";
+            $css .= "  body .sidebar a {\n";
+            $css .= "    font-size: {$tamanhoSidebarLinksMobile} !important;\n";
+            $css .= "  }\n";
+            $css .= "  body .sidebar .card .card-body .list-unstyled li a {\n";
+            $css .= "    font-size: {$tamanhoSidebarLinksMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
         
-        // Widgets da Sidebar - CONTROLE ESPECÍFICO
+        // Widgets da Sidebar - CONTROLE ESPECÍFICO COM ESPECIFICIDADE MÁXIMA
         if (isset($configs['fontes']['sidebar_widget']['fonte'])) {
             $fonteSidebarWidget = $configs['fontes']['sidebar_widget']['fonte'];
             $pesoSidebarWidget = $this->getPesoFonte('sidebar_widget', '600');
             $tamanhoSidebarWidgetDesktop = $this->getTamanhoFonte('sidebar_widget', 'desktop', '19px');
             $tamanhoSidebarWidgetMobile = $this->getTamanhoFonte('sidebar_widget', 'mobile', '17px');
             
-            $css .= ".sidebar-widget h3 {\n";
-            $css .= "  font-family: {$fonteSidebarWidget};\n";
-            $css .= "  font-weight: {$pesoSidebarWidget};\n";
-            $css .= "  font-size: {$tamanhoSidebarWidgetDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - WIDGETS SIDEBAR */\n";
+            $css .= "body .sidebar .sidebar-widget h3 {\n";
+            $css .= "  font-family: {$fonteSidebarWidget} !important;\n";
+            $css .= "  font-weight: {$pesoSidebarWidget} !important;\n";
+            $css .= "  font-size: {$tamanhoSidebarWidgetDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .sidebar-widget h3 {\n";
-            $css .= "    font-size: {$tamanhoSidebarWidgetMobile};\n";
+            $css .= "  body .sidebar .sidebar-widget h3 {\n";
+            $css .= "    font-size: {$tamanhoSidebarWidgetMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -654,15 +669,16 @@ class VisualConfigManager {
             $tamanhoConteudoDesktop = $this->getTamanhoFonte('conteudo', 'desktop', '16px');
             $tamanhoConteudoMobile = $this->getTamanhoFonte('conteudo', 'mobile', '14px');
             
-            $css .= ".post-content {\n";
-            $css .= "  font-family: {$fonteConteudo};\n";
-            $css .= "  font-weight: {$pesoConteudo};\n";
-            $css .= "  font-size: {$tamanhoConteudoDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - CONTEÚDO */\n";
+            $css .= "body .post-content {\n";
+            $css .= "  font-family: {$fonteConteudo} !important;\n";
+            $css .= "  font-weight: {$pesoConteudo} !important;\n";
+            $css .= "  font-size: {$tamanhoConteudoDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .post-content {\n";
-            $css .= "    font-size: {$tamanhoConteudoMobile};\n";
+            $css .= "  body .post-content {\n";
+            $css .= "    font-size: {$tamanhoConteudoMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -672,9 +688,10 @@ class VisualConfigManager {
             $fonteTituloConteudo = $configs['fontes']['titulo_conteudo']['fonte'];
             $pesoTituloConteudo = $this->getPesoFonte('titulo_conteudo', '700');
             
-            $css .= ".post-content h2 {\n";
-            $css .= "  font-family: {$fonteTituloConteudo};\n";
-            $css .= "  font-weight: {$pesoTituloConteudo};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS CONTEÚDO */\n";
+            $css .= "body .post-content h2 {\n";
+            $css .= "  font-family: {$fonteTituloConteudo} !important;\n";
+            $css .= "  font-weight: {$pesoTituloConteudo} !important;\n";
             $css .= "}\n\n";
         }
         
@@ -685,15 +702,16 @@ class VisualConfigManager {
             $tamanhoCardTituloDesktop = $this->getTamanhoFonte('card_titulo', 'desktop', '20px');
             $tamanhoCardTituloMobile = $this->getTamanhoFonte('card_titulo', 'mobile', '18px');
             
-            $css .= ".post-card .card-title, .featured-post .card-title {\n";
-            $css .= "  font-family: {$fonteCardTitulo};\n";
-            $css .= "  font-weight: {$pesoCardTitulo};\n";
-            $css .= "  font-size: {$tamanhoCardTituloDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS CARDS */\n";
+            $css .= "body .post-card .card-title, body .featured-post .card-title {\n";
+            $css .= "  font-family: {$fonteCardTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoCardTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoCardTituloDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .post-card .card-title, .featured-post .card-title {\n";
-            $css .= "    font-size: {$tamanhoCardTituloMobile};\n";
+            $css .= "  body .post-card .card-title, body .featured-post .card-title {\n";
+            $css .= "    font-size: {$tamanhoCardTituloMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -705,15 +723,16 @@ class VisualConfigManager {
             $tamanhoCardHeaderDesktop = $this->getTamanhoFonte('card_header', 'desktop', '22px');
             $tamanhoCardHeaderMobile = $this->getTamanhoFonte('card_header', 'mobile', '20px');
             
-            $css .= ".card-header h3 {\n";
-            $css .= "  font-family: {$fonteCardHeader};\n";
-            $css .= "  font-weight: {$pesoCardHeader};\n";
-            $css .= "  font-size: {$tamanhoCardHeaderDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - HEADERS CARDS */\n";
+            $css .= "body .card-header h3 {\n";
+            $css .= "  font-family: {$fonteCardHeader} !important;\n";
+            $css .= "  font-weight: {$pesoCardHeader} !important;\n";
+            $css .= "  font-size: {$tamanhoCardHeaderDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .card-header h3 {\n";
-            $css .= "    font-size: {$tamanhoCardHeaderMobile};\n";
+            $css .= "  body .card-header h3 {\n";
+            $css .= "    font-size: {$tamanhoCardHeaderMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -725,15 +744,16 @@ class VisualConfigManager {
             $tamanhoBadgesDesktop = $this->getTamanhoFonte('badges', 'desktop', '12px');
             $tamanhoBadgesMobile = $this->getTamanhoFonte('badges', 'mobile', '10px');
             
-            $css .= ".badge, .category-badge {\n";
-            $css .= "  font-family: {$fonteBadges};\n";
-            $css .= "  font-weight: {$pesoBadges};\n";
-            $css .= "  font-size: {$tamanhoBadgesDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - BADGES */\n";
+            $css .= "body .badge, body .category-badge {\n";
+            $css .= "  font-family: {$fonteBadges} !important;\n";
+            $css .= "  font-weight: {$pesoBadges} !important;\n";
+            $css .= "  font-size: {$tamanhoBadgesDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .badge, .category-badge {\n";
-            $css .= "    font-size: {$tamanhoBadgesMobile};\n";
+            $css .= "  body .badge, body .category-badge {\n";
+            $css .= "    font-size: {$tamanhoBadgesMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -745,15 +765,16 @@ class VisualConfigManager {
             $tamanhoFooterTituloDesktop = $this->getTamanhoFonte('footer_titulo', 'desktop', '18px');
             $tamanhoFooterTituloMobile = $this->getTamanhoFonte('footer_titulo', 'mobile', '16px');
             
-            $css .= ".footer-title {\n";
-            $css .= "  font-family: {$fonteFooterTitulo};\n";
-            $css .= "  font-weight: {$pesoFooterTitulo};\n";
-            $css .= "  font-size: {$tamanhoFooterTituloDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - TÍTULOS FOOTER */\n";
+            $css .= "body .footer-title {\n";
+            $css .= "  font-family: {$fonteFooterTitulo} !important;\n";
+            $css .= "  font-weight: {$pesoFooterTitulo} !important;\n";
+            $css .= "  font-size: {$tamanhoFooterTituloDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .footer-title {\n";
-            $css .= "    font-size: {$tamanhoFooterTituloMobile};\n";
+            $css .= "  body .footer-title {\n";
+            $css .= "    font-size: {$tamanhoFooterTituloMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }
@@ -765,15 +786,16 @@ class VisualConfigManager {
             $tamanhoBreadcrumbDesktop = $this->getTamanhoFonte('breadcrumb', 'desktop', '12px');
             $tamanhoBreadcrumbMobile = $this->getTamanhoFonte('breadcrumb', 'mobile', '10px');
             
-            $css .= ".breadcrumb, .breadcrumb-item {\n";
-            $css .= "  font-family: {$fonteBreadcrumb};\n";
-            $css .= "  font-weight: {$pesoBreadcrumb};\n";
-            $css .= "  font-size: {$tamanhoBreadcrumbDesktop};\n";
+            $css .= "/* CONFIGURAÇÃO ADMIN - BREADCRUMB */\n";
+            $css .= "body .breadcrumb, body .breadcrumb-item {\n";
+            $css .= "  font-family: {$fonteBreadcrumb} !important;\n";
+            $css .= "  font-weight: {$pesoBreadcrumb} !important;\n";
+            $css .= "  font-size: {$tamanhoBreadcrumbDesktop} !important;\n";
             $css .= "}\n\n";
             
             $css .= "@media (max-width: 768px) {\n";
-            $css .= "  .breadcrumb, .breadcrumb-item {\n";
-            $css .= "    font-size: {$tamanhoBreadcrumbMobile};\n";
+            $css .= "  body .breadcrumb, body .breadcrumb-item {\n";
+            $css .= "    font-size: {$tamanhoBreadcrumbMobile} !important;\n";
             $css .= "  }\n";
             $css .= "}\n\n";
         }

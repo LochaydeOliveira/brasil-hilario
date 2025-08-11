@@ -1,5 +1,6 @@
 <?php
 require_once 'config/config.php';
+require_once 'config/database.php';
 require_once 'includes/db.php';
 require_once 'includes/VisualConfigManager.php';
 
@@ -20,4 +21,6 @@ echo "\nCorreções aplicadas:\n";
 echo "✅ Erro de digitação corrigido: var(--font-primaary) → var(--font-primary)\n";
 echo "✅ Fonte adicionada para .sidebar-widget h3\n";
 echo "✅ Todas as fontes da sidebar agora usam variáveis CSS\n";
+echo "✅ ESPECIFICIDADE MÁXIMA adicionada com 'body' + '!important'\n";
+echo "✅ Regras CSS com prioridade máxima para configurações do admin\n";
 ?> 
