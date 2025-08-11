@@ -187,12 +187,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         }
         
         // Gerar CSS dinâmico
-        $css_salvo = $visualConfig->saveCSS();
+        // $css_salvo = $visualConfig->saveCSS(); // DESABILITADO PARA EVITAR SOBRESCRITA
         
         $mensagem = "Configurações visuais salvas com sucesso! ({$salvas} configurações atualizadas)";
-        if (!$css_salvo) {
-            $mensagem .= " ⚠️ CSS não foi atualizado";
-        }
+        // if (!$css_salvo) {
+        //     $mensagem .= " ⚠️ CSS não foi atualizado";
+        // }
         $tipo_mensagem = 'success';
         
         // Debug temporário (remover depois)
@@ -217,7 +217,7 @@ if (empty($configs['fontes']['site'])) {
     $configs = $visualConfig->getAllConfigs(); // Recarregar configurações
     
     // Forçar regeneração do CSS
-    $visualConfig->saveCSS();
+    // $visualConfig->saveCSS(); // DESABILITADO PARA EVITAR SOBRESCRITA
 }
 
 $page_title = 'Configurações Visuais';
