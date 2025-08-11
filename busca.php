@@ -87,6 +87,7 @@ $total_results = $search_results['total'];
 $suggestions = get_search_suggestions($search_term);
 ?>
 
+<!-- PÁGINA DE RESULTADOS DE BUSCA - ÍCONES CORRIGIDOS -->
 <div class="container py-4">
     <div class="row mb-4">
         <div class="col-12">
@@ -112,7 +113,7 @@ $suggestions = get_search_suggestions($search_term);
                     <div class="list-group">
                         <?php foreach ($_SESSION['search_history'] as $history_term): ?>
                             <a href="?q=<?php echo urlencode($history_term); ?>" class="list-group-item list-group-item-action">
-                                <i class="fa-solid fa-clock-rotate-left me-2"></i>
+                                <i class="fas fa-clock me-2"></i>
                                 <?php echo htmlspecialchars($history_term); ?>
                             </a>
                         <?php endforeach; ?>
@@ -124,7 +125,7 @@ $suggestions = get_search_suggestions($search_term);
     
     <?php if (empty($posts)): ?>
         <div class="alert alert-info">
-            <i class="fa-solid fa-circle-info me-2"></i>
+            <i class="fas fa-info-circle me-2"></i>
             Nenhum resultado encontrado para sua busca. Tente outros termos.
         </div>
     <?php else: ?>
@@ -152,17 +153,17 @@ $suggestions = get_search_suggestions($search_term);
                             <div class="search-result-meta mt-auto">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <small class="text-muted">
-                                        <i class="fa-regular fa-calendar me-1"></i>
+                                        <i class="far fa-calendar me-1"></i>
                                         <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
                                     </small>
                                     <span class="badge bg-primary">
-                                        <i class="fa-solid fa-folder me-1"></i>
+                                        <i class="fas fa-folder me-1"></i>
                                         <?php echo htmlspecialchars($post['categoria_nome']); ?>
                                     </span>
                                 </div>
                                 <?php if (!empty($post['autor_nome'])): ?>
                                     <small class="text-muted d-block">
-                                        <i class="fa-solid fa-user me-1"></i>
+                                        <i class="fas fa-user me-1"></i>
                                         Por: <?php echo htmlspecialchars($post['autor_nome']); ?>
                                     </small>
                                 <?php endif; ?>
