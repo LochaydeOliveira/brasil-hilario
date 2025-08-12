@@ -1139,6 +1139,11 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     color: var(--cor_secundaria)!important;
 }
 
+.fw-bold {
+    font-weight: 900!important;
+}
+
+
 /* Botão de busca */
 .btn-search {
     border-color: #0b8103!important;
