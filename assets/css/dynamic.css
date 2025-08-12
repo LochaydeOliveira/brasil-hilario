@@ -70,8 +70,8 @@ body .sidebar a {
 /* ESPECIFICIDADE MÁXIMA para links de posts na sidebar */
 body .sidebar .card .card-body .list-unstyled li a {
   font-family: var(--font-secondary) !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
+  font-weight: 900 !important;
+  font-size: 18px !important;
 }
 
 @media (max-width: 768px) {
