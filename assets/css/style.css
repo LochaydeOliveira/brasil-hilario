@@ -1133,7 +1133,7 @@ footer {
 /* Estilos gerais de tipografia */
 h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     font-optical-sizing: auto;
-    font-weight: 900;
+    font-weight: 900!important;
     font-style: normal;
     font-variation-settings: "wdth" 100;
     color: var(--cor_secundaria)!important;
