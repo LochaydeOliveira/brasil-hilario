@@ -160,6 +160,8 @@ body .category-badge {
   font-family: var(--font-secondary) !important;
   font-weight: 300 !important;
   font-size: 12px !important;
+  background: #000!important;
+  color: #fff!important;
 }
 
 @media (max-width: 768px) {
