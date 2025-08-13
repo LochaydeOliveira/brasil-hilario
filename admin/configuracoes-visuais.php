@@ -770,8 +770,7 @@ include 'includes/header.php';
                                             </div>
                                         </div>
                                         
-                                        <!-- Seção Últimas do Portal -->
-                                        <div class="mb-4">
+                                        <div style="margin-top: 3rem;" class="mb-4">
                                             <h6>Seção "Últimas do Portal"</h6>
                                             <div class="row">
                                                 <div class="col-md-6">
