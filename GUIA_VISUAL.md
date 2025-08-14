@@ -16,7 +16,7 @@
 4. **Delete o arquivo** `configurar_projeto.php` por segurança
 
 ### **PASSO 2: Testar a Configuração**
-1. **Acesse**: `https://seu-site.com/testar_configuracao.php`
+1. **Acesse**: `https://seu-site.com/status.php`
 2. **Verifique** se todos os testes passaram (✅)
 3. **Se houver erros**, siga as instruções para corrigir
 
@@ -87,13 +87,12 @@ PHP Warning: ini_set(): Session ini settings cannot be changed when a session is
 ## 🔧 **FUNCIONALIDADES DISPONÍVEIS**
 
 ### **1. Sistema de Teste**
-- **Localização**: `/testar_configuracao.php`
+- **Localização**: `/status.php`
 - **Funcionalidades**:
-  - Testa conexão com banco
-  - Verifica sistema de logs
-  - Testa sistema de cache
-  - Valida sistema de sessão
-  - Verifica diretórios e permissões
+  - Verifica arquivos essenciais
+  - Testa diretórios e permissões
+  - Verifica extensões PHP
+  - Mostra informações do servidor
 
 ### **2. Sistema de Backup**
 - **Localização**: `/admin/backup.php`
@@ -134,7 +133,7 @@ PHP Warning: ini_set(): Session ini settings cannot be changed when a session is
 ### **Sistema de Teste**
 ```
 ┌─────────────────────────────────────┐
-│ Teste de Configuração               │
+│ Status do Sistema                   │
 ├─────────────────────────────────────┤
 │ ✅ Conexão com banco OK             │
 │ ✅ Sistema de logs OK               │
@@ -143,6 +142,7 @@ PHP Warning: ini_set(): Session ini settings cannot be changed when a session is
 │ ✅ Sistema de sessão OK             │
 │ ✅ Diretórios criados               │
 │ ✅ Arquivo .env existe              │
+│ ✅ Extensões PHP carregadas         │
 └─────────────────────────────────────┘
 ```
 
