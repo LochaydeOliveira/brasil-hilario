@@ -10,6 +10,9 @@ require_once 'includes/Logger.php';
 require_once 'includes/CacheManager.php';
 require_once 'includes/Validator.php';
 
+// Inicializar sessão de forma segura
+require_once 'includes/session_init.php';
+
 // Inicializar classes
 $logger = new Logger();
 $cache = new CacheManager();

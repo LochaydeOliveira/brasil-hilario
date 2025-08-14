@@ -2,6 +2,9 @@
 require_once '../includes/db.php';
 require_once '../includes/Logger.php';
 
+// Inicializar sessão de forma segura
+require_once '../includes/session_init.php';
+
 class BackupManager {
     private $pdo;
     private $logger;
@@ -366,8 +369,6 @@ class BackupManager {
 
 // Interface web para o sistema de backup
 if (isset($_GET['action'])) {
-    session_start();
-    
     // Verificar se usuário está logado
     if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
         die('Acesso negado');

@@ -15,22 +15,50 @@
 3. **Clique em "Salvar Configuração"**
 4. **Delete o arquivo** `configurar_projeto.php` por segurança
 
-### **PASSO 2: Testar o Sistema de Backup**
+### **PASSO 2: Testar a Configuração**
+1. **Acesse**: `https://seu-site.com/testar_configuracao.php`
+2. **Verifique** se todos os testes passaram (✅)
+3. **Se houver erros**, siga as instruções para corrigir
+
+### **PASSO 3: Testar o Sistema de Backup**
 1. **Acesse**: `https://seu-site.com/admin/backup.php`
 2. **Faça login** no painel admin
 3. **Clique em "Backup Completo"** para criar seu primeiro backup
 4. **Verifique** se apareceu na lista de backups
 
-### **PASSO 3: Verificar os Logs**
+### **PASSO 4: Verificar os Logs**
 1. **Acesse**: `https://seu-site.com/logs/app.log`
 2. **Verifique** se os logs estão sendo criados
 3. **Procure por** mensagens de sucesso
 
-### **PASSO 4: Testar a Newsletter**
+### **PASSO 5: Testar a Newsletter**
 1. **Acesse**: `https://seu-site.com/newsletter`
 2. **Preencha** o formulário com seu email
 3. **Verifique** se recebeu o email de confirmação
 4. **Clique** no link de confirmação
+
+---
+
+## 🔧 **PROBLEMA RESOLVIDO: Erros de Sessão**
+
+### **❌ Problema Identificado**
+```
+PHP Warning: ini_set(): Session ini settings cannot be changed when a session is active
+```
+
+### **✅ Solução Implementada**
+- **Criado arquivo**: `includes/session_init.php`
+- **Configurações de sessão** movidas para antes de `session_start()`
+- **Verificação de status** da sessão antes de configurar
+- **CSRF token** gerado automaticamente
+
+### **📁 Arquivos Atualizados**
+- `config/config.php` - Configurações de sessão corrigidas
+- `includes/session_init.php` - Novo sistema de inicialização
+- `index.php` - Usa novo sistema de sessão
+- `newsletter.php` - Usa novo sistema de sessão
+- `confirmar-newsletter.php` - Usa novo sistema de sessão
+- `admin/backup.php` - Usa novo sistema de sessão
 
 ---
 
@@ -40,6 +68,7 @@
 - [x] Credenciais protegidas em arquivo .env
 - [x] Headers de segurança automáticos
 - [x] Validação de dados robusta
+- [x] **Sistema de sessão seguro corrigido**
 
 ### ✅ **Performance**
 - [x] Cache inteligente para posts
@@ -51,12 +80,22 @@
 - [x] Newsletter completa
 - [x] Logs estruturados
 - [x] Monitoramento avançado
+- [x] **Sistema de teste de configuração**
 
 ---
 
 ## 🔧 **FUNCIONALIDADES DISPONÍVEIS**
 
-### **1. Sistema de Backup**
+### **1. Sistema de Teste**
+- **Localização**: `/testar_configuracao.php`
+- **Funcionalidades**:
+  - Testa conexão com banco
+  - Verifica sistema de logs
+  - Testa sistema de cache
+  - Valida sistema de sessão
+  - Verifica diretórios e permissões
+
+### **2. Sistema de Backup**
 - **Localização**: `/admin/backup.php`
 - **Funcionalidades**:
   - Backup completo do banco
@@ -65,7 +104,7 @@
   - Compressão automática
   - Limpeza de backups antigos
 
-### **2. Newsletter**
+### **3. Newsletter**
 - **Página de inscrição**: `/newsletter`
 - **Confirmação**: `/confirmar-newsletter?token=...`
 - **Funcionalidades**:
@@ -74,7 +113,7 @@
   - Estatísticas detalhadas
   - Cancelamento fácil
 
-### **3. Logs Estruturados**
+### **4. Logs Estruturados**
 - **Arquivo**: `/logs/app.log`
 - **Informações registradas**:
   - Acessos às páginas
@@ -82,7 +121,7 @@
   - Ações de usuários
   - Consultas de banco
 
-### **4. Cache Inteligente**
+### **5. Cache Inteligente**
 - **Funciona automaticamente**
 - **Melhora a velocidade** do site
 - **Cache de posts** por 30 minutos
@@ -91,6 +130,21 @@
 ---
 
 ## 📱 **INTERFACES DISPONÍVEIS**
+
+### **Sistema de Teste**
+```
+┌─────────────────────────────────────┐
+│ Teste de Configuração               │
+├─────────────────────────────────────┤
+│ ✅ Conexão com banco OK             │
+│ ✅ Sistema de logs OK               │
+│ ✅ Sistema de cache OK              │
+│ ✅ Sistema de validação OK          │
+│ ✅ Sistema de sessão OK             │
+│ ✅ Diretórios criados               │
+│ ✅ Arquivo .env existe              │
+└─────────────────────────────────────┘
+```
 
 ### **Painel de Backup**
 ```
@@ -133,8 +187,9 @@
 
 ### **Imediato (Hoje)**
 1. ✅ Configurar o projeto
-2. ✅ Testar o sistema de backup
-3. ✅ Verificar se os logs funcionam
+2. ✅ Testar a configuração
+3. ✅ Verificar se não há mais erros de sessão
+4. ✅ Testar o sistema de backup
 
 ### **Esta Semana**
 1. 🔄 Implementar newsletter no rodapé do site
@@ -156,6 +211,10 @@
 - Verifique se as credenciais estão corretas no .env
 - Teste a conexão no configurador
 
+**Erros de sessão:**
+- ✅ **RESOLVIDO** - Use o novo sistema de inicialização
+- Verifique se o arquivo `includes/session_init.php` existe
+
 **Backup não funciona:**
 - Verifique se o mysqldump está instalado
 - Confirme as permissões do diretório backups
@@ -165,6 +224,7 @@
 - Confirme se o domínio está autorizado
 
 ### **Contatos**
+- **Teste**: `/testar_configuracao.php`
 - **Logs**: `/logs/app.log`
 - **Backup**: `/admin/backup.php`
 - **Newsletter**: `/newsletter`
@@ -177,6 +237,7 @@
 - 🔒 Credenciais protegidas
 - 🔒 Validação robusta
 - 🔒 Headers de segurança
+- 🔒 **Sistema de sessão seguro**
 
 ### **Performance**
 - ⚡ Cache inteligente
@@ -188,12 +249,14 @@
 - 💾 Backup automático
 - 📝 Logs estruturados
 - 📊 Monitoramento
+- 🧪 **Sistema de teste**
 
 ### **Manutenibilidade**
 - 🛠️ Código organizado
 - 🛠️ Configurações centralizadas
 - 🛠️ Fácil debugging
+- 🛠️ **Sem erros de sessão**
 
 ---
 
-**🎯 Resultado: Seu site agora está mais seguro, rápido e funcional!** 
+**🎯 Resultado: Seu site agora está mais seguro, rápido, funcional e sem erros!** 

@@ -4,6 +4,9 @@ require_once 'config/config.php';
 require_once 'includes/Logger.php';
 require_once 'includes/NewsletterManager.php';
 
+// Inicializar sessão de forma segura
+require_once 'includes/session_init.php';
+
 $logger = new Logger();
 $newsletter = new NewsletterManager($pdo);
 

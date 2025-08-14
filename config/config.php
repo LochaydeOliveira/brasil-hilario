@@ -141,11 +141,13 @@ define('DEBUG_MODE', ENVIRONMENT === 'development');
 // Configurações de Timezone
 date_default_timezone_set('America/Sao_Paulo');
 
-// Configurações de Sessão
-ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1);
-ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_samesite', 'Strict');
+// Configurações de Sessão (antes de session_start())
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 1);
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+}
 
 // Configurações de Headers de Segurança
 if (!headers_sent()) {
