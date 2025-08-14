@@ -12,12 +12,6 @@ define('META_DESCRIPTION', 'O melhor conteúdo de humor do Brasil. Piadas, memes
 // Configurações de Cache
 define('CACHE_ENABLED', true);
 define('CACHE_TIME', 3600); // 1 hora
-define('CACHE_DIR', __DIR__ . '/../cache');
-
-// Configurações de Logs
-define('LOG_ENABLED', true);
-define('LOG_LEVEL', 'INFO'); // DEBUG, INFO, WARNING, ERROR, CRITICAL
-define('LOG_DIR', __DIR__ . '/../logs');
 
 // Configurações de Posts
 define('POSTS_PER_PAGE', 10);
@@ -31,7 +25,7 @@ define('UPLOAD_URL', BLOG_URL . '/uploads');
 
 // Configurações de Segurança
 define('ADMIN_EMAIL', 'admin@brasilhilario.com.br');
-define('SECURE_AUTH_KEY', $_ENV['SECURE_AUTH_KEY'] ?? bin2hex(random_bytes(32)));
+define('SECURE_AUTH_KEY', bin2hex(random_bytes(32)));
 
 // Configurações de Cache do AdSense
 define('ADSENSE_CLIENT_ID', 'ca-pub-8313157699231074');
@@ -61,34 +55,6 @@ define('SITEMAP_URL', BLOG_URL . '/sitemap.xml');
 define('ROBOTS_PATH', 'robots.txt');
 define('ROBOTS_URL', BLOG_URL . '/robots.txt');
 
-// Configurações de Backup
-define('BACKUP_ENABLED', true);
-define('BACKUP_DIR', __DIR__ . '/../backups');
-define('BACKUP_KEEP_COUNT', 10); // Manter apenas os últimos 10 backups
-
-// Configurações de Newsletter
-define('NEWSLETTER_ENABLED', true);
-define('NEWSLETTER_FROM_EMAIL', 'noreply@brasilhilario.com.br');
-define('NEWSLETTER_FROM_NAME', 'Brasil Hilário');
-
-// Configurações de Validação
-define('VALIDATION_ENABLED', true);
-define('CSRF_ENABLED', true);
-define('RECAPTCHA_ENABLED', false);
-define('RECAPTCHA_SITE_KEY', '');
-define('RECAPTCHA_SECRET_KEY', '');
-
-// Configurações de Performance
-define('MINIFY_CSS', true);
-define('MINIFY_JS', true);
-define('COMPRESS_IMAGES', true);
-define('LAZY_LOADING', true);
-
-// Configurações de Monitoramento
-define('MONITORING_ENABLED', true);
-define('ERROR_REPORTING', E_ALL);
-define('DISPLAY_ERRORS', false);
-
 // Configurações de Páginas
 define('PAGES', [
     'sobre' => [
@@ -115,75 +81,4 @@ define('LEGAL_PAGES', [
         'slug' => 'termos',
         'url' => BLOG_URL . '/termos'
     ]
-]);
-
-// Configurações de Redes Sociais
-define('SOCIAL_MEDIA', [
-    'facebook' => 'https://facebook.com/brasilhilario',
-    'twitter' => 'https://twitter.com/brasilhilario',
-    'instagram' => 'https://instagram.com/brasilhilario',
-    'youtube' => 'https://youtube.com/brasilhilario'
-]);
-
-// Configurações de Analytics
-define('GOOGLE_ANALYTICS_ID', '');
-define('FACEBOOK_PIXEL_ID', '');
-
-// Configurações de Integração
-define('INTEGRATION_ENABLED', true);
-define('API_RATE_LIMIT', 100); // Requisições por hora
-define('API_TIMEOUT', 30); // Segundos
-
-// Configurações de Ambiente
-define('ENVIRONMENT', $_ENV['ENVIRONMENT'] ?? 'production'); // development, staging, production
-define('DEBUG_MODE', ENVIRONMENT === 'development');
-
-// Configurações de Timezone
-date_default_timezone_set('America/Sao_Paulo');
-
-// Configurações de Sessão (antes de session_start())
-if (session_status() === PHP_SESSION_NONE) {
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_secure', 1);
-    ini_set('session.use_strict_mode', 1);
-    ini_set('session.cookie_samesite', 'Strict');
-}
-
-// Configurações de Headers de Segurança
-if (!headers_sent()) {
-    header('X-Content-Type-Options: nosniff');
-    header('X-Frame-Options: SAMEORIGIN');
-    header('X-XSS-Protection: 1; mode=block');
-    header('Referrer-Policy: strict-origin-when-cross-origin');
-    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
-}
-
-// Configurações de Erro
-if (DEBUG_MODE) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-} else {
-    error_reporting(0);
-    ini_set('display_errors', 0);
-}
-
-// Configurações de Log
-if (LOG_ENABLED) {
-    ini_set('log_errors', 1);
-    ini_set('error_log', LOG_DIR . '/php_errors.log');
-}
-
-// Configurações de Cache
-if (CACHE_ENABLED && !is_dir(CACHE_DIR)) {
-    mkdir(CACHE_DIR, 0755, true);
-}
-
-// Configurações de Logs
-if (LOG_ENABLED && !is_dir(LOG_DIR)) {
-    mkdir(LOG_DIR, 0755, true);
-}
-
-// Configurações de Backup
-if (BACKUP_ENABLED && !is_dir(BACKUP_DIR)) {
-    mkdir(BACKUP_DIR, 0755, true);
-} 
+]); 
