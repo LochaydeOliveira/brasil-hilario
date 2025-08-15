@@ -29,19 +29,47 @@ $tipo_mensagem = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $link_compra = trim($_POST['link_compra'] ?? '');
-    $imagem = trim($_POST['imagem'] ?? '');
     $marca = $_POST['marca'] ?? '';
     $ativo = isset($_POST['ativo']);
+    
+    // Processar upload da imagem (se houver)
+    $imagem_path = $anuncio['imagem']; // Manter imagem atual
+    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = '../uploads/images/';
+        
+        // Criar diretório se não existir
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+        
+        $file_extension = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        
+        if (in_array($file_extension, $allowed_extensions)) {
+            $filename = 'anuncio_' . time() . '_' . uniqid() . '.' . $file_extension;
+            $upload_path = $upload_dir . $filename;
+            
+            if (move_uploaded_file($_FILES['imagem']['tmp_name'], $upload_path)) {
+                $imagem_path = '/uploads/images/' . $filename;
+            } else {
+                $mensagem = 'Erro ao fazer upload da imagem.';
+                $tipo_mensagem = 'danger';
+            }
+        } else {
+            $mensagem = 'Formato de imagem não suportado. Use JPG, PNG, GIF ou WebP.';
+            $tipo_mensagem = 'danger';
+        }
+    }
     
     // Validar campos obrigatórios
     if (empty($titulo) || empty($link_compra)) {
         $mensagem = 'Nome do produto e link são obrigatórios.';
         $tipo_mensagem = 'danger';
-    } else {
+    } elseif (empty($mensagem)) {
         try {
             $sql = "UPDATE anuncios SET titulo = ?, imagem = ?, link_compra = ?, marca = ?, ativo = ?, atualizado_em = NOW() WHERE id = ?";
             
-            $resultado = $dbManager->execute($sql, [$titulo, $imagem, $link_compra, $marca, $ativo ? 1 : 0, $anuncio_id]);
+            $resultado = $dbManager->execute($sql, [$titulo, $imagem_path, $link_compra, $marca, $ativo ? 1 : 0, $anuncio_id]);
             
             if ($resultado) {
                 header('Location: anuncios.php?success=1');
@@ -82,7 +110,7 @@ include 'includes/header.php';
                     <h5 class="card-title mb-0">Informações do Produto</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
@@ -115,10 +143,10 @@ include 'includes/header.php';
                         </div>
                         
                         <div class="mb-3">
-                            <label for="imagem" class="form-label">URL da Imagem</label>
-                            <input type="url" class="form-control" id="imagem" name="imagem" 
-                                   value="<?php echo htmlspecialchars($anuncio['imagem']); ?>">
-                            <div class="form-text">URL da imagem do produto (opcional)</div>
+                            <label for="imagem" class="form-label">Imagem do Produto</label>
+                            <input type="file" class="form-control" id="imagem" name="imagem" 
+                                   accept="image/*">
+                            <div class="form-text">Selecione uma nova imagem ou deixe em branco para manter a atual</div>
                         </div>
                         
                         <div class="mb-3">
