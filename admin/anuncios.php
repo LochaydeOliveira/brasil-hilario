@@ -1,104 +1,175 @@
 <?php
-ob_start();
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once '../config/config.php';
-require_once '../includes/db.php';
-require_once '../includes/AnunciosManager.php';
+require_once '../config/database_unified.php';
 require_once 'includes/auth.php';
 
-$anunciosManager = new AnunciosManager($pdo);
+// Verificar se o usuário está logado
+check_login();
 
-$topAnuncios = $anunciosManager->getTopAnuncios(5);
+$dbManager = DatabaseManager::getInstance();
 
-$todosAnuncios = $anunciosManager->getAllAnunciosComStats();
+// Processar exclusão
+if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    
+    try {
+        // Verificar se o anúncio está em algum grupo
+        $em_grupo = $dbManager->queryOne("
+            SELECT COUNT(*) as total FROM grupos_anuncios_items WHERE anuncio_id = ?
+        ", [$id]);
+        
+        if ($em_grupo['total'] > 0) {
+            $erro = "Não é possível excluir este anúncio pois ele está associado a um grupo. Remova a associação primeiro.";
+        } else {
+            $resultado = $dbManager->execute("DELETE FROM anuncios WHERE id = ?", [$id]);
+            if ($resultado) {
+                $sucesso = "Anúncio excluído com sucesso!";
+            } else {
+                $erro = "Erro ao excluir anúncio.";
+            }
+        }
+    } catch (Exception $e) {
+        $erro = "Erro: " . $e->getMessage();
+    }
+}
 
-$page_title = 'Anúncios';
+// Buscar anúncios
+$anuncios = $dbManager->query("
+    SELECT a.*, 
+           COUNT(gi.grupo_id) as total_grupos,
+           GROUP_CONCAT(g.nome SEPARATOR ', ') as grupos_associados
+    FROM anuncios a
+    LEFT JOIN grupos_anuncios_items gi ON a.id = gi.anuncio_id
+    LEFT JOIN grupos_anuncios g ON gi.grupo_id = g.id
+    GROUP BY a.id
+    ORDER BY a.criado_em DESC
+");
+
 include 'includes/header.php';
 ?>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Anúncios Nativos</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="novo-anuncio.php" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Anúncio
-        </a>
-    </div>
-</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Catálogo de Anúncios</h1>
+                <a href="novo-anuncio.php" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Anúncio
+                </a>
+            </div>
             
-            <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    Operação realizada com sucesso!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <?php if (isset($erro)): ?>
+                <div class="alert alert-danger"><?php echo $erro; ?></div>
             <?php endif; ?>
             
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> Top 5 Anúncios Mais Clicados</h5>
-                    <a href="todos-anuncios.php" class="btn btn-outline-primary btn-sm">
-                        Ver Todos
-                    </a>
+            <?php if (isset($sucesso)): ?>
+                <div class="alert alert-success"><?php echo $sucesso; ?></div>
+            <?php endif; ?>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Produtos Disponíveis</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (empty($topAnuncios)): ?>
-                        <p class="text-muted text-center">Nenhum anúncio encontrado.</p>
+                    <?php if (empty($anuncios)): ?>
+                        <div class="text-center py-4">
+                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <h5>Nenhum anúncio encontrado</h5>
+                            <p class="text-muted">Crie seu primeiro anúncio para começar.</p>
+                            <a href="novo-anuncio.php" class="btn btn-primary">Criar Primeiro Anúncio</a>
+                        </div>
                     <?php else: ?>
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Título</th>
-                                        <th>Localização</th>
-                                        <th>Cliques</th>
+                                        <th>ID</th>
+                                        <th>Produto</th>
+                                        <th>Marca</th>
                                         <th>Status</th>
+                                        <th>Grupos</th>
+                                        <th>Criado em</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($topAnuncios as $anuncio): ?>
+                                    <?php foreach ($anuncios as $anuncio): ?>
                                         <tr>
                                             <td>
+                                                <span class="badge bg-secondary">#<?php echo $anuncio['id']; ?></span>
+                                            </td>
+                                            <td>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="<?php echo htmlspecialchars($anuncio['imagem']); ?>" 
-                                                         alt="<?php echo htmlspecialchars($anuncio['titulo']); ?>"
-                                                         class="anuncio-thumb me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                                    <?php if (!empty($anuncio['imagem'])): ?>
+                                                        <img src="<?php echo htmlspecialchars($anuncio['imagem']); ?>" 
+                                                             alt="<?php echo htmlspecialchars($anuncio['titulo']); ?>"
+                                                             class="me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                                    <?php endif; ?>
                                                     <div>
                                                         <strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong>
-                                                        <?php if ($anuncio['cta_ativo']): ?>
-                                                            <br><small class="text-muted">CTA: <?php echo htmlspecialchars($anuncio['cta_texto']); ?></small>
-                                                        <?php endif; ?>
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            <a href="<?php echo htmlspecialchars($anuncio['link_compra']); ?>" 
+                                                               target="_blank" class="text-decoration-none">
+                                                                <i class="fas fa-external-link-alt"></i> Ver produto
+                                                            </a>
+                                                        </small>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="badge bg-<?php echo $anuncio['localizacao'] === 'sidebar' ? 'info' : 'warning'; ?>">
-                                                    <?php echo ucfirst($anuncio['localizacao']); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success">
-                                                    <?php echo number_format($anuncio['total_cliques'], 0, ',', '.'); ?>
-                                                </span>
+                                                <?php if (!empty($anuncio['marca'])): ?>
+                                                    <?php if ($anuncio['marca'] === 'amazon'): ?>
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="fab fa-amazon"></i> Amazon
+                                                        </span>
+                                                    <?php elseif ($anuncio['marca'] === 'shopee'): ?>
+                                                        <span class="badge bg-orange text-white">
+                                                            <i class="fas fa-shopping-cart"></i> Shopee
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary"><?php echo ucfirst($anuncio['marca']); ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <?php if ($anuncio['ativo']): ?>
                                                     <span class="badge bg-success">Ativo</span>
                                                 <?php else: ?>
-                                                    <span class="badge bg-secondary">Inativo</span>
+                                                    <span class="badge bg-danger">Inativo</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <a href="editar-anuncio.php?id=<?php echo $anuncio['id']; ?>" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="excluir-anuncio.php?id=<?php echo $anuncio['id']; ?>" 
-                                                   class="btn btn-sm btn-danger"
-                                                   onclick="return confirm('Tem certeza que deseja excluir este anúncio?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
+                                                <?php if ($anuncio['total_grupos'] > 0): ?>
+                                                    <span class="badge bg-info"><?php echo $anuncio['total_grupos']; ?> grupo(s)</span>
+                                                    <br>
+                                                    <small class="text-muted"><?php echo htmlspecialchars($anuncio['grupos_associados']); ?></small>
+                                                <?php else: ?>
+                                                    <span class="badge bg-warning text-dark">Sem grupo</span>
+                                                    <br>
+                                                    <small class="text-muted">Não aparecerá no site</small>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    <?php echo date('d/m/Y H:i', strtotime($anuncio['criado_em'])); ?>
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="editar-anuncio.php?id=<?php echo $anuncio['id']; ?>" 
+                                                       class="btn btn-sm btn-outline-primary" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="anuncios.php?delete=<?php echo $anuncio['id']; ?>" 
+                                                       class="btn btn-sm btn-outline-danger" 
+                                                       onclick="return confirm('Tem certeza que deseja excluir este anúncio?')"
+                                                       title="Excluir">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -109,160 +180,47 @@ include 'includes/header.php';
                 </div>
             </div>
             
- 
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-0"><?php echo count($todosAnuncios); ?></h4>
-                                    <p class="mb-0">Total de Anúncios</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-ad fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-0">
-                                        <?php 
-                                        $ativos = array_filter($todosAnuncios, function($a) { return $a['ativo']; });
-                                        echo count($ativos);
-                                        ?>
-                                    </h4>
-                                    <p class="mb-0">Anúncios Ativos</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-check-circle fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-0">
-                                        <?php 
-                                        $sidebar = array_filter($todosAnuncios, function($a) { return $a['localizacao'] === 'sidebar'; });
-                                        echo count($sidebar);
-                                        ?>
-                                    </h4>
-                                    <p class="mb-0">Sidebar</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-columns fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-0">
-                                        <?php 
-                                        $conteudo = array_filter($todosAnuncios, function($a) { return $a['localizacao'] === 'conteudo'; });
-                                        echo count($conteudo);
-                                        ?>
-                                    </h4>
-                                    <p class="mb-0">Conteúdo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-newspaper fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
+            <div class="card mt-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-list"></i> Todos os Anúncios</h5>
+                    <h5 class="card-title mb-0">Como Funciona o Sistema</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (empty($todosAnuncios)): ?>
-                        <p class="text-muted text-center">Nenhum anúncio cadastrado.</p>
-                    <?php else: ?>
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Título</th>
-                                        <th>Localização</th>
-                                        <th>Cliques</th>
-                                        <th>Posts</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($todosAnuncios as $anuncio): ?>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="<?php echo htmlspecialchars($anuncio['imagem']); ?>" 
-                                                         alt="<?php echo htmlspecialchars($anuncio['titulo']); ?>"
-                                                         class="anuncio-thumb me-3" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                                                    <div>
-                                                        <strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong>
-                                                        <?php if ($anuncio['cta_ativo']): ?>
-                                                            <br><small class="text-muted">CTA: <?php echo htmlspecialchars($anuncio['cta_texto']); ?></small>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-<?php echo $anuncio['localizacao'] === 'sidebar' ? 'info' : 'warning'; ?>">
-                                                    <?php echo ucfirst($anuncio['localizacao']); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success">
-                                                    <?php echo number_format($anuncio['total_cliques'], 0, ',', '.'); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-secondary">
-                                                    <?php echo $anuncio['total_posts']; ?> posts
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <?php if ($anuncio['ativo']): ?>
-                                                    <span class="badge bg-success">Ativo</span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-secondary">Inativo</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <a href="editar-anuncio.php?id=<?php echo $anuncio['id']; ?>" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="excluir-anuncio.php?id=<?php echo $anuncio['id']; ?>" 
-                                                   class="btn btn-sm btn-danger"
-                                                   onclick="return confirm('Tem certeza que deseja excluir este anúncio?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-box fa-2x text-primary mb-2"></i>
+                                <h6>1. Catálogo de Produtos</h6>
+                                <p class="text-muted small">Crie produtos com informações básicas (nome, imagem, link, marca)</p>
+                            </div>
                         </div>
-                    <?php endif; ?>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-layer-group fa-2x text-success mb-2"></i>
+                                <h6>2. Grupos de Anúncios</h6>
+                                <p class="text-muted small">Configure onde e como exibir os produtos (sidebar, conteúdo, posts específicos)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-eye fa-2x text-info mb-2"></i>
+                                <h6>3. Exibição no Site</h6>
+                                <p class="text-muted small">Os produtos aparecem conforme as configurações dos grupos</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6><i class="fas fa-info-circle"></i> Dica Importante</h6>
+                        <p class="mb-0">
+                            <strong>Produtos sem grupo não aparecem no site!</strong> 
+                            Após criar um produto aqui, vá para <a href="grupos-anuncios.php" class="alert-link">Grupos de Anúncios</a> 
+                            para configurar onde ele será exibido.
+                        </p>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
 <?php include 'includes/footer.php'; ?> 

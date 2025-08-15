@@ -1,310 +1,152 @@
 <?php
-ob_start();
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once '../config/config.php';
-require_once '../includes/db.php';
-require_once '../includes/AnunciosManager.php';
+require_once '../config/database_unified.php';
 require_once 'includes/auth.php';
 
-$anunciosManager = new AnunciosManager($pdo);
-$posts = $anunciosManager->getPostsParaSelecao();
+// Verificar se o usuário está logado
+check_login();
 
-$mensagem = '';
-$tipo_mensagem = '';
+$dbManager = DatabaseManager::getInstance();
 
-// Processar formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titulo = trim($_POST['titulo'] ?? '');
-    $link_compra = trim($_POST['link_compra'] ?? '');
-    $localizacao = $_POST['localizacao'] ?? '';
-    $layout = $_POST['layout'] ?? 'carrossel';
-    $cta_ativo = isset($_POST['cta_ativo']);
-    $cta_texto = trim($_POST['cta_texto'] ?? 'Saiba Mais');
-    $posts_selecionados = $_POST['posts'] ?? [];
+    $titulo = trim($_POST['titulo']);
+    $imagem = trim($_POST['imagem']);
+    $link_compra = trim($_POST['link_compra']);
+    $marca = $_POST['marca'];
+    $ativo = isset($_POST['ativo']) ? 1 : 0;
     
-    // Validar campos obrigatórios
-    if (empty($titulo) || empty($link_compra) || empty($localizacao)) {
-        $mensagem = 'Todos os campos obrigatórios devem ser preenchidos.';
-        $tipo_mensagem = 'danger';
+    // Validações básicas
+    if (empty($titulo) || empty($link_compra)) {
+        $erro = "Título e link são obrigatórios.";
     } else {
-        // Processar upload da imagem
-        $imagem_path = '';
-        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = '../uploads/images/';
+        try {
+            $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, marca, ativo, criado_em) 
+                    VALUES (?, ?, ?, ?, ?, NOW())";
             
-            // Criar diretório se não existir
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
-            }
+            $resultado = $dbManager->execute($sql, [$titulo, $imagem, $link_compra, $marca, $ativo]);
             
-            $file_extension = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
-            $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            
-            if (in_array($file_extension, $allowed_extensions)) {
-                $filename = 'anuncio_' . time() . '_' . uniqid() . '.' . $file_extension;
-                $upload_path = $upload_dir . $filename;
-                
-                if (move_uploaded_file($_FILES['imagem']['tmp_name'], $upload_path)) {
-                    $imagem_path = '/uploads/images/' . $filename;
-                } else {
-                    $mensagem = 'Erro ao fazer upload da imagem.';
-                    $tipo_mensagem = 'danger';
-                }
+            if ($resultado) {
+                $sucesso = "Anúncio criado com sucesso!";
+                // Limpar formulário
+                $_POST = array();
             } else {
-                $mensagem = 'Formato de imagem não suportado. Use JPG, PNG, GIF ou WebP.';
-                $tipo_mensagem = 'danger';
+                $erro = "Erro ao criar anúncio.";
             }
-        } else {
-            $mensagem = 'É obrigatório selecionar uma imagem.';
-            $tipo_mensagem = 'danger';
-        }
-        
-        // Se não houve erro no upload, criar o anúncio
-        if (empty($mensagem)) {
-            $dados = [
-                'titulo' => $titulo,
-                'imagem' => $imagem_path,
-                'link_compra' => $link_compra,
-                'localizacao' => $localizacao,
-                'layout' => $layout,
-                'cta_ativo' => $cta_ativo,
-                'cta_texto' => $cta_texto,
-                'posts' => $posts_selecionados
-            ];
-            
-            $anuncio_id = $anunciosManager->criarAnuncio($dados);
-            
-            if ($anuncio_id) {
-                header('Location: anuncios.php?success=1');
-                exit;
-            } else {
-                $mensagem = 'Erro ao criar anúncio. Tente novamente.';
-                $tipo_mensagem = 'danger';
-            }
+        } catch (Exception $e) {
+            $erro = "Erro: " . $e->getMessage();
         }
     }
 }
 
-$page_title = 'Novo Anúncio';
 include 'includes/header.php';
 ?>
 
-
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Novo Anúncio</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <a href="anuncios.php" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </a>
-                </div>
-            </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="h3 mb-4">Criar Novo Anúncio</h1>
             
-            <?php if (!empty($mensagem)): ?>
-                <div class="alert alert-<?php echo $tipo_mensagem; ?> alert-dismissible fade show" role="alert">
-                    <?php echo htmlspecialchars($mensagem); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <?php if (isset($erro)): ?>
+                <div class="alert alert-danger"><?php echo $erro; ?></div>
+            <?php endif; ?>
+            
+            <?php if (isset($sucesso)): ?>
+                <div class="alert alert-success"><?php echo $sucesso; ?></div>
             <?php endif; ?>
             
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-plus"></i> Criar Novo Anúncio</h5>
+                    <h5 class="card-title mb-0">Informações do Produto</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST">
                         <div class="row">
-                            <!-- Informações Básicas -->
                             <div class="col-md-8">
-                                <h6 class="mb-3">Informações do Anúncio</h6>
-                                
                                 <div class="mb-3">
-                                    <label for="titulo" class="form-label">Título do Anúncio *</label>
+                                    <label for="titulo" class="form-label">Nome do Produto *</label>
                                     <input type="text" class="form-control" id="titulo" name="titulo" 
-                                           value="<?php echo htmlspecialchars($_POST['titulo'] ?? ''); ?>" 
-                                           required placeholder="Digite o título do anúncio">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="link_compra" class="form-label">Link de Compra *</label>
-                                    <input type="url" class="form-control" id="link_compra" name="link_compra" 
-                                           value="<?php echo htmlspecialchars($_POST['link_compra'] ?? ''); ?>" 
-                                           required placeholder="https://exemplo.com/produto">
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="localizacao" class="form-label">Localização *</label>
-                                            <select class="form-select" id="localizacao" name="localizacao" required>
-                                                <option value="">Selecione...</option>
-                                                <option value="sidebar" <?php echo ($_POST['localizacao'] ?? '') === 'sidebar' ? 'selected' : ''; ?>>Sidebar</option>
-                                                <option value="conteudo" <?php echo ($_POST['localizacao'] ?? '') === 'conteudo' ? 'selected' : ''; ?>>Conteúdo Principal</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="layout" class="form-label">Layout (Conteúdo Principal)</label>
-                                            <select class="form-select" id="layout" name="layout">
-                                                <option value="carrossel" <?php echo ($_POST['layout'] ?? 'carrossel') === 'carrossel' ? 'selected' : ''; ?>>Carrossel (sem limite)</option>
-                                                <option value="grade" <?php echo ($_POST['layout'] ?? '') === 'grade' ? 'selected' : ''; ?>>Grade (máx. 8 anúncios)</option>
-                                            </select>
-                                            <div class="form-text">Aplicado apenas para anúncios no conteúdo principal</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="imagem" class="form-label">Imagem do Anúncio *</label>
-                                            <input type="file" class="form-control" id="imagem" name="imagem" 
-                                                   accept="image/*" required>
-                                            <div class="form-text">Formatos aceitos: JPG, PNG, GIF, WebP. Tamanho recomendado: 300x200px</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- CTA -->
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="cta_ativo" name="cta_ativo" 
-                                               <?php echo isset($_POST['cta_ativo']) ? 'checked' : ''; ?>>
-                                        <label class="form-check-label" for="cta_ativo">
-                                            Ativar botão de ação (CTA)
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3" id="cta_texto_container" style="display: none;">
-                                    <label for="cta_texto" class="form-label">Texto do Botão CTA</label>
-                                    <input type="text" class="form-control" id="cta_texto" name="cta_texto" 
-                                           value="<?php echo htmlspecialchars($_POST['cta_texto'] ?? 'Saiba Mais'); ?>" 
-                                           placeholder="Ex: Comprar Agora, Saiba Mais, Ver Ofertas">
+                                           value="<?php echo isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo']) : ''; ?>" 
+                                           required>
+                                    <div class="form-text">Nome completo do produto para exibição</div>
                                 </div>
                             </div>
                             
-                            <!-- Preview -->
                             <div class="col-md-4">
-                                <h6 class="mb-3">Preview do Anúncio</h6>
-                                <div class="card" id="preview-card">
-                                    <div class="card-body">
-                                        <div class="anuncio-patrocinado-preview">PATROCINADO</div>
-                                        <div class="preview-imagem-container mb-2">
-                                            <img id="preview-imagem" src="/assets/img/placeholder.jpg" 
-                                                 alt="Preview" class="img-fluid rounded" style="max-height: 150px; width: 100%; object-fit: cover;">
-                                        </div>
-                                        <h6 id="preview-titulo" class="card-title">Título do anúncio aparecerá aqui</h6>
-                                        <button id="preview-cta" class="btn btn-primary btn-sm" style="display: none;">Saiba Mais</button>
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="marca" class="form-label">Marca</label>
+                                    <select class="form-select" id="marca" name="marca">
+                                        <option value="">Nenhuma</option>
+                                        <option value="amazon" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'amazon') ? 'selected' : ''; ?>>Amazon</option>
+                                        <option value="shopee" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'shopee') ? 'selected' : ''; ?>>Shopee</option>
+                                    </select>
+                                    <div class="form-text">Marca do produto (opcional)</div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Seleção de Posts -->
-                        <div class="mt-4">
-                            <h6 class="mb-3">Posts onde o anúncio será exibido</h6>
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="todos_posts">
-                                    <label class="form-check-label" for="todos_posts">
-                                        <strong>Selecionar todos os posts</strong>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="row" style="max-height: 300px; overflow-y: auto;">
-                                <?php foreach ($posts as $post): ?>
-                                    <div class="col-md-6 col-lg-4 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input post-checkbox" type="checkbox" 
-                                                   name="posts[]" value="<?php echo $post['id']; ?>" 
-                                                   id="post_<?php echo $post['id']; ?>">
-                                            <label class="form-check-label" for="post_<?php echo $post['id']; ?>">
-                                                <?php echo htmlspecialchars($post['titulo']); ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
+                        <div class="mb-3">
+                            <label for="link_compra" class="form-label">Link do Produto *</label>
+                            <input type="url" class="form-control" id="link_compra" name="link_compra" 
+                                   value="<?php echo isset($_POST['link_compra']) ? htmlspecialchars($_POST['link_compra']) : ''; ?>" 
+                                   required>
+                            <div class="form-text">Link direto para compra do produto</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="imagem" class="form-label">URL da Imagem</label>
+                            <input type="url" class="form-control" id="imagem" name="imagem" 
+                                   value="<?php echo isset($_POST['imagem']) ? htmlspecialchars($_POST['imagem']) : ''; ?>">
+                            <div class="form-text">URL da imagem do produto (opcional)</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" 
+                                       <?php echo (isset($_POST['ativo']) && $_POST['ativo']) ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="ativo">
+                                    Anúncio Ativo
+                                </label>
+                                <div class="form-text">Anúncios inativos não aparecem em nenhum grupo</div>
                             </div>
                         </div>
                         
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Criar Anúncio
-                            </button>
-                            <a href="anuncios.php" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Cancelar
-                            </a>
+                        <div class="d-flex justify-content-between">
+                            <a href="anuncios.php" class="btn btn-secondary">← Voltar</a>
+                            <button type="submit" class="btn btn-primary">Criar Anúncio</button>
                         </div>
                     </form>
                 </div>
             </div>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ctaCheckbox = document.getElementById('cta_ativo');
-    const ctaContainer = document.getElementById('cta_texto_container');
-    const ctaTexto = document.getElementById('cta_texto');
-    const previewCta = document.getElementById('preview-cta');
-    const previewTitulo = document.getElementById('preview-titulo');
-    const previewImagem = document.getElementById('preview-imagem');
-    const imagemInput = document.getElementById('imagem');
-    const tituloInput = document.getElementById('titulo');
-    const todosPostsCheckbox = document.getElementById('todos_posts');
-    const postCheckboxes = document.querySelectorAll('.post-checkbox');
-    
-    // Toggle CTA
-    ctaCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            ctaContainer.style.display = 'block';
-            previewCta.style.display = 'inline-block';
-        } else {
-            ctaContainer.style.display = 'none';
-            previewCta.style.display = 'none';
-        }
-    });
-    
-    // Preview do título
-    tituloInput.addEventListener('input', function() {
-        previewTitulo.textContent = this.value || 'Título do anúncio aparecerá aqui';
-    });
-    
-    // Preview da imagem
-    imagemInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImagem.src = e.target.result;
-            };
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-    
-    // Preview do CTA
-    ctaTexto.addEventListener('input', function() {
-        previewCta.textContent = this.value || 'Saiba Mais';
-    });
-    
-    // Selecionar todos os posts
-    todosPostsCheckbox.addEventListener('change', function() {
-        postCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
-    
-    // Verificar se todos os posts estão selecionados
-    postCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const todosSelecionados = Array.from(postCheckboxes).every(cb => cb.checked);
-            todosPostsCheckbox.checked = todosSelecionados;
-        });
-    });
-});
-</script>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Como Funciona</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>📋 Página Anúncios</h6>
+                            <ul class="mb-0">
+                                <li>Crie o catálogo de produtos</li>
+                                <li>Configure informações básicas</li>
+                                <li>Defina marca (Amazon/Shopee)</li>
+                                <li>Ative/desative produtos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>🎯 Próximo Passo</h6>
+                            <ul class="mb-0">
+                                <li>Vá para "Grupos de Anúncios"</li>
+                                <li>Selecione produtos do catálogo</li>
+                                <li>Configure onde e como exibir</li>
+                                <li>Defina posts específicos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include 'includes/footer.php'; ?> 
