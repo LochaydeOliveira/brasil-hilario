@@ -139,11 +139,7 @@ class DatabaseManager {
         $queries = [
             "SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO'",
             "SET SESSION innodb_lock_wait_timeout = 50",
-            "SET SESSION innodb_flush_log_at_trx_commit = 2",
-            "SET SESSION query_cache_type = 1",
-            "SET SESSION query_cache_size = 67108864", // 64MB
-            "SET SESSION sort_buffer_size = 2097152", // 2MB
-            "SET SESSION read_buffer_size = 1048576", // 1MB
+            "SET SESSION innodb_flush_log_at_trx_commit = 2"
         ];
         
         foreach ($queries as $query) {
