@@ -11,65 +11,36 @@
  * 4. Exibe apenas se o post estiver configurado
  */
 
-// DEBUG TEMPORÁRIO - REMOVER DEPOIS
-error_log("DEBUG: anuncios-sidebar.php executado");
-
 // Verificar se estamos em um post específico
 if (!isset($post) || !isset($post['id'])) {
     // Não estamos em um post específico, não exibir anúncios
-    error_log("DEBUG: Não estamos em um post específico - variável \$post não existe");
     return;
 }
 
 $postId = $post['id'];
-error_log("DEBUG: Post ID: $postId");
 
 try {
-    // Buscar anúncios da sidebar que estão ativos (sem coluna marca por enquanto)
+    // Buscar anúncios da sidebar que estão ativos E configurados para este post específico
     $sql = "
         SELECT a.id, a.titulo, a.imagem, a.link_compra
         FROM anuncios a
+        INNER JOIN anuncios_posts ap ON a.id = ap.anuncio_id
         WHERE a.localizacao = 'sidebar' 
         AND a.ativo = 1
+        AND ap.post_id = ?
         ORDER BY a.criado_em DESC
     ";
     
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$postId]);
     $anuncios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    error_log("DEBUG: Anúncios da sidebar encontrados: " . count($anuncios));
-    
     if (empty($anuncios)) {
-        error_log("DEBUG: Nenhum anúncio da sidebar ativo");
-        return; // Nenhum anúncio da sidebar ativo
+        return; // Nenhum anúncio da sidebar configurado para este post
     }
     
-    // Para cada anúncio, verificar se está configurado para este post
+    // Exibir os anúncios configurados para este post
     foreach ($anuncios as $anuncio) {
-        error_log("DEBUG: Verificando anúncio ID: {$anuncio['id']} - {$anuncio['titulo']}");
-        
-        // Verificar se este anúncio está configurado para aparecer neste post
-        $sql_check = "
-            SELECT COUNT(*) as total
-            FROM anuncios_posts ap
-            WHERE ap.anuncio_id = ? AND ap.post_id = ?
-        ";
-        
-        $stmt_check = $pdo->prepare($sql_check);
-        $stmt_check->execute([$anuncio['id'], $postId]);
-        $result = $stmt_check->fetch(PDO::FETCH_ASSOC);
-        
-        error_log("DEBUG: Configurações para anúncio {$anuncio['id']} no post $postId: {$result['total']}");
-        
-        // Se não há configuração específica, não exibir
-        if ($result['total'] == 0) {
-            error_log("DEBUG: Anúncio {$anuncio['id']} não configurado para post $postId - pulando");
-            continue;
-        }
-        
-        error_log("DEBUG: Exibindo anúncio {$anuncio['id']} para post $postId");
-        
         // Exibir o anúncio
         echo '<li class="mb-3 anuncio-item">';
         echo '<div class="anuncio-card-sidebar">';
