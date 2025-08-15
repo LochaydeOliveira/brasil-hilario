@@ -40,15 +40,12 @@ try {
                     echo '</div>';
                 }
                 
-                if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                if (!empty($anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
                     echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
                     echo '</a>';
                 }
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-sidebar" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-                if ($anuncio['cta_ativo']) {
-                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-sidebar" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
-                }
                 echo '</div>';
                 echo '</li>';
             }
