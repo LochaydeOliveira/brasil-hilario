@@ -11,45 +11,21 @@ class GruposAnunciosManager {
      * Buscar grupos de anúncios por localização
      */
     public function getGruposPorLocalizacao($localizacao, $postId = null, $isHomePage = false) {
+        // Regra: anúncios nativos só aparecem em posts específicos selecionados
+        if ($postId === null) {
+            return [];
+        }
+
         $sql = "SELECT g.*, COUNT(gi.anuncio_id) as total_anuncios
                 FROM grupos_anuncios g 
                 LEFT JOIN grupos_anuncios_items gi ON g.id = gi.grupo_id
-                WHERE g.localizacao = ? AND g.ativo = 1";
-        
-        $params = [$localizacao];
-        
-        // Lógica específica para sidebar: aparecer apenas em posts específicos
-        if ($localizacao === 'sidebar') {
-            if ($isHomePage) {
-                // Na página inicial, mostrar apenas grupos configurados para aparecer na home
-                $sql .= " AND g.aparecer_inicio = 1";
-            } else {
-                // Em posts específicos, mostrar apenas se o post estiver configurado
-                if ($postId !== null) {
-                    $sql .= " AND g.id IN (
-                        SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
-                    )";
-                    $params[] = $postId;
-                } else {
-                    // Se não há postId, não mostrar nada na sidebar
-                    $sql .= " AND 1 = 0";
-                }
-            }
-        } else {
-            // Para conteúdo principal, manter lógica original
-            if ($postId !== null) {
-                $sql .= " AND (g.posts_especificos = 0 OR g.id IN (
+                WHERE g.localizacao = ? AND g.ativo = 1
+                AND g.id IN (
                     SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
-                ))";
-                $params[] = $postId;
-            }
-            
-            if ($isHomePage) {
-                $sql .= " AND g.aparecer_inicio = 1";
-            }
-        }
-        
-        $sql .= " GROUP BY g.id ORDER BY g.criado_em DESC";
+                )
+                GROUP BY g.id ORDER BY g.criado_em DESC";
+
+        $params = [$localizacao, $postId];
         
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -85,26 +61,32 @@ class GruposAnunciosManager {
      * Criar novo grupo de anúncios
      */
     public function criarGrupo($dados) {
-        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca, posts_especificos, aparecer_inicio) VALUES (?, ?, ?, ?, ?, ?)";
-        
+        // Sidebar força layout 'grade'; sempre posts_especificos = 1 e aparecer_inicio = 0
+        $localizacao = $dados['localizacao'];
+        $layout = ($localizacao === 'sidebar') ? 'grade' : ($dados['layout'] ?? 'carrossel');
+        $ativo = !empty($dados['ativo']) ? 1 : 0;
+
+        $sql = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca, posts_especificos, aparecer_inicio, ativo, criado_em) VALUES (?, ?, ?, '', 1, 0, ?, NOW())";
+
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $dados['nome'],
-                $dados['localizacao'],
-                $dados['layout'] ?? 'carrossel',
-                $dados['marca'] ?? '',
-                $dados['posts_especificos'] ?? false,
-                $dados['aparecer_inicio'] ?? true
+                $localizacao,
+                $layout,
+                $ativo
             ]);
-            
+
             $grupoId = $this->pdo->lastInsertId();
-            
-            // Associar anúncios ao grupo
+
             if (!empty($dados['anuncios'])) {
                 $this->associarAnunciosAoGrupo($grupoId, $dados['anuncios']);
             }
-            
+
+            if (!empty($dados['posts'])) {
+                $this->associarPostsAoGrupo($grupoId, $dados['posts']);
+            }
+
             return $grupoId;
         } catch (Exception $e) {
             error_log("Erro ao criar grupo de anúncios: " . $e->getMessage());
@@ -178,29 +160,36 @@ class GruposAnunciosManager {
      * Atualizar grupo
      */
     public function atualizarGrupo($id, $dados) {
+        // Sidebar força layout 'grade'; sempre posts_especificos = 1 e aparecer_inicio = 0; marca não é configurável
+        $localizacao = $dados['localizacao'];
+        $layout = ($localizacao === 'sidebar') ? 'grade' : ($dados['layout'] ?? 'carrossel');
+        $ativo = !empty($dados['ativo']) ? 1 : 0;
+
         $sql = "UPDATE grupos_anuncios SET 
-                nome = ?, localizacao = ?, layout = ?, marca = ?, ativo = ?
+                nome = ?, localizacao = ?, layout = ?, marca = '', ativo = ?, posts_especificos = 1, aparecer_inicio = 0
                 WHERE id = ?";
-        
+
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 $dados['nome'],
-                $dados['localizacao'],
-                $dados['layout'] ?? 'carrossel',
-                $dados['marca'] ?? '',
-                $dados['ativo'] ?? true,
+                $localizacao,
+                $layout,
+                $ativo,
                 $id
             ]);
-            
-            // Atualizar associações com anúncios
+
             if (isset($dados['anuncios'])) {
                 $this->removerAssociacoesGrupo($id);
                 if (!empty($dados['anuncios'])) {
                     $this->associarAnunciosAoGrupo($id, $dados['anuncios']);
                 }
             }
-            
+
+            if (isset($dados['posts'])) {
+                $this->associarPostsAoGrupo($id, $dados['posts']);
+            }
+
             return true;
         } catch (Exception $e) {
             error_log("Erro ao atualizar grupo: " . $e->getMessage());
@@ -318,20 +307,16 @@ class GruposAnunciosManager {
      * Atualizar configurações de posts de um grupo
      */
     public function atualizarConfiguracoesPosts($grupoId, $postsEspecificos, $aparecerInicio, $postsIds = []) {
-        $sql = "UPDATE grupos_anuncios SET posts_especificos = ?, aparecer_inicio = ? WHERE id = ?";
-        
+        // Nova regra: sempre posts_especificos = 1, aparecer_inicio = 0
+        $sql = "UPDATE grupos_anuncios SET posts_especificos = 1, aparecer_inicio = 0 WHERE id = ?";
+
         try {
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$postsEspecificos, $aparecerInicio, $grupoId]);
-            
-            // Se posts específicos estiver ativo, associar os posts selecionados
-            if ($postsEspecificos && !empty($postsIds)) {
-                $this->associarPostsAoGrupo($grupoId, $postsIds);
-            } elseif ($postsEspecificos && empty($postsIds)) {
-                // Se posts específicos estiver ativo mas nenhum post selecionado, remover todas as associações
-                $this->removerPostsDoGrupo($grupoId);
-            }
-            
+            $stmt->execute([$grupoId]);
+
+            // Associar posts selecionados (obrigatório)
+            $this->associarPostsAoGrupo($grupoId, $postsIds);
+
             return true;
         } catch (Exception $e) {
             error_log("Erro ao atualizar configurações de posts: " . $e->getMessage());

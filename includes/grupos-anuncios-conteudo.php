@@ -42,26 +42,12 @@ try {
                     echo '<div class="anuncio-card-grade">';
                     echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
                     
-                    // Badge da marca
-                    if (!empty($grupo['marca'])) {
-                        echo '<div class="marca-badge">';
-                        if ($grupo['marca'] === 'shopee') {
-                            echo '<img src="https://brasilhilario.com.br/assets/img/logo-shopee.png" alt="Shopee">';
-                        } elseif ($grupo['marca'] === 'amazon') {
-                            echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Amazon">';
-                        }
-                        echo '</div>';
-                    }
-                    
-                    if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                    if (!empty($anuncio['imagem'])) {
                         echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-grade">';
                         echo '</a>';
                     }
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-grade" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-                    if ($anuncio['cta_ativo']) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-grade" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
-                    }
                     echo '</div>';
                 }
                 echo '</div>';
@@ -76,26 +62,12 @@ try {
                     echo '<div class="anuncio-card-carrossel">';
                     echo '<div class="anuncio-patrocinado-badge">Patrocinado</div>';
                     
-                    // Badge da marca
-                    if (!empty($grupo['marca'])) {
-                        echo '<div class="marca-badge">';
-                        if ($grupo['marca'] === 'shopee') {
-                            echo '<img src="https://brasilhilario.com.br/assets/img/logo-shopee.png" alt="Shopee">';
-                        } elseif ($grupo['marca'] === 'amazon') {
-                            echo '<img src="https://brasilhilario.com.br/assets/img/logo-amazon.png" alt="Amazon">';
-                        }
-                        echo '</div>';
-                    }
-                    
-                    if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                    if (!empty($anuncio['imagem'])) {
                         echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-imagem-link" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'imagem\')">';
                         echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-carrossel">';
                         echo '</a>';
                     }
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-carrossel" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-                    if ($anuncio['cta_ativo']) {
-                        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-carrossel" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
-                    }
                     echo '</div>';
                 }
                 echo '</div>';

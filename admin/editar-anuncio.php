@@ -1,12 +1,12 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/database_unified.php';
+require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
 // Verificar se o usuário está logado
 check_login();
 
-$dbManager = DatabaseManager::getInstance();
+// Conexão via $pdo (definido em ../includes/db.php)
 
 // Verificar se o ID foi fornecido
 $anuncio_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -16,7 +16,13 @@ if (!$anuncio_id) {
 }
 
 // Buscar produto
-$anuncio = $dbManager->queryOne("SELECT * FROM anuncios WHERE id = ?", [$anuncio_id]);
+try {
+    $stmt = $pdo->prepare("SELECT * FROM anuncios WHERE id = ?");
+    $stmt->execute([$anuncio_id]);
+    $anuncio = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $anuncio = false;
+}
 if (!$anuncio) {
     header('Location: anuncios.php');
     exit;
@@ -68,10 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($mensagem)) {
         try {
             $sql = "UPDATE anuncios SET titulo = ?, imagem = ?, link_compra = ?, marca = ?, ativo = ?, atualizado_em = NOW() WHERE id = ?";
-            
-            $resultado = $dbManager->execute($sql, [$titulo, $imagem_path, $link_compra, $marca, $ativo ? 1 : 0, $anuncio_id]);
-            
-            if ($resultado) {
+            $stmt = $pdo->prepare($sql);
+            $ok = $stmt->execute([$titulo, $imagem_path, $link_compra, $marca, $ativo ? 1 : 0, $anuncio_id]);
+            if ($ok) {
                 header('Location: anuncios.php?success=1');
                 exit;
             } else {

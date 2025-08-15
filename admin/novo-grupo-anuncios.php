@@ -3,7 +3,7 @@ ob_start();
 session_start();
 
 require_once '../config/config.php';
-require_once '../config/database_unified.php';
+require_once '../includes/db.php';
 require_once '../includes/GruposAnunciosManager.php';
 require_once '../includes/AnunciosManager.php';
 require_once 'includes/auth.php';
@@ -11,25 +11,27 @@ require_once 'includes/auth.php';
 // Verificar se o usuário está logado
 check_login();
 
-$dbManager = DatabaseManager::getInstance();
+// Conexão via $pdo (definido em ../includes/db.php)
 
 $page_title = 'Novo Grupo de Anúncios';
 
 // Buscar anúncios disponíveis
-$anuncios_disponiveis = $dbManager->query("
-    SELECT id, titulo, marca, ativo
-    FROM anuncios 
-    WHERE ativo = 1
-    ORDER BY titulo ASC
-");
+try {
+    $stmt = $pdo->prepare("SELECT id, titulo, marca, ativo FROM anuncios WHERE ativo = 1 ORDER BY titulo ASC");
+    $stmt->execute();
+    $anuncios_disponiveis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $anuncios_disponiveis = [];
+}
 
 // Buscar posts para seleção
-$posts = $dbManager->query("
-    SELECT id, titulo, slug
-    FROM posts 
-    WHERE status = 'publicado'
-    ORDER BY data_publicacao DESC
-");
+try {
+    $stmt = $pdo->prepare("SELECT id, titulo, slug FROM posts WHERE status = 'publicado' ORDER BY data_publicacao DESC");
+    $stmt->execute();
+    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $posts = [];
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
@@ -59,48 +61,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erro = "Se marcou 'Posts específicos', selecione pelo menos um post.";
     } else {
         try {
-            $dbManager->beginTransaction();
-            
+            $pdo->beginTransaction();
+
             // Criar grupo
             $sql_grupo = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca, ativo, posts_especificos, aparecer_inicio, criado_em) 
                           VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
-            
-            $grupo_id = $dbManager->execute($sql_grupo, [
-                $nome, $localizacao, $layout, $marca, $ativo, 
-                $posts_especificos, $aparecer_inicio
-            ]);
-            
-            if ($grupo_id) {
-                $grupo_id = $dbManager->lastInsertId();
-                
+            $stmt = $pdo->prepare($sql_grupo);
+            $ok = $stmt->execute([$nome, $localizacao, $layout, $marca, $ativo, $posts_especificos, $aparecer_inicio]);
+
+            if ($ok) {
+                $grupo_id = (int)$pdo->lastInsertId();
+
                 // Associar anúncios ao grupo
-                foreach ($anuncios_selecionados as $ordem => $anuncio_id) {
-                    $dbManager->execute("
-                        INSERT INTO grupos_anuncios_items (grupo_id, anuncio_id, ordem) 
-                        VALUES (?, ?, ?)
-                    ", [$grupo_id, $anuncio_id, $ordem]);
-                }
-                
-                // Associar posts específicos (se houver)
-                if ($posts_especificos && !empty($posts_selecionados)) {
-                    foreach ($posts_selecionados as $post_id) {
-                        $dbManager->execute("
-                            INSERT INTO grupos_anuncios_posts (grupo_id, post_id) 
-                            VALUES (?, ?)
-                        ", [$grupo_id, $post_id]);
+                if (!empty($anuncios_selecionados)) {
+                    $stmtItem = $pdo->prepare("INSERT INTO grupos_anuncios_items (grupo_id, anuncio_id, ordem) VALUES (?, ?, ?)");
+                    foreach ($anuncios_selecionados as $ordem => $anuncio_id) {
+                        $stmtItem->execute([$grupo_id, $anuncio_id, $ordem]);
                     }
                 }
-                
-                $dbManager->commit();
+
+                // Associar posts específicos (se houver)
+                if ($posts_especificos && !empty($posts_selecionados)) {
+                    $stmtPost = $pdo->prepare("INSERT INTO grupos_anuncios_posts (grupo_id, post_id) VALUES (?, ?)");
+                    foreach ($posts_selecionados as $post_id) {
+                        $stmtPost->execute([$grupo_id, $post_id]);
+                    }
+                }
+
+                $pdo->commit();
                 $sucesso = "Grupo criado com sucesso!";
-                $_POST = array(); // Limpar formulário
-                
+                $_POST = array();
             } else {
-                $dbManager->rollback();
+                $pdo->rollBack();
                 $erro = "Erro ao criar grupo.";
             }
         } catch (Exception $e) {
-            $dbManager->rollback();
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             $erro = "Erro: " . $e->getMessage();
         }
     }
@@ -157,18 +155,9 @@ include 'includes/header.php';
                                                 <option value="carrossel" <?php echo (isset($_POST['layout']) && $_POST['layout'] === 'carrossel') ? 'selected' : ''; ?>>Carrossel</option>
                                                 <option value="grade" <?php echo (isset($_POST['layout']) && $_POST['layout'] === 'grade') ? 'selected' : ''; ?>>Grade</option>
                                             </select>
+                                            <div class="form-text">Para Sidebar o layout será automaticamente "Grade" empilhado.</div>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="marca" class="form-label">Marca Principal</label>
-                                    <select class="form-select" id="marca" name="marca">
-                                        <option value="">Nenhuma</option>
-                                        <option value="amazon" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'amazon') ? 'selected' : ''; ?>>Amazon</option>
-                                        <option value="shopee" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'shopee') ? 'selected' : ''; ?>>Shopee</option>
-                                    </select>
-                                    <div class="form-text">Marca principal do grupo (opcional)</div>
                                 </div>
                                 
                                 <div class="mb-3">
@@ -184,61 +173,22 @@ include 'includes/header.php';
                         </div>
                     </div>
                     
-                    <!-- Configurações de Exibição -->
+                    <!-- Seleção de Posts (sempre obrigatória) -->
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Configurações de Exibição</h5>
+                                <h5 class="card-title mb-0">Posts Específicos *</h5>
                             </div>
                             <div class="card-body">
-                                <div id="configuracao_sidebar" style="display: none;">
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-info-circle"></i>
-                                        <strong>Grupo da Sidebar:</strong> Os anúncios aparecerão apenas nos posts específicos selecionados.
-                                    </div>
-                                    <input type="hidden" name="posts_especificos" value="1">
-                                </div>
-                                
-                                <div id="configuracao_conteudo">
-                                    <div class="mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="posts_especificos" name="posts_especificos" 
-                                                   <?php echo (isset($_POST['posts_especificos']) && $_POST['posts_especificos']) ? 'checked' : ''; ?>>
-                                            <label class="form-check-label" for="posts_especificos">
-                                                Posts Específicos
-                                            </label>
-                                            <div class="form-text">Se marcado, o grupo só aparecerá nos posts selecionados</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="aparecer_inicio" name="aparecer_inicio" 
-                                                   <?php echo (isset($_POST['aparecer_inicio']) && $_POST['aparecer_inicio']) ? 'checked' : ''; ?>>
-                                            <label class="form-check-label" for="aparecer_inicio">
-                                                Aparecer na Página Inicial
-                                            </label>
-                                            <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div id="posts_container" style="display: none;">
-                                    <label class="form-label">Selecionar Posts</label>
-                                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
-                                        <?php foreach ($posts as $post): ?>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="posts[]" 
-                                                       value="<?php echo $post['id']; ?>" 
-                                                       id="post_<?php echo $post['id']; ?>"
-                                                       <?php echo (isset($_POST['posts']) && in_array($post['id'], $_POST['posts'])) ? 'checked' : ''; ?>>
-                                                <label class="form-check-label" for="post_<?php echo $post['id']; ?>">
-                                                    <?php echo htmlspecialchars($post['titulo']); ?>
-                                                </label>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
+                                <label for="posts" class="form-label">Selecione os posts onde este grupo aparecerá</label>
+                                <select class="form-select" id="posts" name="posts[]" multiple size="10" required>
+                                    <?php foreach ($posts as $post): ?>
+                                        <option value="<?php echo $post['id']; ?>" <?php echo (isset($_POST['posts']) && in_array($post['id'], $_POST['posts'])) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($post['titulo']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="form-text">Segure Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplos.</div>
                             </div>
                         </div>
                     </div>
@@ -258,45 +208,16 @@ include 'includes/header.php';
                                 Crie anúncios primeiro em <a href="anuncios.php" class="alert-link">Anúncios</a> antes de criar um grupo.
                             </div>
                         <?php else: ?>
-                            <div class="row">
+                            <label for="anuncios" class="form-label">Selecione os anúncios (produtos) a exibir</label>
+                            <select class="form-select" id="anuncios" name="anuncios[]" multiple size="10" required>
                                 <?php foreach ($anuncios_disponiveis as $anuncio): ?>
-                                    <div class="col-md-6 col-lg-4 mb-3">
-                                        <div class="card h-100">
-                                            <div class="card-body">
-                                                <div class="form-check">
-                                                    <input class="form-check-input anuncio-checkbox" type="checkbox" 
-                                                           name="anuncios[]" value="<?php echo $anuncio['id']; ?>" 
-                                                           id="anuncio_<?php echo $anuncio['id']; ?>"
-                                                           <?php echo (isset($_POST['anuncios']) && in_array($anuncio['id'], $_POST['anuncios'])) ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="anuncio_<?php echo $anuncio['id']; ?>">
-                                                        <strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong>
-                                                    </label>
-                                                </div>
-                                                <?php if (!empty($anuncio['marca'])): ?>
-                                                    <small class="text-muted">
-                                                        <?php if ($anuncio['marca'] === 'amazon'): ?>
-                                                            <i class="fab fa-amazon"></i> Amazon
-                                                        <?php elseif ($anuncio['marca'] === 'shopee'): ?>
-                                                            <i class="fas fa-shopping-cart"></i> Shopee
-                                                        <?php else: ?>
-                                                            <?php echo ucfirst($anuncio['marca']); ?>
-                                                        <?php endif; ?>
-                                                    </small>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <option value="<?php echo $anuncio['id']; ?>" <?php echo (isset($_POST['anuncios']) && in_array($anuncio['id'], $_POST['anuncios'])) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($anuncio['titulo']); ?>
+                                        <?php echo !empty($anuncio['marca']) ? ' - ' . htmlspecialchars($anuncio['marca']) : ''; ?>
+                                    </option>
                                 <?php endforeach; ?>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <button type="button" class="btn btn-outline-primary btn-sm" id="selecionar_todos">
-                                    <i class="fas fa-check-square"></i> Selecionar Todos
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" id="limpar_selecao">
-                                    <i class="fas fa-square"></i> Limpar Seleção
-                                </button>
-                            </div>
+                            </select>
+                            <div class="form-text">Segure Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplos.</div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -315,55 +236,17 @@ include 'includes/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const localizacaoSelect = document.getElementById('localizacao');
-    const postsEspecificosCheckbox = document.getElementById('posts_especificos');
-    const postsContainer = document.getElementById('posts_container');
-    const configuracaoSidebar = document.getElementById('configuracao_sidebar');
-    const configuracaoConteudo = document.getElementById('configuracao_conteudo');
-    const anuncioCheckboxes = document.querySelectorAll('.anuncio-checkbox');
-    const selecionarTodosBtn = document.getElementById('selecionar_todos');
-    const limparSelecaoBtn = document.getElementById('limpar_selecao');
+    const layoutSelect = document.getElementById('layout');
     
     // Função para atualizar configuração baseada na localização
-    function atualizarConfiguracao() {
-        const localizacao = localizacaoSelect.value;
-        
-        if (localizacao === 'sidebar') {
-            configuracaoSidebar.style.display = 'block';
-            configuracaoConteudo.style.display = 'none';
-            postsContainer.style.display = 'block';
-        } else {
-            configuracaoSidebar.style.display = 'none';
-            configuracaoConteudo.style.display = 'block';
-            postsContainer.style.display = postsEspecificosCheckbox.checked ? 'block' : 'none';
-        }
+    function aplicarRegraSidebar() {
+        const isSidebar = localizacaoSelect.value === 'sidebar';
+        layoutSelect.value = isSidebar ? 'grade' : layoutSelect.value;
+        layoutSelect.disabled = isSidebar;
     }
-    
-    // Toggle posts específicos (apenas para conteúdo)
-    postsEspecificosCheckbox.addEventListener('change', function() {
-        if (localizacaoSelect.value !== 'sidebar') {
-            postsContainer.style.display = this.checked ? 'block' : 'none';
-        }
-    });
-    
-    // Mudança na localização
-    localizacaoSelect.addEventListener('change', atualizarConfiguracao);
-    
-    // Selecionar todos os anúncios
-    selecionarTodosBtn.addEventListener('click', function() {
-        anuncioCheckboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
-    });
-    
-    // Limpar seleção de anúncios
-    limparSelecaoBtn.addEventListener('click', function() {
-        anuncioCheckboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-    });
-    
-    // Inicializar configuração
-    atualizarConfiguracao();
+
+    localizacaoSelect.addEventListener('change', aplicarRegraSidebar);
+    aplicarRegraSidebar();
 });
 </script>
 

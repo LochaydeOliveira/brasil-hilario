@@ -1,12 +1,12 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/database_unified.php';
+require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
 // Verificar se o usuário está logado
 check_login();
 
-$dbManager = DatabaseManager::getInstance();
+// Conexão via $pdo (definido em ../includes/db.php)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo']);
@@ -48,12 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, marca, ativo, criado_em) 
                     VALUES (?, ?, ?, ?, ?, NOW())";
-            
-            $resultado = $dbManager->execute($sql, [$titulo, $imagem_path, $link_compra, $marca, $ativo]);
-            
-            if ($resultado) {
+            $stmt = $pdo->prepare($sql);
+            $ok = $stmt->execute([$titulo, $imagem_path, $link_compra, $marca, $ativo]);
+            if ($ok) {
                 $sucesso = "Produto cadastrado com sucesso!";
-                // Limpar formulário
                 $_POST = array();
             } else {
                 $erro = "Erro ao cadastrar produto.";

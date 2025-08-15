@@ -1,12 +1,12 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/database_unified.php';
+require_once '../includes/db.php';
 require_once 'includes/auth.php';
 
 // Verificar se o usuário está logado
 check_login();
 
-$dbManager = DatabaseManager::getInstance();
+// Conexão via $pdo (definido em ../includes/db.php)
 
 // Processar exclusão
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
@@ -14,15 +14,16 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     
     try {
         // Verificar se o produto está em algum grupo
-        $em_grupo = $dbManager->queryOne("
-            SELECT COUNT(*) as total FROM grupos_anuncios_items WHERE anuncio_id = ?
-        ", [$id]);
-        
-        if ($em_grupo['total'] > 0) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM grupos_anuncios_items WHERE anuncio_id = ?");
+        $stmt->execute([$id]);
+        $em_grupo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($em_grupo && (int)$em_grupo['total'] > 0) {
             $erro = "Não é possível excluir este produto pois ele está associado a um grupo. Remova a associação primeiro.";
         } else {
-            $resultado = $dbManager->execute("DELETE FROM anuncios WHERE id = ?", [$id]);
-            if ($resultado) {
+            $stmt = $pdo->prepare("DELETE FROM anuncios WHERE id = ?");
+            $ok = $stmt->execute([$id]);
+            if ($ok) {
                 $sucesso = "Produto excluído com sucesso!";
             } else {
                 $erro = "Erro ao excluir produto.";
@@ -34,16 +35,21 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 }
 
 // Buscar produtos
-$anuncios = $dbManager->query("
-    SELECT a.*, 
+try {
+    $stmt = $pdo->prepare("SELECT a.*, 
            COUNT(gi.grupo_id) as total_grupos,
            GROUP_CONCAT(g.nome SEPARATOR ', ') as grupos_associados
     FROM anuncios a
     LEFT JOIN grupos_anuncios_items gi ON a.id = gi.anuncio_id
     LEFT JOIN grupos_anuncios g ON gi.grupo_id = g.id
     GROUP BY a.id
-    ORDER BY a.criado_em DESC
-");
+    ORDER BY a.criado_em DESC");
+    $stmt->execute();
+    $anuncios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $anuncios = [];
+    $erro = "Erro ao carregar produtos: " . $e->getMessage();
+}
 
 include 'includes/header.php';
 ?>
