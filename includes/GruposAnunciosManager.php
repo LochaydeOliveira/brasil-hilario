@@ -18,17 +18,35 @@ class GruposAnunciosManager {
         
         $params = [$localizacao];
         
-        // Filtro para posts específicos
-        if ($postId !== null) {
-            $sql .= " AND (g.posts_especificos = 0 OR g.id IN (
-                SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
-            ))";
-            $params[] = $postId;
-        }
-        
-        // Filtro para página inicial
-        if ($isHomePage) {
-            $sql .= " AND g.aparecer_inicio = 1";
+        // Lógica específica para sidebar: aparecer apenas em posts específicos
+        if ($localizacao === 'sidebar') {
+            if ($isHomePage) {
+                // Na página inicial, mostrar apenas grupos configurados para aparecer na home
+                $sql .= " AND g.aparecer_inicio = 1";
+            } else {
+                // Em posts específicos, mostrar apenas se o post estiver configurado
+                if ($postId !== null) {
+                    $sql .= " AND g.id IN (
+                        SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
+                    )";
+                    $params[] = $postId;
+                } else {
+                    // Se não há postId, não mostrar nada na sidebar
+                    $sql .= " AND 1 = 0";
+                }
+            }
+        } else {
+            // Para conteúdo principal, manter lógica original
+            if ($postId !== null) {
+                $sql .= " AND (g.posts_especificos = 0 OR g.id IN (
+                    SELECT gap.grupo_id FROM grupos_anuncios_posts gap WHERE gap.post_id = ?
+                ))";
+                $params[] = $postId;
+            }
+            
+            if ($isHomePage) {
+                $sql .= " AND g.aparecer_inicio = 1";
+            }
         }
         
         $sql .= " GROUP BY g.id ORDER BY g.criado_em DESC";
