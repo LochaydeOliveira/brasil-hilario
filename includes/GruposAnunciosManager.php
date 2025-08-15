@@ -388,4 +388,3 @@ class GruposAnunciosManager {
         return $result;
     }
 }
-?> 
