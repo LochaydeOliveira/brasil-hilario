@@ -5,30 +5,16 @@ require_once __DIR__ . '/GruposAnunciosManager.php';
 try {
     $gruposManager = new GruposAnunciosManager($pdo);
     
-    // Determinar se estamos na página inicial ou em um post específico
-    $current_url = $_SERVER['REQUEST_URI'];
-    $isHomePage = (
-        $current_url === '/' || 
-        $current_url === '/index.php' || 
-        preg_match('/^\/\d+$/', $current_url) || // Páginas numeradas como /1, /2, etc.
-        (basename($_SERVER['PHP_SELF']) === 'index.php' && !isset($_GET['slug']))
-    );
-    $postId = isset($post['id']) ? $post['id'] : null;
-    
-    // IMPORTANTE: Anúncios da sidebar aparecem APENAS em posts específicos
-    // Se estamos na página inicial, não mostrar anúncios da sidebar
-    if ($isHomePage) {
-        // Não exibir anúncios da sidebar na página inicial
+    // SOLUÇÃO SIMPLES: Verificar se estamos em um post específico
+    // A variável $post só existe quando estamos em um post específico (post.php)
+    if (!isset($post) || !isset($post['id'])) {
+        // Não estamos em um post específico, não mostrar anúncios da sidebar
         return;
     }
     
-    // Se não temos postId, não mostrar anúncios da sidebar
-    if (!$postId) {
-        // Não exibir anúncios da sidebar se não estamos em um post específico
-        return;
-    }
+    $postId = $post['id'];
     
-    // Buscar grupos da sidebar apenas para posts específicos
+    // Buscar grupos da sidebar apenas para este post específico
     $gruposSidebar = $gruposManager->getGruposPorLocalizacao('sidebar', $postId, false);
     
     if (!empty($gruposSidebar)) {
