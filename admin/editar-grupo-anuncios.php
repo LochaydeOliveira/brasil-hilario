@@ -58,6 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $aparecerInicio = isset($_POST['aparecer_inicio']);
     $posts = $_POST['posts'] ?? [];
     
+    // Lógica específica para sidebar: sempre requer posts específicos
+    if ($localizacao === 'sidebar') {
+        $postsEspecificos = true;
+        if (empty($posts)) {
+            $erro = 'Para grupos da sidebar, você deve selecionar pelo menos um post específico.';
+        }
+    }
+    
     if (empty($nome)) {
         $erro = 'Nome do grupo é obrigatório.';
     } elseif (empty($anuncios)) {
@@ -227,33 +235,43 @@ include 'includes/header.php';
                             <label class="form-label">Configuração de Exibição</label>
                             <div class="form-text mb-2">Defina onde este grupo de anúncios será exibido</div>
                             
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" 
-                                               id="posts_especificos" name="posts_especificos"
-                                               <?php echo ($grupo['posts_especificos'] ?? false) ? 'checked' : ''; ?>>
-                                        <label class="form-check-label" for="posts_especificos">
-                                            <strong>Posts específicos</strong>
-                                        </label>
-                                        <div class="form-text">Se marcado, o grupo aparecerá apenas nos posts selecionados</div>
+                            <?php if ($grupo['localizacao'] === 'sidebar'): ?>
+                                <!-- Configuração específica para sidebar -->
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>Grupo da Sidebar:</strong> Os anúncios aparecerão apenas nos posts específicos selecionados.
+                                </div>
+                                <input type="hidden" name="posts_especificos" value="1">
+                            <?php else: ?>
+                                <!-- Configuração para conteúdo principal -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   id="posts_especificos" name="posts_especificos"
+                                                   <?php echo ($grupo['posts_especificos'] ?? false) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="posts_especificos">
+                                                <strong>Posts específicos</strong>
+                                            </label>
+                                            <div class="form-text">Se marcado, o grupo aparecerá apenas nos posts selecionados</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   id="aparecer_inicio" name="aparecer_inicio"
+                                                   <?php echo ($grupo['aparecer_inicio'] ?? true) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="aparecer_inicio">
+                                                <strong>Aparecer na página inicial</strong>
+                                            </label>
+                                            <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" 
-                                               id="aparecer_inicio" name="aparecer_inicio"
-                                               <?php echo ($grupo['aparecer_inicio'] ?? true) ? 'checked' : ''; ?>>
-                                        <label class="form-check-label" for="aparecer_inicio">
-                                            <strong>Aparecer na página inicial</strong>
-                                        </label>
-                                        <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php endif; ?>
                             
-                            <!-- Seleção de Posts (aparece apenas se "Posts específicos" estiver marcado) -->
-                            <div id="selecao_posts" class="mt-3" style="display: <?php echo ($grupo['posts_especificos'] ?? false) ? 'block' : 'none'; ?>;">
+                            <!-- Seleção de Posts (sempre aparece para sidebar, ou se "Posts específicos" estiver marcado) -->
+                            <div id="selecao_posts" class="mt-3" style="display: <?php echo ($grupo['localizacao'] === 'sidebar' || ($grupo['posts_especificos'] ?? false)) ? 'block' : 'none'; ?>;">
                                 <label class="form-label">Selecionar Posts *</label>
                                 <div class="form-text mb-2">Selecione os posts onde este grupo será exibido</div>
                                 

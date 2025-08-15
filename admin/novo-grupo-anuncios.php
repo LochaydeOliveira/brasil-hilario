@@ -42,6 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $anuncios_selecionados = $_POST['anuncios'] ?? [];
     $posts_selecionados = $_POST['posts'] ?? [];
     
+    // Lógica específica para sidebar: sempre requer posts específicos
+    if ($localizacao === 'sidebar') {
+        $posts_especificos = 1;
+        if (empty($posts_selecionados)) {
+            $erro = "Para grupos da sidebar, você deve selecionar pelo menos um post específico.";
+        }
+    }
+    
     // Validações
     if (empty($nome)) {
         $erro = "Nome do grupo é obrigatório.";
@@ -183,25 +191,35 @@ include 'includes/header.php';
                                 <h5 class="card-title mb-0">Configurações de Exibição</h5>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="posts_especificos" name="posts_especificos" 
-                                               <?php echo (isset($_POST['posts_especificos']) && $_POST['posts_especificos']) ? 'checked' : ''; ?>>
-                                        <label class="form-check-label" for="posts_especificos">
-                                            Posts Específicos
-                                        </label>
-                                        <div class="form-text">Se marcado, o grupo só aparecerá nos posts selecionados</div>
+                                <div id="configuracao_sidebar" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i>
+                                        <strong>Grupo da Sidebar:</strong> Os anúncios aparecerão apenas nos posts específicos selecionados.
                                     </div>
+                                    <input type="hidden" name="posts_especificos" value="1">
                                 </div>
                                 
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="aparecer_inicio" name="aparecer_inicio" 
-                                               <?php echo (isset($_POST['aparecer_inicio']) && $_POST['aparecer_inicio']) ? 'checked' : ''; ?>>
-                                        <label class="form-check-label" for="aparecer_inicio">
-                                            Aparecer na Página Inicial
-                                        </label>
-                                        <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
+                                <div id="configuracao_conteudo">
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="posts_especificos" name="posts_especificos" 
+                                                   <?php echo (isset($_POST['posts_especificos']) && $_POST['posts_especificos']) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="posts_especificos">
+                                                Posts Específicos
+                                            </label>
+                                            <div class="form-text">Se marcado, o grupo só aparecerá nos posts selecionados</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="aparecer_inicio" name="aparecer_inicio" 
+                                                   <?php echo (isset($_POST['aparecer_inicio']) && $_POST['aparecer_inicio']) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="aparecer_inicio">
+                                                Aparecer na Página Inicial
+                                            </label>
+                                            <div class="form-text">Se marcado, o grupo aparecerá na página inicial</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -296,16 +314,39 @@ include 'includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const localizacaoSelect = document.getElementById('localizacao');
     const postsEspecificosCheckbox = document.getElementById('posts_especificos');
     const postsContainer = document.getElementById('posts_container');
+    const configuracaoSidebar = document.getElementById('configuracao_sidebar');
+    const configuracaoConteudo = document.getElementById('configuracao_conteudo');
     const anuncioCheckboxes = document.querySelectorAll('.anuncio-checkbox');
     const selecionarTodosBtn = document.getElementById('selecionar_todos');
     const limparSelecaoBtn = document.getElementById('limpar_selecao');
     
-    // Toggle posts específicos
+    // Função para atualizar configuração baseada na localização
+    function atualizarConfiguracao() {
+        const localizacao = localizacaoSelect.value;
+        
+        if (localizacao === 'sidebar') {
+            configuracaoSidebar.style.display = 'block';
+            configuracaoConteudo.style.display = 'none';
+            postsContainer.style.display = 'block';
+        } else {
+            configuracaoSidebar.style.display = 'none';
+            configuracaoConteudo.style.display = 'block';
+            postsContainer.style.display = postsEspecificosCheckbox.checked ? 'block' : 'none';
+        }
+    }
+    
+    // Toggle posts específicos (apenas para conteúdo)
     postsEspecificosCheckbox.addEventListener('change', function() {
-        postsContainer.style.display = this.checked ? 'block' : 'none';
+        if (localizacaoSelect.value !== 'sidebar') {
+            postsContainer.style.display = this.checked ? 'block' : 'none';
+        }
     });
+    
+    // Mudança na localização
+    localizacaoSelect.addEventListener('change', atualizarConfiguracao);
     
     // Selecionar todos os anúncios
     selecionarTodosBtn.addEventListener('click', function() {
@@ -321,10 +362,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Mostrar posts container se já estava marcado
-    if (postsEspecificosCheckbox.checked) {
-        postsContainer.style.display = 'block';
-    }
+    // Inicializar configuração
+    atualizarConfiguracao();
 });
 </script>
 
