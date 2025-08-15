@@ -79,6 +79,7 @@ if (!isset($_SESSION['usuario_id'])) {
             padding-left: 2rem !important;
             padding-right: 2rem !important;
             padding-bottom: 4rem !important;
+            padding-top: 3rem !important;
         }
         
         /* Garantir que o conteúdo preencha toda a largura */

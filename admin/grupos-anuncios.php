@@ -175,7 +175,7 @@ include 'includes/header.php';
         </div>
     </div>
 
-<!-- Modal de Confirmação -->
+
 <div class="modal fade" id="modalConfirmacao" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
