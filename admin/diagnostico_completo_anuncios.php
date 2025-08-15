@@ -48,7 +48,7 @@ $tabelas_necessarias = [
 
 foreach ($tabelas_necessarias as $tabela => $colunas) {
     try {
-        $resultado = $dbManager->queryOne("SHOW TABLES LIKE ?", [$tabela]);
+        $resultado = $dbManager->queryOne("SHOW TABLES LIKE '$tabela'");
         if ($resultado) {
             logMessage("✅ Tabela '$tabela' existe", 'success');
             
@@ -82,9 +82,9 @@ try {
     logMessage("📈 Anúncios: $total_anuncios total, $anuncios_ativos ativos", 'info');
     
     if ($anuncios_ativos > 0) {
-        $anuncios = $dbManager->query("SELECT id, titulo, marca, ativo FROM anuncios WHERE ativo = 1 ORDER BY criado_em DESC LIMIT 5");
+        $anuncios = $dbManager->query("SELECT id, titulo, ativo FROM anuncios WHERE ativo = 1 ORDER BY criado_em DESC LIMIT 5");
         foreach ($anuncios as $anuncio) {
-            logMessage("   - ID {$anuncio['id']}: {$anuncio['titulo']} ({$anuncio['marca']})", 'info');
+            logMessage("   - ID {$anuncio['id']}: {$anuncio['titulo']}", 'info');
         }
     }
     

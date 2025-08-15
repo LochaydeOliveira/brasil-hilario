@@ -13,19 +13,19 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     
     try {
-        // Verificar se o anúncio está em algum grupo
+        // Verificar se o produto está em algum grupo
         $em_grupo = $dbManager->queryOne("
             SELECT COUNT(*) as total FROM grupos_anuncios_items WHERE anuncio_id = ?
         ", [$id]);
         
         if ($em_grupo['total'] > 0) {
-            $erro = "Não é possível excluir este anúncio pois ele está associado a um grupo. Remova a associação primeiro.";
+            $erro = "Não é possível excluir este produto pois ele está associado a um grupo. Remova a associação primeiro.";
         } else {
             $resultado = $dbManager->execute("DELETE FROM anuncios WHERE id = ?", [$id]);
             if ($resultado) {
-                $sucesso = "Anúncio excluído com sucesso!";
+                $sucesso = "Produto excluído com sucesso!";
             } else {
-                $erro = "Erro ao excluir anúncio.";
+                $erro = "Erro ao excluir produto.";
             }
         }
     } catch (Exception $e) {
@@ -33,7 +33,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     }
 }
 
-// Buscar anúncios
+// Buscar produtos
 $anuncios = $dbManager->query("
     SELECT a.*, 
            COUNT(gi.grupo_id) as total_grupos,
@@ -52,9 +52,9 @@ include 'includes/header.php';
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">Catálogo de Anúncios</h1>
+                <h1 class="h3 mb-0">Catálogo de Produtos</h1>
                 <a href="novo-anuncio.php" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Novo Anúncio
+                    <i class="fas fa-plus"></i> Novo Produto
                 </a>
             </div>
             
@@ -74,9 +74,9 @@ include 'includes/header.php';
                     <?php if (empty($anuncios)): ?>
                         <div class="text-center py-4">
                             <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                            <h5>Nenhum anúncio encontrado</h5>
-                            <p class="text-muted">Crie seu primeiro anúncio para começar.</p>
-                            <a href="novo-anuncio.php" class="btn btn-primary">Criar Primeiro Anúncio</a>
+                            <h5>Nenhum produto encontrado</h5>
+                            <p class="text-muted">Cadastre seu primeiro produto para começar.</p>
+                            <a href="novo-anuncio.php" class="btn btn-primary">Cadastrar Primeiro Produto</a>
                         </div>
                     <?php else: ?>
                         <div class="table-responsive">
@@ -165,7 +165,7 @@ include 'includes/header.php';
                                                     </a>
                                                     <a href="anuncios.php?delete=<?php echo $anuncio['id']; ?>" 
                                                        class="btn btn-sm btn-outline-danger" 
-                                                       onclick="return confirm('Tem certeza que deseja excluir este anúncio?')"
+                                                       onclick="return confirm('Tem certeza que deseja excluir este produto?')"
                                                        title="Excluir">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
@@ -190,32 +190,23 @@ include 'includes/header.php';
                             <div class="text-center mb-3">
                                 <i class="fas fa-box fa-2x text-primary mb-2"></i>
                                 <h6>1. Catálogo de Produtos</h6>
-                                <p class="text-muted small">Crie produtos com informações básicas (nome, imagem, link, marca)</p>
+                                <p class="text-muted small">Cadastre produtos com informações básicas (nome, imagem, link, marca)</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="text-center mb-3">
                                 <i class="fas fa-layer-group fa-2x text-success mb-2"></i>
                                 <h6>2. Grupos de Anúncios</h6>
-                                <p class="text-muted small">Configure onde e como exibir os produtos (sidebar, conteúdo, posts específicos)</p>
+                                <p class="text-muted small">Crie grupos e selecione produtos do catálogo para exibir</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="text-center mb-3">
                                 <i class="fas fa-eye fa-2x text-info mb-2"></i>
                                 <h6>3. Exibição no Site</h6>
-                                <p class="text-muted small">Os produtos aparecem conforme as configurações dos grupos</p>
+                                <p class="text-muted small">Configure onde e como os produtos aparecerão no site</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="alert alert-info mt-3">
-                        <h6><i class="fas fa-info-circle"></i> Dica Importante</h6>
-                        <p class="mb-0">
-                            <strong>Produtos sem grupo não aparecem no site!</strong> 
-                            Após criar um produto aqui, vá para <a href="grupos-anuncios.php" class="alert-link">Grupos de Anúncios</a> 
-                            para configurar onde ele será exibido.
-                        </p>
                     </div>
                 </div>
             </div>

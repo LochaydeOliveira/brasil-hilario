@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validações básicas
     if (empty($titulo) || empty($link_compra)) {
-        $erro = "Título e link são obrigatórios.";
+        $erro = "Nome do produto e link são obrigatórios.";
     } else {
         try {
             $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, marca, ativo, criado_em) 
@@ -26,11 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resultado = $dbManager->execute($sql, [$titulo, $imagem, $link_compra, $marca, $ativo]);
             
             if ($resultado) {
-                $sucesso = "Anúncio criado com sucesso!";
+                $sucesso = "Produto cadastrado com sucesso!";
                 // Limpar formulário
                 $_POST = array();
             } else {
-                $erro = "Erro ao criar anúncio.";
+                $erro = "Erro ao cadastrar produto.";
             }
         } catch (Exception $e) {
             $erro = "Erro: " . $e->getMessage();
@@ -44,7 +44,7 @@ include 'includes/header.php';
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="h3 mb-4">Criar Novo Anúncio</h1>
+            <h1 class="h3 mb-4">Cadastrar Novo Produto</h1>
             
             <?php if (isset($erro)): ?>
                 <div class="alert alert-danger"><?php echo $erro; ?></div>
@@ -67,7 +67,7 @@ include 'includes/header.php';
                                     <input type="text" class="form-control" id="titulo" name="titulo" 
                                            value="<?php echo isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo']) : ''; ?>" 
                                            required>
-                                    <div class="form-text">Nome completo do produto para exibição</div>
+                                    <div class="form-text">Nome completo do produto</div>
                                 </div>
                             </div>
                             
@@ -79,7 +79,6 @@ include 'includes/header.php';
                                         <option value="amazon" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'amazon') ? 'selected' : ''; ?>>Amazon</option>
                                         <option value="shopee" <?php echo (isset($_POST['marca']) && $_POST['marca'] === 'shopee') ? 'selected' : ''; ?>>Shopee</option>
                                     </select>
-                                    <div class="form-text">Marca do produto (opcional)</div>
                                 </div>
                             </div>
                         </div>
@@ -104,15 +103,15 @@ include 'includes/header.php';
                                 <input class="form-check-input" type="checkbox" id="ativo" name="ativo" 
                                        <?php echo (isset($_POST['ativo']) && $_POST['ativo']) ? 'checked' : ''; ?>>
                                 <label class="form-check-label" for="ativo">
-                                    Anúncio Ativo
+                                    Produto Ativo
                                 </label>
-                                <div class="form-text">Anúncios inativos não aparecem em nenhum grupo</div>
+                                <div class="form-text">Produtos inativos não aparecem em nenhum grupo</div>
                             </div>
                         </div>
                         
                         <div class="d-flex justify-content-between">
                             <a href="anuncios.php" class="btn btn-secondary">← Voltar</a>
-                            <button type="submit" class="btn btn-primary">Criar Anúncio</button>
+                            <button type="submit" class="btn btn-primary">Cadastrar Produto</button>
                         </div>
                     </form>
                 </div>
@@ -127,7 +126,7 @@ include 'includes/header.php';
                         <div class="col-md-6">
                             <h6>📋 Página Anúncios</h6>
                             <ul class="mb-0">
-                                <li>Crie o catálogo de produtos</li>
+                                <li>Cadastre produtos no catálogo</li>
                                 <li>Configure informações básicas</li>
                                 <li>Defina marca (Amazon/Shopee)</li>
                                 <li>Ative/desative produtos</li>
