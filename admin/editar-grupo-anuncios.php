@@ -214,8 +214,8 @@ include 'includes/header.php';
                                     <table class="table table-sm align-middle mb-0" id="tbl_anuncios">
                                         <thead>
                                             <tr>
-                                                <th style=\"width:32px\"><input type=\"checkbox\" id=\"checkAllAnuncios\" onclick=\"toggleAll('anuncio', this)\"></th>
-                                                <th style=\"width:52px\"></th>
+                                                <th style="width:32px"><input type="checkbox" id="checkAllAnuncios" onclick="toggleAll('anuncio', this)"></th>
+                                                <th style="width:52px"></th>
                                                 <th>Produto</th>
                                                 <th>Marca</th>
                                                 <th>Status</th>
@@ -223,16 +223,16 @@ include 'includes/header.php';
                                         </thead>
                                         <tbody>
                                             <?php foreach ($todosAnuncios as $anuncio): ?>
-                                            <tr data-kind=\"anuncio\" data-title=\"<?php echo strtolower(htmlspecialchars($anuncio['titulo'])); ?>\" data-marca=\"<?php echo htmlspecialchars($anuncio['marca'] ?? ''); ?>\" data-status=\"<?php echo (int)($anuncio['ativo'] ?? 1); ?>\">
-                                                <td><input type=\"checkbox\" class=\"row-check-anuncio\" name=\"anuncios[]\" value=\"<?php echo $anuncio['id']; ?>\" <?php echo in_array($anuncio['id'], $anunciosIds) ? 'checked' : ''; ?>></td>
+                                            <tr data-kind="anuncio" data-title="<?php echo strtolower(htmlspecialchars($anuncio['titulo'])); ?>" data-marca="<?php echo htmlspecialchars($anuncio['marca'] ?? ''); ?>" data-status="<?php echo (int)($anuncio['ativo'] ?? 1); ?>">
+                                                <td><input type="checkbox" class="row-check-anuncio" name="anuncios[]" value="<?php echo $anuncio['id']; ?>" <?php echo in_array($anuncio['id'], $anunciosIds) ? 'checked' : ''; ?>></td>
                                                 <td>
                                                     <?php if (!empty($anuncio['imagem'])): ?>
-                                                        <img src=\"<?php echo htmlspecialchars($anuncio['imagem']); ?>\" alt=\"\" style=\"width:42px;height:42px;object-fit:cover;border-radius:4px;\">
+                                                        <img src="<?php echo htmlspecialchars($anuncio['imagem']); ?>" alt="" style="width:42px;height:42px;object-fit:cover;border-radius:4px;">
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong></td>
-                                                <td><?php echo !empty($anuncio['marca']) ? htmlspecialchars(ucfirst($anuncio['marca'])) : '<span class=\"text-muted\">-</span>'; ?></td>
-                                                <td><?php echo (int)($anuncio['ativo'] ?? 1) ? '<span class=\"badge bg-success\">Ativo</span>' : '<span class=\"badge bg-secondary\">Inativo</span>'; ?></td>
+                                                <td><?php echo !empty($anuncio['marca']) ? htmlspecialchars(ucfirst($anuncio['marca'])) : '<span class="text-muted">-</span>'; ?></td>
+                                                <td><?php echo (int)($anuncio['ativo'] ?? 1) ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-secondary">Inativo</span>'; ?></td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -279,17 +279,17 @@ include 'includes/header.php';
                                     <table class="table table-sm align-middle mb-0" id="tbl_posts">
                                         <thead>
                                             <tr>
-                                                <th style=\"width:32px\"><input type=\"checkbox\" id=\"checkAllPosts\" onclick=\"toggleAll('post', this)\"></th>
+                                                <th style="width:32px"><input type="checkbox" id="checkAllPosts" onclick="toggleAll('post', this)"></th>
                                                 <th>Título</th>
                                                 <th>Data</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($todosPosts as $post): ?>
-                                            <tr data-kind=\"post\" data-title=\"<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>\">
-                                                <td><input type=\"checkbox\" class=\"row-check-post\" name=\"posts[]\" value=\"<?php echo $post['id']; ?>\" <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>></td>
+                                            <tr data-kind="post" data-title="<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>">
+                                                <td><input type="checkbox" class="row-check-post" name="posts[]" value="<?php echo $post['id']; ?>" <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>></td>
                                                 <td><?php echo htmlspecialchars($post['titulo']); ?></td>
-                                                <td><small class=\"text-muted\"><?php echo !empty($post['data_publicacao']) ? date('d/m/Y', strtotime($post['data_publicacao'])) : ''; ?></small></td>
+                                                <td><small class="text-muted"><?php echo !empty($post['data_publicacao']) ? date('d/m/Y', strtotime($post['data_publicacao'])) : ''; ?></small></td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>
