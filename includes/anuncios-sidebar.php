@@ -12,17 +12,27 @@ require_once __DIR__ . '/GruposAnunciosManager.php';
 try {
     $gruposManager = new GruposAnunciosManager($pdo);
     $gruposSidebar = $gruposManager->getGruposPorLocalizacao('sidebar', $postId, false);
+    $debug = isset($_GET['debug_sidebar']) && $_GET['debug_sidebar'] == '1';
 
     if (empty($gruposSidebar)) {
+        if ($debug) {
+            error_log("SIDEBAR DEBUG: Nenhum grupo para postId={$postId}. Verifique se o grupo está ativo, localizacao='sidebar' e associado em grupos_anuncios_posts.");
+        }
         return;
     }
 
     foreach ($gruposSidebar as $grupo) {
         $anuncios = $gruposManager->getAnunciosDoGrupo($grupo['id']);
         if (empty($anuncios)) {
+            if ($debug) {
+                error_log("SIDEBAR DEBUG: Grupo {$grupo['id']} sem anúncios ativos associados (grupos_anuncios_items).");
+            }
             continue;
         }
         foreach ($anuncios as $anuncio) {
+            if ($debug) {
+                error_log("SIDEBAR DEBUG: Renderizando anuncio id={$anuncio['id']} marca=" . ($anuncio['marca'] ?? '')); 
+            }
             echo '<li class="mb-3 anuncio-item">';
             echo '<div class="anuncio-card-sidebar">';
             echo '<div class="anuncio-patrocinado-badge-sidebar">Anúncio</div>';
