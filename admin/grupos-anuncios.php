@@ -305,6 +305,13 @@ include 'includes/header.php';
                                         <span class="badge bg-secondary">
                                             <?php echo $grupo['total_anuncios']; ?> anúncio(s)
                                         </span>
+                                        <?php if (!empty($grupo['marca'])): ?>
+                                            <?php if ($grupo['marca'] === 'amazon'): ?>
+                                                <span class="badge badge-amazon ms-1"><i class="fab fa-amazon"></i></span>
+                                            <?php elseif ($grupo['marca'] === 'shopee'): ?>
+                                                <span class="badge badge-shopee ms-1"><i class="fas fa-shopping-cart"></i></span>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <span class="badge bg-<?php echo (int)$grupo['total_posts']>0 ? 'warning' : 'secondary'; ?>">

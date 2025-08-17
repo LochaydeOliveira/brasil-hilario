@@ -198,11 +198,11 @@ include 'includes/header.php';
                                     
                                     <?php if (!empty($anuncio['marca'])): ?>
                                         <?php if ($anuncio['marca'] === 'amazon'): ?>
-                                            <span class="badge bg-warning text-dark mb-2">
+                                            <span class="badge badge-amazon mb-2">
                                                 <i class="fab fa-amazon"></i> Amazon
                                             </span>
                                         <?php elseif ($anuncio['marca'] === 'shopee'): ?>
-                                            <span class="badge bg-orange text-white mb-2">
+                                            <span class="badge badge-shopee mb-2">
                                                 <i class="fas fa-shopping-cart"></i> Shopee
                                             </span>
                                         <?php endif; ?>

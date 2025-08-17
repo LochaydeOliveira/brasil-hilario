@@ -263,6 +263,16 @@ form {
     padding: 0.5rem 0.75rem;
 }
 
+/* Badges de marcas */
+.badge-amazon {
+    background-color: #ff9900;
+    color: #222;
+}
+.badge-shopee {
+    background-color: #ee4d2d;
+    color: #fff;
+}
+
 /* Responsividade para os filtros */
 @media (max-width: 768px) {
     .row.g-3 > div {

@@ -285,13 +285,13 @@ include 'includes/header.php';
                                             <td>
                                                 <?php if (!empty($anuncio['marca'])): ?>
                                                     <?php if ($anuncio['marca'] === 'amazon'): ?>
-                                                        <span class="badge bg-warning text-dark">
+                                                        <span class="badge badge-amazon">
                                                             <i class="fab fa-amazon"></i> Amazon
                                                 </span>
                                                     <?php elseif ($anuncio['marca'] === 'shopee'): ?>
-                                                        <span class="badge bg-orange text-white">
+                                                        <span class="badge badge-shopee">
                                                             <i class="fas fa-shopping-cart"></i> Shopee
-                                                </span>
+                                                        </span>
                                                     <?php else: ?>
                                                         <span class="badge bg-secondary"><?php echo ucfirst($anuncio['marca']); ?></span>
                                                     <?php endif; ?>

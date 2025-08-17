@@ -231,7 +231,19 @@ include 'includes/header.php';
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong></td>
-                                                <td><?php echo !empty($anuncio['marca']) ? htmlspecialchars(ucfirst($anuncio['marca'])) : '<span class="text-muted">-</span>'; ?></td>
+                                                <td>
+                                                    <?php if (!empty($anuncio['marca'])): ?>
+                                                        <?php if ($anuncio['marca'] === 'amazon'): ?>
+                                                            <span class="badge badge-amazon"><i class="fab fa-amazon"></i> Amazon</span>
+                                                        <?php elseif ($anuncio['marca'] === 'shopee'): ?>
+                                                            <span class="badge badge-shopee"><i class="fas fa-shopping-cart"></i> Shopee</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-secondary"><?php echo htmlspecialchars(ucfirst($anuncio['marca'])); ?></span>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <span class="text-muted">-</span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><?php echo (int)($anuncio['ativo'] ?? 1) ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-secondary">Inativo</span>'; ?></td>
                                             </tr>
                                             <?php endforeach; ?>
