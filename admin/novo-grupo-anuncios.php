@@ -36,56 +36,45 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $localizacao = $_POST['localizacao'];
-    $layout = $_POST['layout'];
-    $marca = $_POST['marca'];
+    $layout = $_POST['layout'] ?? 'carrossel';
     $ativo = isset($_POST['ativo']) ? 1 : 0;
-    $posts_especificos = isset($_POST['posts_especificos']) ? 1 : 0;
-    $aparecer_inicio = isset($_POST['aparecer_inicio']) ? 1 : 0;
     $anuncios_selecionados = $_POST['anuncios'] ?? [];
     $posts_selecionados = $_POST['posts'] ?? [];
-    
-    // Lógica específica para sidebar: sempre requer posts específicos
-    if ($localizacao === 'sidebar') {
-        $posts_especificos = 1;
-        if (empty($posts_selecionados)) {
-            $erro = "Para grupos da sidebar, você deve selecionar pelo menos um post específico.";
-        }
-    }
-    
-    // Validações
+
+    // Validações obrigatórias no novo modelo
     if (empty($nome)) {
         $erro = "Nome do grupo é obrigatório.";
     } elseif (empty($anuncios_selecionados)) {
         $erro = "Selecione pelo menos um anúncio para o grupo.";
-    } elseif ($posts_especificos && empty($posts_selecionados)) {
-        $erro = "Se marcou 'Posts específicos', selecione pelo menos um post.";
+    } elseif (empty($posts_selecionados)) {
+        $erro = "Selecione pelo menos um post para exibir este grupo.";
     } else {
         try {
             $pdo->beginTransaction();
 
-            // Criar grupo
+            // Ajustes de regra: sidebar força layout 'grade'; posts_especificos=1; aparecer_inicio=0; marca vazia
+            if ($localizacao === 'sidebar') {
+                $layout = 'grade';
+            }
+
             $sql_grupo = "INSERT INTO grupos_anuncios (nome, localizacao, layout, marca, ativo, posts_especificos, aparecer_inicio, criado_em) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+                          VALUES (?, ?, ?, '', ?, 1, 0, NOW())";
             $stmt = $pdo->prepare($sql_grupo);
-            $ok = $stmt->execute([$nome, $localizacao, $layout, $marca, $ativo, $posts_especificos, $aparecer_inicio]);
+            $ok = $stmt->execute([$nome, $localizacao, $layout, $ativo]);
 
             if ($ok) {
                 $grupo_id = (int)$pdo->lastInsertId();
 
-                // Associar anúncios ao grupo
-                if (!empty($anuncios_selecionados)) {
-                    $stmtItem = $pdo->prepare("INSERT INTO grupos_anuncios_items (grupo_id, anuncio_id, ordem) VALUES (?, ?, ?)");
-                    foreach ($anuncios_selecionados as $ordem => $anuncio_id) {
-                        $stmtItem->execute([$grupo_id, $anuncio_id, $ordem]);
-                    }
+                // Associar anúncios ao grupo (ordem pela posição no seletor)
+                $stmtItem = $pdo->prepare("INSERT INTO grupos_anuncios_items (grupo_id, anuncio_id, ordem) VALUES (?, ?, ?)");
+                foreach ($anuncios_selecionados as $ordem => $anuncio_id) {
+                    $stmtItem->execute([$grupo_id, $anuncio_id, $ordem]);
                 }
 
-                // Associar posts específicos (se houver)
-                if ($posts_especificos && !empty($posts_selecionados)) {
-                    $stmtPost = $pdo->prepare("INSERT INTO grupos_anuncios_posts (grupo_id, post_id) VALUES (?, ?)");
-                    foreach ($posts_selecionados as $post_id) {
-                        $stmtPost->execute([$grupo_id, $post_id]);
-                    }
+                // Associar posts obrigatórios
+                $stmtPost = $pdo->prepare("INSERT INTO grupos_anuncios_posts (grupo_id, post_id) VALUES (?, ?)");
+                foreach ($posts_selecionados as $post_id) {
+                    $stmtPost->execute([$grupo_id, $post_id]);
                 }
 
                 $pdo->commit();
