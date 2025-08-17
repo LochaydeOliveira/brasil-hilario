@@ -1853,7 +1853,6 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 .marca-badge {
     position: absolute;
     left: 0;
-    background: rgba(255, 255, 255, 0.95);
     z-index: 2;
     bottom: 10px;
 }
