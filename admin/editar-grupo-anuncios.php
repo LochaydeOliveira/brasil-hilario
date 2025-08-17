@@ -428,8 +428,14 @@ function changePageSize(tipo, size){
   applyPagination(tipo);
 }
 function changePage(tipo, delta){
-  paginacao[tipo].page += delta;
-  if (paginacao[tipo].page < 1) paginacao[tipo].page = 1;
+  const tableId = `#tbl_${tipo==='anuncio'?'anuncios':'posts'}`;
+  const visibleRows = Array.from(document.querySelectorAll(`${tableId} tbody tr`)).filter(tr => tr.style.display !== 'none');
+  const total = visibleRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / (paginacao[tipo].size || 20)));
+  let newPage = (paginacao[tipo].page || 1) + delta;
+  if (newPage < 1) newPage = 1;
+  if (newPage > totalPages) newPage = totalPages;
+  paginacao[tipo].page = newPage;
   applyPagination(tipo);
 }
 function filtrarLinhas(tipo){
