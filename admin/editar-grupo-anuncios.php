@@ -223,7 +223,7 @@ include 'includes/header.php';
                                         </thead>
                                         <tbody>
                                             <?php foreach ($todosAnuncios as $anuncio): ?>
-                                            <tr data-kind="anuncio" data-title="<?php echo strtolower(htmlspecialchars($anuncio['titulo'])); ?>" data-marca="<?php echo htmlspecialchars($anuncio['marca'] ?? ''); ?>" data-status="<?php echo (int)($anuncio['ativo'] ?? 1); ?>">
+                                            <tr data-kind="anuncio" data-id="<?php echo (int)$anuncio['id']; ?>" data-title="<?php echo strtolower(htmlspecialchars($anuncio['titulo'])); ?>" data-marca="<?php echo htmlspecialchars($anuncio['marca'] ?? ''); ?>" data-status="<?php echo (int)($anuncio['ativo'] ?? 1); ?>">
                                                 <td><input type="checkbox" class="row-check-anuncio" name="anuncios[]" value="<?php echo $anuncio['id']; ?>" <?php echo in_array($anuncio['id'], $anunciosIds) ? 'checked' : ''; ?>></td>
                                                 <td>
                                                     <?php if (!empty($anuncio['imagem'])): ?>
@@ -286,7 +286,7 @@ include 'includes/header.php';
                                         </thead>
                                         <tbody>
                                             <?php foreach ($todosPosts as $post): ?>
-                                            <tr data-kind="post" data-title="<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>">
+                                            <tr data-kind="post" data-id="<?php echo (int)$post['id']; ?>" data-title="<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>">
                                                 <td><input type="checkbox" class="row-check-post" name="posts[]" value="<?php echo $post['id']; ?>" <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>></td>
                                                 <td><?php echo htmlspecialchars($post['titulo']); ?></td>
                                                 <td><small class="text-muted"><?php echo !empty($post['data_publicacao']) ? date('d/m/Y', strtotime($post['data_publicacao'])) : ''; ?></small></td>
@@ -404,13 +404,15 @@ let paginacao = {
 function applyPagination(tipo){
   const state = paginacao[tipo];
   const rows = Array.from(document.querySelectorAll(`#tbl_${tipo==='anuncio'?'anuncios':'posts'} tbody tr`))
-    .filter(tr => tr.style.display !== 'none');
+    .filter(tr => tr.dataset.filtered !== '0');
   const total = rows.length;
   const start = (state.page - 1) * state.size;
   const end = start + state.size;
+  let shown = 0;
   rows.forEach((tr, idx) => {
-    tr.style.visibility = (idx >= start && idx < end) ? '' : 'hidden';
-    tr.style.display = (idx >= start && idx < end) ? '' : 'none';
+    const show = idx >= start && idx < end;
+    tr.style.display = show ? '' : 'none';
+    if (show) shown++;
   });
   const infoId = tipo==='anuncio' ? 'anuncioPageInfo' : 'postPageInfo';
   const prevBtn = document.getElementById(tipo==='anuncio' ? 'anuncioPrevBtn' : 'postPrevBtn');
@@ -421,6 +423,9 @@ function applyPagination(tipo){
   document.getElementById(infoId).textContent = `${from}–${to} de ${total} (pág. ${state.page}/${totalPages})`;
   prevBtn.disabled = state.page <= 1;
   nextBtn.disabled = state.page >= totalPages;
+  // Logs de debug
+  const ids = rows.slice(start, end).map(tr => tr.getAttribute('data-id'));
+  console.log(`[${tipo}] applyPagination total=${total} page=${state.page} size=${state.size} range=${from}-${to} ids=`, ids);
 }
 function changePageSize(tipo, size){
   paginacao[tipo].size = parseInt(size, 10) || 20;
@@ -429,13 +434,14 @@ function changePageSize(tipo, size){
 }
 function changePage(tipo, delta){
   const tableId = `#tbl_${tipo==='anuncio'?'anuncios':'posts'}`;
-  const visibleRows = Array.from(document.querySelectorAll(`${tableId} tbody tr`)).filter(tr => tr.style.display !== 'none');
-  const total = visibleRows.length;
+  const rows = Array.from(document.querySelectorAll(`${tableId} tbody tr`)).filter(tr => tr.dataset.filtered !== '0');
+  const total = rows.length;
   const totalPages = Math.max(1, Math.ceil(total / (paginacao[tipo].size || 20)));
   let newPage = (paginacao[tipo].page || 1) + delta;
   if (newPage < 1) newPage = 1;
   if (newPage > totalPages) newPage = totalPages;
   paginacao[tipo].page = newPage;
+  console.log(`[${tipo}] changePage -> newPage=${newPage}, totalPages=${totalPages}, total=${total}`);
   applyPagination(tipo);
 }
 function filtrarLinhas(tipo){
@@ -451,15 +457,17 @@ function filtrarLinhas(tipo){
       if(q && !t.includes(q)) show=false;
       if(marca && m !== marca) show=false;
       if(status && s !== status) show=false;
-      tr.style.display = show ? '' : 'none';
+      tr.dataset.filtered = show ? '1' : '0';
     });
   } else if (tipo==='post'){
     const q = (document.getElementById('f_post_q')?.value||'').toLowerCase();
     document.querySelectorAll('#tbl_posts tbody tr').forEach(tr=>{
       const t = tr.getAttribute('data-title');
-      tr.style.display = (q && !t.includes(q)) ? 'none' : '';
+      tr.dataset.filtered = (q && !t.includes(q)) ? '0' : '1';
     });
   }
+  // Reset para primeira página após filtro
+  paginacao[tipo].page = 1;
   applyPagination(tipo);
 }
 function selecionarTodos(tipo){
@@ -476,6 +484,9 @@ function toggleAll(tipo, el){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+  // Inicializa flag de filtro para todas as linhas
+  document.querySelectorAll('#tbl_anuncios tbody tr').forEach(tr=>{ tr.dataset.filtered = '1'; });
+  document.querySelectorAll('#tbl_posts tbody tr').forEach(tr=>{ tr.dataset.filtered = '1'; });
   applyPagination('anuncio');
   applyPagination('post');
 });
