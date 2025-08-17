@@ -184,14 +184,74 @@ include 'includes/header.php';
                                     <a href="novo-anuncio.php" class="alert-link">Crie um anúncio primeiro</a>.
                                 </div>
                             <?php else: ?>
-                                <select class="form-select" name="anuncios[]" id="anuncios" multiple size="10" required>
-                                    <?php foreach ($todosAnuncios as $anuncio): ?>
-                                        <option value="<?php echo $anuncio['id']; ?>" <?php echo in_array($anuncio['id'], $anunciosIds) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($anuncio['titulo']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <div class="form-text">Segure Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplos.</div>
+                                <div class="row g-2 align-items-end mb-2">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Buscar</label>
+                                        <input type="text" class="form-control" id="f_anuncio_q" placeholder="Nome ou link" oninput="filtrarLinhas('anuncio')">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Marca</label>
+                                        <select class="form-select" id="f_anuncio_marca" onchange="filtrarLinhas('anuncio')">
+                                            <option value="">Todas</option>
+                                            <option value="amazon">Amazon</option>
+                                            <option value="shopee">Shopee</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" id="f_anuncio_status" onchange="filtrarLinhas('anuncio')">
+                                            <option value="">Todos</option>
+                                            <option value="1">Ativo</option>
+                                            <option value="0">Inativo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="selecionarTodos('anuncio')">Selecionar todos</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limparSelecao('anuncio')">Limpar</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="max-height: 420px; overflow: auto; border: 1px solid #ddd; border-radius: 4px;">
+                                    <table class="table table-sm align-middle mb-0" id="tbl_anuncios">
+                                        <thead>
+                                            <tr>
+                                                <th style=\"width:32px\"><input type=\"checkbox\" id=\"checkAllAnuncios\" onclick=\"toggleAll('anuncio', this)\"></th>
+                                                <th style=\"width:52px\"></th>
+                                                <th>Produto</th>
+                                                <th>Marca</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($todosAnuncios as $anuncio): ?>
+                                            <tr data-kind=\"anuncio\" data-title=\"<?php echo strtolower(htmlspecialchars($anuncio['titulo'])); ?>\" data-marca=\"<?php echo htmlspecialchars($anuncio['marca'] ?? ''); ?>\" data-status=\"<?php echo (int)($anuncio['ativo'] ?? 1); ?>\">
+                                                <td><input type=\"checkbox\" class=\"row-check-anuncio\" name=\"anuncios[]\" value=\"<?php echo $anuncio['id']; ?>\" <?php echo in_array($anuncio['id'], $anunciosIds) ? 'checked' : ''; ?>></td>
+                                                <td>
+                                                    <?php if (!empty($anuncio['imagem'])): ?>
+                                                        <img src=\"<?php echo htmlspecialchars($anuncio['imagem']); ?>\" alt=\"\" style=\"width:42px;height:42px;object-fit:cover;border-radius:4px;\">
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><strong><?php echo htmlspecialchars($anuncio['titulo']); ?></strong></td>
+                                                <td><?php echo !empty($anuncio['marca']) ? htmlspecialchars(ucfirst($anuncio['marca'])) : '<span class=\"text-muted\">-</span>'; ?></td>
+                                                <td><?php echo (int)($anuncio['ativo'] ?? 1) ? '<span class=\"badge bg-success\">Ativo</span>' : '<span class=\"badge bg-secondary\">Inativo</span>'; ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="small text-muted" id="anuncioPageInfo"></div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <select id="anuncioPageSize" class="form-select form-select-sm" style="width:auto" onchange="changePageSize('anuncio', this.value)">
+                                            <option value="10">10</option>
+                                            <option value="20" selected>20</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-outline-secondary" id="anuncioPrevBtn" onclick="changePage('anuncio', -1)">‹</button>
+                                            <button type="button" class="btn btn-outline-secondary" id="anuncioNextBtn" onclick="changePage('anuncio', 1)">›</button>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endif; ?>
                         </div>
 
@@ -205,14 +265,50 @@ include 'includes/header.php';
                                     Nenhum post encontrado.
                                 </div>
                             <?php else: ?>
-                                <select class="form-select" name="posts[]" id="posts" multiple size="10" required>
-                                    <?php foreach ($todosPosts as $post): ?>
-                                        <option value="<?php echo $post['id']; ?>" <?php echo in_array($post['id'], $postsIds) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($post['titulo']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <div class="form-text">Segure Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplos.</div>
+                                <div class="row g-2 align-items-end mb-2">
+                                    <div class="col-8">
+                                        <label class="form-label">Buscar</label>
+                                        <input type="text" class="form-control" id="f_post_q" placeholder="Título do post" oninput="filtrarLinhas('post')">
+                                    </div>
+                                    <div class="col-4 d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="selecionarTodos('post')">Selecionar todos</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limparSelecao('post')">Limpar</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="max-height: 360px; overflow: auto; border: 1px solid #ddd; border-radius: 4px;">
+                                    <table class="table table-sm align-middle mb-0" id="tbl_posts">
+                                        <thead>
+                                            <tr>
+                                                <th style=\"width:32px\"><input type=\"checkbox\" id=\"checkAllPosts\" onclick=\"toggleAll('post', this)\"></th>
+                                                <th>Título</th>
+                                                <th>Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($todosPosts as $post): ?>
+                                            <tr data-kind=\"post\" data-title=\"<?php echo strtolower(htmlspecialchars($post['titulo'])); ?>\">
+                                                <td><input type=\"checkbox\" class=\"row-check-post\" name=\"posts[]\" value=\"<?php echo $post['id']; ?>\" <?php echo in_array($post['id'], $postsIds) ? 'checked' : ''; ?>></td>
+                                                <td><?php echo htmlspecialchars($post['titulo']); ?></td>
+                                                <td><small class=\"text-muted\"><?php echo !empty($post['data_publicacao']) ? date('d/m/Y', strtotime($post['data_publicacao'])) : ''; ?></small></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="small text-muted" id="postPageInfo"></div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <select id="postPageSize" class="form-select form-select-sm" style="width:auto" onchange="changePageSize('post', this.value)">
+                                            <option value="10">10</option>
+                                            <option value="20" selected>20</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-outline-secondary" id="postPrevBtn" onclick="changePage('post', -1)">‹</button>
+                                            <button type="button" class="btn btn-outline-secondary" id="postNextBtn" onclick="changePage('post', 1)">›</button>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endif; ?>
                         </div>
 
@@ -296,6 +392,86 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     localizacaoSelect.addEventListener('change', aplicarRegraSidebar);
     aplicarRegraSidebar();
+});
+</script>
+
+<script>
+// Paginação e filtros client-side (reuso do novo-grupo)
+let paginacao = {
+  anuncio: { page: 1, size: 20 },
+  post: { page: 1, size: 20 }
+};
+function applyPagination(tipo){
+  const state = paginacao[tipo];
+  const rows = Array.from(document.querySelectorAll(`#tbl_${tipo==='anuncio'?'anuncios':'posts'} tbody tr`))
+    .filter(tr => tr.style.display !== 'none');
+  const total = rows.length;
+  const start = (state.page - 1) * state.size;
+  const end = start + state.size;
+  rows.forEach((tr, idx) => {
+    tr.style.visibility = (idx >= start && idx < end) ? '' : 'hidden';
+    tr.style.display = (idx >= start && idx < end) ? '' : 'none';
+  });
+  const infoId = tipo==='anuncio' ? 'anuncioPageInfo' : 'postPageInfo';
+  const prevBtn = document.getElementById(tipo==='anuncio' ? 'anuncioPrevBtn' : 'postPrevBtn');
+  const nextBtn = document.getElementById(tipo==='anuncio' ? 'anuncioNextBtn' : 'postNextBtn');
+  const from = total ? (start + 1) : 0;
+  const to = Math.min(end, total);
+  const totalPages = Math.max(1, Math.ceil(total / state.size));
+  document.getElementById(infoId).textContent = `${from}–${to} de ${total} (pág. ${state.page}/${totalPages})`;
+  prevBtn.disabled = state.page <= 1;
+  nextBtn.disabled = state.page >= totalPages;
+}
+function changePageSize(tipo, size){
+  paginacao[tipo].size = parseInt(size, 10) || 20;
+  paginacao[tipo].page = 1;
+  applyPagination(tipo);
+}
+function changePage(tipo, delta){
+  paginacao[tipo].page += delta;
+  if (paginacao[tipo].page < 1) paginacao[tipo].page = 1;
+  applyPagination(tipo);
+}
+function filtrarLinhas(tipo){
+  if(tipo==='anuncio'){
+    const q = (document.getElementById('f_anuncio_q')?.value||'').toLowerCase();
+    const marca = document.getElementById('f_anuncio_marca')?.value||'';
+    const status = document.getElementById('f_anuncio_status')?.value||'';
+    document.querySelectorAll('#tbl_anuncios tbody tr').forEach(tr=>{
+      const t = tr.getAttribute('data-title');
+      const m = tr.getAttribute('data-marca');
+      const s = tr.getAttribute('data-status');
+      let show = true;
+      if(q && !t.includes(q)) show=false;
+      if(marca && m !== marca) show=false;
+      if(status && s !== status) show=false;
+      tr.style.display = show ? '' : 'none';
+    });
+  } else if (tipo==='post'){
+    const q = (document.getElementById('f_post_q')?.value||'').toLowerCase();
+    document.querySelectorAll('#tbl_posts tbody tr').forEach(tr=>{
+      const t = tr.getAttribute('data-title');
+      tr.style.display = (q && !t.includes(q)) ? 'none' : '';
+    });
+  }
+  applyPagination(tipo);
+}
+function selecionarTodos(tipo){
+  const selector = tipo==='anuncio' ? '.row-check-anuncio' : '.row-check-post';
+  document.querySelectorAll(selector).forEach(cb=>{ if(cb.closest('tr').style.display !== 'none'){ cb.checked = true; } });
+}
+function limparSelecao(tipo){
+  const selector = tipo==='anuncio' ? '.row-check-anuncio' : '.row-check-post';
+  document.querySelectorAll(selector).forEach(cb=> cb.checked = false);
+}
+function toggleAll(tipo, el){
+  const selector = tipo==='anuncio' ? '.row-check-anuncio' : '.row-check-post';
+  document.querySelectorAll(selector).forEach(cb=>{ if(cb.closest('tr').style.display !== 'none'){ cb.checked = el.checked; } });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  applyPagination('anuncio');
+  applyPagination('post');
 });
 </script>
 
