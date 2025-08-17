@@ -1,64 +1,99 @@
 <?php
-// Exibir anúncios na sidebar apenas em posts específicos, baseando-se na configuração de grupos
+// Exibir anúncios na sidebar apenas em posts específicos, com fallback robusto
 
-if (!isset($post) || !isset($post['id'])) {
-    return;
+$debug = isset($_GET['debug_sidebar']) && $_GET['debug_sidebar'] == '1';
+
+// Determinar o ID do post atual de forma resiliente
+$postId = null;
+if (isset($post) && isset($post['id'])) {
+    $postId = (int)$post['id'];
 }
 
-$postId = (int)$post['id'];
+if ($postId === null) {
+    // Tentar obter via slug na URL: /post/{slug}
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (preg_match('#/post/([a-z0-9\-]+)#i', $uri, $m)) {
+        $slug = $m[1];
+        try {
+            $stmt = $pdo->prepare("SELECT id FROM posts WHERE slug = ? AND publicado = 1 LIMIT 1");
+            $stmt->execute([$slug]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) { $postId = (int)$row['id']; }
+        } catch (Exception $e) {
+            if ($debug) error_log('SIDEBAR DEBUG: Erro ao obter postId por slug: ' . $e->getMessage());
+        }
+    }
+}
+
+if ($postId === null) {
+    if ($debug) error_log('SIDEBAR DEBUG: postId indefinido. Não exibindo anúncios.');
+    return;
+}
 
 require_once __DIR__ . '/GruposAnunciosManager.php';
 
 try {
     $gruposManager = new GruposAnunciosManager($pdo);
+    // 1) Tentar via grupos (modelo atual)
     $gruposSidebar = $gruposManager->getGruposPorLocalizacao('sidebar', $postId, false);
-    $debug = isset($_GET['debug_sidebar']) && $_GET['debug_sidebar'] == '1';
 
-    if (empty($gruposSidebar)) {
-        if ($debug) {
-            error_log("SIDEBAR DEBUG: Nenhum grupo para postId={$postId}. Verifique se o grupo está ativo, localizacao='sidebar' e associado em grupos_anuncios_posts.");
+    $anunciosRender = [];
+    if (!empty($gruposSidebar)) {
+        foreach ($gruposSidebar as $grupo) {
+            $anuncios = $gruposManager->getAnunciosDoGrupo($grupo['id']);
+            foreach ($anuncios as $anuncio) {
+                $anunciosRender[$anuncio['id']] = $anuncio;
+            }
         }
+    } else {
+        if ($debug) error_log("SIDEBAR DEBUG: Nenhum grupo para postId={$postId}. Tentando fallback anuncios_posts...");
+        // 2) Fallback legado: anuncios_posts
+        $sql = "SELECT a.* FROM anuncios a
+                INNER JOIN anuncios_posts ap ON ap.anuncio_id = a.id
+                WHERE a.localizacao = 'sidebar' AND a.ativo = 1 AND ap.post_id = ?
+                ORDER BY a.criado_em DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$postId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $anuncio) {
+            $anunciosRender[$anuncio['id']] = $anuncio;
+        }
+    }
+
+    if (empty($anunciosRender)) {
+        if ($debug) error_log("SIDEBAR DEBUG: Nenhum anúncio para exibir no postId={$postId} (após grupos e fallback).");
         return;
     }
 
-    foreach ($gruposSidebar as $grupo) {
-        $anuncios = $gruposManager->getAnunciosDoGrupo($grupo['id']);
-        if (empty($anuncios)) {
-            if ($debug) {
-                error_log("SIDEBAR DEBUG: Grupo {$grupo['id']} sem anúncios ativos associados (grupos_anuncios_items).");
-            }
-            continue;
+    foreach ($anunciosRender as $anuncio) {
+        if ($debug) {
+            error_log("SIDEBAR DEBUG: Renderizando anuncio id={$anuncio['id']} marca=" . ($anuncio['marca'] ?? ''));
         }
-        foreach ($anuncios as $anuncio) {
-            if ($debug) {
-                error_log("SIDEBAR DEBUG: Renderizando anuncio id={$anuncio['id']} marca=" . ($anuncio['marca'] ?? '')); 
+        echo '<li class="mb-3 anuncio-item">';
+        echo '<div class="anuncio-card-sidebar">';
+        echo '<div class="anuncio-patrocinado-badge-sidebar">Anúncio</div>';
+
+        // Badge de marca
+        if (!empty($anuncio['marca'])) {
+            echo '<div class="marca-badge" style="position:absolute;right:8px;top:8px;">';
+            if ($anuncio['marca'] === 'shopee') {
+                echo '<span class="badge badge-shopee" style="font-size:10px;padding:2px 6px;"><i class="fas fa-shopping-cart"></i> Shopee</span>';
+            } elseif ($anuncio['marca'] === 'amazon') {
+                echo '<span class="badge badge-amazon" style="font-size:10px;padding:2px 6px;"><i class="fab fa-amazon"></i> Amazon</span>';
             }
-            echo '<li class="mb-3 anuncio-item">';
-            echo '<div class="anuncio-card-sidebar">';
-            echo '<div class="anuncio-patrocinado-badge-sidebar">Anúncio</div>';
-
-            // Badge de marca por anúncio
-            if (!empty($anuncio['marca'])) {
-                echo '<div class="marca-badge" style="position:absolute;right:8px;top:8px;">';
-                if ($anuncio['marca'] === 'shopee') {
-                    echo '<span class="badge badge-shopee" style="font-size:10px;padding:2px 6px;"><i class="fas fa-shopping-cart"></i> Shopee</span>';
-                } elseif ($anuncio['marca'] === 'amazon') {
-                    echo '<span class="badge badge-amazon" style="font-size:10px;padding:2px 6px;"><i class="fab fa-amazon"></i> Amazon</span>';
-                }
-                echo '</div>';
-            }
-
-            if (!empty($anuncio['imagem'])) {
-                echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" onclick="registrarCliqueAnuncio(' . (int)$anuncio['id'] . ', \'imagem\')">';
-                echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
-                echo '</a>';
-            }
-
-            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" style="font-size: 15px!important;padding: 0 0.9rem!important;font-weight: 500!important;" class="anuncio-titulo-sidebar" onclick="registrarCliqueAnuncio(' . (int)$anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-
             echo '</div>';
-            echo '</li>';
         }
+
+        if (!empty($anuncio['imagem'])) {
+            echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" onclick="registrarCliqueAnuncio(' . (int)$anuncio['id'] . ', \'imagem\')">';
+            echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
+            echo '</a>';
+        }
+
+        echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" style="font-size: 15px!important;padding: 0 0.9rem!important;font-weight: 500!important;" class="anuncio-titulo-sidebar" onclick="registrarCliqueAnuncio(' . (int)$anuncio['id'] . ', \'titulo\')">' . htmlspecialchars($anuncio['titulo']) . '</a>';
+
+        echo '</div>';
+        echo '</li>';
     }
 } catch (Exception $e) {
     error_log('Erro ao carregar anúncios da sidebar: ' . $e->getMessage());

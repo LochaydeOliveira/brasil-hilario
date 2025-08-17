@@ -47,23 +47,23 @@ try {
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                <?php foreach ($ultimas_postagens as $post): ?>
+                <?php foreach ($ultimas_postagens as $p): ?>
                 <li class="mb-3">
-                    <?php if (!empty($post['imagem_destacada'])): ?>
+                    <?php if (!empty($p['imagem_destacada'])): ?>
                         <div class="post-thumbnail mb-2">
-                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>">
-                                <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($post['imagem_destacada']); ?>" 
+                            <a href="<?php echo BLOG_URL; ?>/post/<?php echo $p['slug']; ?>">
+                                <img src="<?php echo BLOG_URL; ?>/uploads/images/<?php echo htmlspecialchars($p['imagem_destacada']); ?>" 
                                      class="img-fluid" 
-                                     alt="<?php echo htmlspecialchars($post['titulo']); ?>"
+                                     alt="<?php echo htmlspecialchars($p['titulo']); ?>"
                                     >
                             </a>
                         </div>
                     <?php endif; ?>
-                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $post['slug']; ?>" class="text-decoration-none">
-                        <?php echo htmlspecialchars($post['titulo']); ?>
+                    <a href="<?php echo BLOG_URL; ?>/post/<?php echo $p['slug']; ?>" class="text-decoration-none">
+                        <?php echo htmlspecialchars($p['titulo']); ?>
                     </a>
                     <small class="text-muted d-block">
-                        <?php echo date('d/m/Y', strtotime($post['data_publicacao'])); ?>
+                        <?php echo date('d/m/Y', strtotime($p['data_publicacao'])); ?>
                     </small>
                 </li>
                 <?php endforeach; ?>
