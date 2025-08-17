@@ -213,6 +213,9 @@ include 'includes/header.php';
                                         </div>
                                     </div>
                                 </div>
+                                <div id="postsAlert" class="alert alert-danger mt-2" style="display:none;">
+                                    Para grupos na Sidebar, selecione pelo menos um post.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -322,7 +325,7 @@ include 'includes/header.php';
 
                 <div class="d-flex justify-content-between mt-4">
                     <a href="grupos-anuncios.php" class="btn btn-secondary">← Voltar</a>
-                    <button type="submit" class="btn btn-primary" <?php echo empty($anuncios_disponiveis) ? 'disabled' : ''; ?>>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" <?php echo empty($anuncios_disponiveis) ? 'disabled' : ''; ?>>
                         Criar Grupo
                     </button>
                 </div>
@@ -386,6 +389,18 @@ function initServerLists(){
   loadAnuncios();
   loadPosts();
   syncHiddenInputs();
+
+  // Impedir envio se sidebar sem posts
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e){
+    const loc = document.getElementById('localizacao').value;
+    if (loc === 'sidebar' && selectedPosts.size === 0) {
+      e.preventDefault();
+      const alertEl = document.getElementById('postsAlert');
+      alertEl.style.display = '';
+      alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
 }
 
 function loadAnuncios(){

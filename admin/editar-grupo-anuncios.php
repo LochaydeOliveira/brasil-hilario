@@ -130,6 +130,9 @@ include 'includes/header.php';
                                            value="<?php echo htmlspecialchars($grupo['nome']); ?>" required>
                                     <div class="form-text">Ex: "Anúncios da Página Inicial", "Promoções Especiais"</div>
                                 </div>
+                                <div id="postsAlert" class="alert alert-danger mt-2" style="display:none;">
+                                    Para grupos na Sidebar, selecione pelo menos um post.
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -501,6 +504,19 @@ document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('#tbl_posts tbody tr').forEach(tr=>{ tr.dataset.filtered = '1'; });
   applyPagination('anuncio');
   applyPagination('post');
+  // Bloquear submit se sidebar sem posts selecionados
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e){
+    const loc = document.getElementById('localizacao').value;
+    if (loc === 'sidebar') {
+      const anyChecked = document.querySelectorAll('#tbl_posts tbody input.row-check-post:checked').length > 0;
+      if (!anyChecked) {
+        e.preventDefault();
+        const alertEl = document.getElementById('postsAlert');
+        if (alertEl) { alertEl.style.display = ''; alertEl.scrollIntoView({behavior:'smooth', block:'center'}); }
+      }
+    }
+  });
 });
 </script>
 
