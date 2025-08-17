@@ -24,15 +24,12 @@ try {
             foreach ($anunciosGrade as $anuncio) {
                 echo '<div class="anuncio-card-grade">';
                 echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
-                if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                if (!empty($anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                     echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-grade">';
                     echo '</a>';
                 }
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-grade">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-                if ($anuncio['cta_ativo']) {
-                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-grade">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
-                }
                 echo '</div>';
             }
             echo '</div>';
@@ -46,15 +43,12 @@ try {
             foreach ($anunciosCarrossel as $anuncio) {
                 echo '<div class="anuncio-card-carrossel">';
                 echo '<div class="anuncio-patrocinado-badge">Anúncio</div>';
-                if (!empty($anuncio['imagem']) && file_exists('.' . $anuncio['imagem'])) {
+                if (!empty($anuncio['imagem'])) {
                     echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank">';
                     echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-carrossel">';
                     echo '</a>';
                 }
                 echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-titulo-carrossel">' . htmlspecialchars($anuncio['titulo']) . '</a>';
-                if ($anuncio['cta_ativo']) {
-                    echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-link-carrossel">' . htmlspecialchars($anuncio['cta_texto']) . '</a>';
-                }
                 echo '</div>';
             }
             echo '</div>';

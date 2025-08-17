@@ -106,8 +106,8 @@ class AnunciosManager {
      * Criar novo anúncio
      */
     public function criarAnuncio($dados) {
-        $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, localizacao, layout, cta_ativo, cta_texto) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO anuncios (titulo, imagem, link_compra, localizacao, layout) 
+                VALUES (?, ?, ?, ?, ?)";
         
         try {
             $stmt = $this->pdo->prepare($sql);
@@ -116,9 +116,7 @@ class AnunciosManager {
                 $dados['imagem'],
                 $dados['link_compra'],
                 $dados['localizacao'],
-                $dados['layout'] ?? 'carrossel',
-                $dados['cta_ativo'] ?? false,
-                $dados['cta_texto'] ?? 'Saiba Mais'
+                $dados['layout'] ?? 'carrossel'
             ]);
             
             $anuncioId = $this->pdo->lastInsertId();
@@ -141,7 +139,7 @@ class AnunciosManager {
     public function atualizarAnuncio($id, $dados) {
         $sql = "UPDATE anuncios SET 
                 titulo = ?, imagem = ?, link_compra = ?, localizacao = ?, layout = ?,
-                cta_ativo = ?, cta_texto = ?, ativo = ?
+                ativo = ?
                 WHERE id = ?";
         
         try {
@@ -152,8 +150,6 @@ class AnunciosManager {
                 $dados['link_compra'],
                 $dados['localizacao'],
                 $dados['layout'] ?? 'carrossel',
-                $dados['cta_ativo'] ?? false,
-                $dados['cta_texto'] ?? 'Saiba Mais',
                 $dados['ativo'] ?? true,
                 $id
             ]);
@@ -295,11 +291,7 @@ class AnunciosManager {
         $html .= htmlspecialchars($anuncio['titulo']);
         $html .= '</a>';
         
-        if ($anuncio['cta_ativo']) {
-            $html .= '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" class="anuncio-cta" onclick="registrarCliqueAnuncio(' . $anuncio['id'] . ', \'cta\')">';
-            $html .= htmlspecialchars($anuncio['cta_texto']);
-            $html .= '</a>';
-        }
+        // CTA removido no novo modelo
         
         $html .= '</div>';
         $html .= '</div>';
