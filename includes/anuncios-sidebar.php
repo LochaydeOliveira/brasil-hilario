@@ -77,9 +77,9 @@ try {
         if (!empty($anuncio['marca'])) {
             echo '<div class="marca-badge" style="position:absolute;right:8px;top:8px;">';
             if ($anuncio['marca'] === 'shopee') {
-                echo '<span class="badge badge-shopee" style="font-size:10px;padding:2px 6px;"><i class="fas fa-shopping-cart"></i> Shopee</span>';
+                echo '<span class="badge badge-shopee" style="font-size:10px;padding:3px 6px;"><i class="fas fa-shopping-cart"></i> Shopee</span>';
             } elseif ($anuncio['marca'] === 'amazon') {
-                echo '<span class="badge badge-amazon" style="font-size:10px;padding:2px 6px;"><i class="fab fa-amazon"></i> Amazon</span>';
+                echo '<span class="badge badge-amazon" style="font-size:10px;padding:3px 6px;"><i class="fab fa-amazon"></i> Amazon</span>';
             }
             echo '</div>';
         }
