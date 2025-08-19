@@ -105,12 +105,21 @@ body .post-content {
   font-family: var(--font-secondary) !important;
   font-weight: 400 !important;
   font-size: 16px !important;
+  line-height: 1.75 !important;
 }
 
 @media (max-width: 768px) {
   body .post-content {
-    font-size: 14px !important;
+    font-size: 17px !important;
+    line-height: 1.85 !important;
   }
+}
+
+/* Garantir que parágrafos e listas herdem a tipografia ajustada */
+body .post-content p,
+body .post-content li {
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
 
 /* =====================================================
