@@ -41,7 +41,7 @@ class GruposAnunciosManager {
      * Buscar anúncios de um grupo específico
      */
     public function getAnunciosDoGrupo($grupoId) {
-        $sql = "SELECT a.*, gi.ordem
+        $sql = "SELECT a.*, gi.ordem, gi.anuncio_id AS anuncio_id
                 FROM anuncios a 
                 JOIN grupos_anuncios_items gi ON a.id = gi.anuncio_id
                 WHERE gi.grupo_id = ? AND a.ativo = 1
