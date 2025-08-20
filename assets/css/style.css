@@ -1379,15 +1379,14 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 /* Anúncios da Sidebar */
 .anuncio-card-sidebar {
-    border: 1px solid #4e4e4e;
-    padding: 0;
+    padding: 1.5rem;
     margin-bottom: 15px;
     background: #ffffff;
     transition: box-shadow 0.2s ease;
 }
 
 .anuncio-card-sidebar:hover {
-    border: 1px solid #4e4e4e!important;
+    border: 1px solid #4e4e4e8c!important;
 }
 
 
@@ -1870,14 +1869,14 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
     align-items: center;
     gap: 6px;
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: 2px;
     line-height: 1;
     font-weight: 600;
     font-size: 12px;
     text-transform: none;
 }
 
-.badge-amazon { background-color: #ff9900; color: #222; }
+.badge-amazon { background-color: #ff9900; color: #ffffff; }
 .badge-shopee { background-color: #ee4d2d; color: #fff; }
 
 @media (max-width: 768px) {
