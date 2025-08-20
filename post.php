@@ -318,7 +318,7 @@ function injectSections($content, $sections, $font_configs = []) {
         return $content;
     }
 
-    // Preparar todas as injeções (seções + anúncios AdSense)
+    // Preparar todas as injeções (apenas seções, sem anúncios)
     $all_injections = [];
     
     // Adicionar seções de posts relacionados
@@ -336,20 +336,7 @@ function injectSections($content, $sections, $font_configs = []) {
         }
     }
     
-    // Adicionar anúncios AdSense em pontos estratégicos
-    $adsense_points = [3, 7, 12]; // Parágrafos onde inserir anúncios
-    
-    foreach ($adsense_points as $index => $point) {
-        if ($point < count($paragraphs)) {
-            // Primeiro anúncio (slot 2883155880) apenas no primeiro ponto
-            $ad_type = ($index === 0) ? 'first' : 'default';
-            $all_injections[] = [
-                'type' => 'adsense',
-                'point' => $point,
-                'html' => buildAdSenseHtml($ad_type)
-            ];
-        }
-    }
+    // Removido: nenhuma injeção de AdSense será adicionada ao conteúdo
     
     // Ordenar todas as injeções por ponto
     usort($all_injections, function($a, $b) {
@@ -403,6 +390,17 @@ include 'includes/header.php';
                 </p>
             <?php else: ?>
                 <p class="lead">por <?php echo htmlspecialchars($post['autor_nome']); ?></p>
+            <?php endif; ?>
+
+            <?php if (!empty($post['tags'])): ?>
+            <div class="post-tags mb-3">
+                <i class="fas fa-tags"></i>
+                <?php foreach ($post['tags'] as $tag): ?>
+                <span class="badge bg-secondary text-decoration-none me-1">
+                    <?php echo htmlspecialchars($tag['nome']); ?>
+                </span>
+                <?php endforeach; ?>
+            </div>
             <?php endif; ?>
 
 
@@ -482,21 +480,7 @@ include 'includes/header.php';
 
             <hr>
 
-            <?php 
-            // Incluir grupos de anúncios do conteúdo principal
-            include 'includes/grupos-anuncios-conteudo.php';
-            ?>
-
-            <?php if (!empty($post['tags'])): ?>
-            <div class="post-tags mb-3">
-                <i class="fas fa-tags"></i>
-                <?php foreach ($post['tags'] as $tag): ?>
-                <span class="badge bg-secondary text-decoration-none me-1">
-                    <?php echo htmlspecialchars($tag['nome']); ?>
-                </span>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
+            
 
 
             <div class="card my-4">
