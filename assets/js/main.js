@@ -14,15 +14,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Lazy loading de imagens
     if ('loading' in HTMLImageElement.prototype) {
-        const images = document.querySelectorAll('img[loading="lazy"]');
-        images.forEach(img => {
-            img.src = img.dataset.src;
-        });
+        // Nativo suportado: nenhuma ação necessária
     } else {
         // Fallback para navegadores que não suportam lazy loading
+        // Converte imagens com loading="lazy" para data-src + classe lazyload
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            if (!img.dataset.src) {
+                img.dataset.src = img.getAttribute('src');
+            }
+            img.classList.add('lazyload');
+        });
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
         document.body.appendChild(script);
+    }
+
+    // Garantir lazy/async em imagens internas do conteúdo
+    const content = document.querySelector('.post-content');
+    if (content) {
+        content.querySelectorAll('img').forEach(img => {
+            if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+            if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+        });
     }
 
     // Smooth scroll para links internos

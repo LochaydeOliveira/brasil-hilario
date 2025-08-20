@@ -186,7 +186,7 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
         $section_html .= '<div class="col-lg-3 col-md-6 mb-4">';
         $section_html .= '<a href="' . $post_url . '" class="related-post-link">';
         $section_html .= '<div class="card h-100 related-post-card">';
-        $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '">';
+        $section_html .= '<img src="' . $image_path . '" class="related-post-img" alt="' . htmlspecialchars($p['titulo']) . '" loading="lazy" decoding="async">';
         $section_html .= '<div class="pad-01 d-flex flex-column ">';
         $section_html .= '<h6 class="card-title related-post-title mt-auto" style="' . $text_style . '">' . htmlspecialchars($p['titulo']) . '</h6>';
         $section_html .= '<div><span class="badge mb-2">' . htmlspecialchars($p['categoria_nome']) . '</span></div>';
@@ -301,19 +301,8 @@ function buildAdSenseHtml($type = 'default') {
 </div>
 HTML;
     } else {
-        return <<<HTML
-<div class="adsense-block my-4 text-center">
-    <ins class="adsbygoogle"
-         style="display:block; text-align:center;"
-         data-ad-layout="in-article"
-         data-ad-format="fluid"
-         data-ad-client="ca-pub-8313157699231074"
-         data-ad-slot="7748469758"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-HTML;
+        // Removido: não renderizar mais o bloco com slot 7748469758
+        return '';
     }
 }
 

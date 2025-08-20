@@ -86,7 +86,7 @@ try {
 
         if (!empty($anuncio['imagem'])) {
             echo '<a href="' . htmlspecialchars($anuncio['link_compra']) . '" target="_blank" onclick="registrarCliqueAnuncio(' . (int)$anuncio['id'] . ', \'imagem\')">';
-            echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar">';
+            echo '<img src="' . htmlspecialchars($anuncio['imagem']) . '" alt="' . htmlspecialchars($anuncio['titulo']) . '" class="anuncio-imagem-sidebar" loading="lazy" decoding="async">';
             echo '</a>';
         }
 
