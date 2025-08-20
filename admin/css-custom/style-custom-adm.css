@@ -263,14 +263,23 @@ form {
     padding: 0.5rem 0.75rem;
 }
 
-/* Badges de marcas */
-.badge-amazon {
-    background-color: #ff9900;
-    color: #222;
+/* Badges de marcas - padronização admin */
+.badge-amazon { background-color: #ff9900; color: #222; }
+.badge-shopee { background-color: #ee4d2d; color: #fff; }
+
+/* Badge genérica de marca em cards/listas admin */
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    line-height: 1;
+    font-weight: 600;
 }
-.badge-shopee {
-    background-color: #ee4d2d;
-    color: #fff;
+
+@media (max-width: 768px) {
+    .brand-badge { padding: 3px 6px; }
 }
 
 /* Responsividade para os filtros */
