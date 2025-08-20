@@ -480,7 +480,11 @@ include 'includes/header.php';
 
             <hr>
 
-            
+            <?php 
+            // Incluir grupos de anúncios do conteúdo principal (anúncios nativos)
+            include 'includes/grupos-anuncios-conteudo.php';
+            ?>
+
 
 
             <div class="card my-4">
