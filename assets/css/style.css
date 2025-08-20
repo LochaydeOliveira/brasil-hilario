@@ -1546,8 +1546,8 @@ h1, h2, h3, h4, h5, h6, .site-title, .post-title {
 
 .anuncio-patrocinado-badge-sidebar {
     position: relative;
-    top: 12px;
-    right: -5px;
+    top: -15px;
+    right: 0;
     background: #ffffff;
     color: #000000;
     padding: 0px 10px;
