@@ -10,8 +10,8 @@ try {
 }
 
 if ($temUsuarios > 0 && (($_GET['secret'] ?? '') !== ADMIN_SECRET)) {
-    http_response_code(403);
-    die('Acesso negado.');
+    header('Location: index.php');
+    exit;
 }
 
 $msg = '';

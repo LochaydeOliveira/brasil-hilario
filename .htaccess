@@ -31,6 +31,8 @@ Options -Indexes
 # Permitir acesso direto aos arquivos de teste (DEVE VIR ANTES das regras genéricas)
 <IfModule mod_rewrite.c>
     RewriteRule ^api/ - [L]
+    # Permitir acesso direto à aplicação de e-book (sem reescritas)
+    RewriteRule ^ebook_acesso/ - [L]
     RewriteRule ^anuncios\.php$ - [L]
     RewriteRule ^debug-api-cliques\.php$ - [L]
     RewriteRule ^teste-final-sistema\.php$ - [L]
