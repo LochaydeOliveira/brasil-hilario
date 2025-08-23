@@ -1,4 +1,10 @@
 DirectoryIndex index.php
+# Permitir acesso direto a páginas PHP desta pasta, sem interferência de regras da raiz
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /ebook_acesso/
+  RewriteRule ^(index\.php|registrar\.php|setup-user\.php|dashboard\.php|logout\.php|tools/.*)$ - [L]
+</IfModule>
 Options -Indexes
 
 # Bloqueia acesso direto ao arquivo do e-book (Apache 2.4+ e compatibilidade)
