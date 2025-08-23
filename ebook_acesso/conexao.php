@@ -20,7 +20,7 @@ define('DB_USER_EBOOK', 'paymen58');
 define('DB_PASS_EBOOK', 'u4q7+B6ly)obP_gxN9sNe');
 
 define('ADMIN_ALLOWED_EMAILS', json_encode(['lochaydeguerreiro@hotmail.com']));
-define('ADMIN_SECRET', 'troque-este-segredo');
+define('ADMIN_SECRET', '100423Oliviah');
 
 // Opções PDO
 $pdoOptions = [
