@@ -1,6 +1,19 @@
 <?php
 require_once __DIR__ . '/conexao.php';
-if (($_GET['secret'] ?? '') !== ADMIN_SECRET) { http_response_code(403); die('Acesso negado.'); }
+
+// Permitir acesso sem segredo somente no PRIMEIRO USUÁRIO
+$temUsuarios = 0;
+try {
+    $temUsuarios = (int)$pdo->query('SELECT COUNT(*) FROM usuarios')->fetchColumn();
+} catch (Throwable $e) {
+    $temUsuarios = 0;
+}
+
+if ($temUsuarios > 0 && (($_GET['secret'] ?? '') !== ADMIN_SECRET)) {
+    http_response_code(403);
+    die('Acesso negado.');
+}
+
 $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome'] ?? '');
