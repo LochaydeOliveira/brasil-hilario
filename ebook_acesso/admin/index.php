@@ -54,7 +54,7 @@ $usuarios = $stmt->fetchAll();
         .topbar{background:#d2691e}
         .topbar .navbar-brand{color:#fff;font-weight:700}
         .btn-primary{background:#d2691e;border-color:#d2691e}
-        .admin-wrap{max-width:1200px;margin-inline:auto}
+        .admin-wrap{width:90%;max-width:1600px;margin-inline:auto}
         .card{box-shadow:0 10px 24px rgba(0,0,0,.06);border:1px solid #f0e7dd}
         .card-header h5{font-weight:700}
         .top-form .form-label{font-weight:600;font-size:.9rem}
