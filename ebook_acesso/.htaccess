@@ -1,11 +1,15 @@
+DirectoryIndex index.php
+Options -Indexes
+
+# Bloqueia acesso direto ao arquivo do e-book (Apache 2.4+ e compatibilidade)
 <Files "libido.txt">
-  Require all denied
-  <IfModule !mod_access_compat.c>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule mod_access_compat.c>
     Order allow,deny
     Deny from all
   </IfModule>
 </Files>
-
-Options -Indexes
 
 
