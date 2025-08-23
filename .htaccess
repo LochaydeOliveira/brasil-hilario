@@ -1,3 +1,16 @@
+# Proteger acesso direto ao arquivo do e-book
+<Files "libido.txt">
+  Require all denied
+  <IfModule !mod_access_compat.c>
+    # Apache 2.2 compat
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</Files>
+
+# Segurança geral
+Options -Indexes
+
 # Habilitar o mod_rewrite
 RewriteEngine On
 
