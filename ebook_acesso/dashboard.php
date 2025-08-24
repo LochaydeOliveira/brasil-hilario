@@ -11,33 +11,38 @@ function convertEbookTextToHtml(string $text): array {
     $subtitle = trim($lines[1] ?? '');
 
     $html = '';
+    $inList = false;
     foreach ($lines as $idx => $line) {
         $line = trim($line);
         if ($line === '') { continue; }
         if ($idx === 0 || $idx === 1) { continue; }
 
         if (preg_match('/^Introdução/i', $line)) {
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<div class="section-divider"><span>Introdução</span></div>';
-            $line = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
-            $html .= '<h2 class="h3 mt-3">' . $line . '</h2>';
+            $html .= '<h2 class="h3 mt-3">' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</h2>';
             continue;
         }
         if (preg_match('/^Fase\s*1/i', $line)) {
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<div class="section-divider"><span>Fase 1</span></div>';
             $html .= '<h2 class="h4 mt-3">' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</h2>';
             continue;
         }
         if (preg_match('/^Fase\s*2/i', $line)) {
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<div class="section-divider"><span>Fase 2</span></div>';
             $html .= '<h2 class="h4 mt-3">' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</h2>';
             continue;
         }
         if (preg_match('/^Fase\s*3/i', $line)) {
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<div class="section-divider"><span>Fase 3</span></div>';
             $html .= '<h2 class="h4 mt-3">' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</h2>';
             continue;
         }
         if (preg_match('/^Conclusão/i', $line)) {
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<div class="section-divider"><span>Conclusão</span></div>';
             $html .= '<h2 class="h4 mt-3">' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</h2>';
             continue;
@@ -45,16 +50,14 @@ function convertEbookTextToHtml(string $text): array {
 
         // Lista marcada simples: linhas iniciando com "- " ou "* "
         if (preg_match('/^[-*]\s+/', $line)) {
-            // abre/fecha UL inteligentemente
-            if (!str_ends_with($html, '</ul>')) { $html .= '<ul class="lp-list">'; }
+            if (!$inList) { $html .= '<ul class="lp-list">'; $inList = true; }
             $html .= '<li>' . htmlspecialchars(preg_replace('/^[-*]\s+/', '', $line), ENT_QUOTES, 'UTF-8') . '</li>';
-            // lookahead próxima linha; se não for item, fecha ul depois no loop
         } else {
-            if (str_ends_with($html, '</li>')) { $html .= '</ul>'; }
+            if ($inList) { $html .= '</ul>'; $inList = false; }
             $html .= '<p>' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</p>';
         }
     }
-    if (str_ends_with($html, '</li>')) { $html .= '</ul>'; }
+    if ($inList) { $html .= '</ul>'; }
 
     return [$title, $subtitle, $html];
 }
