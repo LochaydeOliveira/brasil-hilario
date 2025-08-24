@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redescobrindo o Desejo: Um Guia para Casais</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
             --terracotta: #D2691E;
@@ -290,13 +289,19 @@
             .illustration svg {
                 max-width: 250px;
             }
-            .hero { grid-template-columns: 1fr; }
-            .cta { flex-direction: column; }
-            .cta input, .cta button { width: 100%; }
         }
 
-        /* Layout Landing Page (oculta regras de impressão) */
-        .page-break { display:none; }
+        /* Preparação para PDF */
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        .page-break { page-break-before: always; break-before: page; }
+        @media print {
+            body { max-width: none; padding: 0; }
+            .container { box-shadow: none; }
+            .page-break { page-break-before: always; break-before: page; }
+        }
 
         /* Capa do e-book */
         .cover {
@@ -332,128 +337,25 @@
             padding: 16px 12px;
             font-weight: 600;
         }
-
-        /* Seções da Landing Page */
-        .hero {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 24px;
-            align-items: center;
-            margin: 32px 0 24px 0;
-        }
-        .hero h1 { color: var(--dark-blue); font-size: 2.4rem; line-height: 1.2; margin: 0 0 12px 0; }
-        .hero p.lead { font-size: 1.1rem; color: #334; }
-        .ebook-mock { border: 1px solid #eee; box-shadow: 0 12px 30px rgba(0,0,0,.08); border-radius: 8px; overflow: hidden; }
-        .badges { display:flex; gap:12px; flex-wrap:wrap; margin: 12px 0; }
-        .badge-pill { background: var(--cream); border: 1px solid #eadfca; color: #444; padding: 6px 10px; border-radius: 999px; font-size: .9rem; }
-        .cta { display:flex; gap:10px; margin-top: 12px; }
-        .cta input { flex:1; padding: 12px 14px; border:1px solid #ddd; border-radius: 6px; font-size: 1rem; }
-        .cta button { background: var(--terracotta); color: #fff; border:0; padding: 12px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; }
-        .cta small { display:block; color:#667; margin-top:6px; }
-
-        .section {
-            margin: 48px 0;
-        }
-        .section h3 { color: var(--dark-blue); font-size: 1.6rem; margin-bottom: 12px; }
-        .grid-3 { display:grid; gap:18px; grid-template-columns: repeat(3, 1fr); }
-        .card { border:1px solid #eee; border-radius: 10px; padding:18px; box-shadow: 0 6px 18px rgba(0,0,0,.05); background:#fff; }
-        .card i { color: var(--terracotta); font-size: 22px; }
-        .card h4 { margin: 8px 0; color: var(--dark-blue); }
-        .card p { margin: 0; font-size: .98rem; color:#334; }
-
-        .author { display:grid; grid-template-columns: 100px 1fr; gap:16px; align-items:center; }
-        .author .avatar { width:100px; height:100px; border-radius: 100%; background:#f0e7dd; display:flex; align-items:center; justify-content:center; color:#b45; font-size:40px; font-weight:700; }
-        .guarantee { background:#faf7f2; border:1px dashed #e0d3bf; padding:16px; border-radius:10px; display:flex; gap:12px; align-items:flex-start; }
-        .guarantee i { color:#16a34a; }
     </style>
 </head>
 <body>
     <div class="container">
 
-        <!-- HERO / CAPA LP -->
-        <section class="hero">
-            <div>
-            <h1>Redescobrindo o Desejo</h1>
-                <p class="lead">Um guia prático para casais reacenderem a intimidade e a libido, com passos simples e exercícios que funcionam na vida real.</p>
-                <div class="badges">
-                    <span class="badge-pill"><i class="fa-solid fa-heart"></i> Para casais reais</span>
-                    <span class="badge-pill"><i class="fa-solid fa-book"></i> E-book imediato</span>
-                    <span class="badge-pill"><i class="fa-solid fa-shield-heart"></i> Conteúdo acolhedor</span>
-        </div>
-                <form class="cta" onsubmit="event.preventDefault(); alert('Obrigado! Enviarei o material ao seu e-mail.');">
-                    <input type="email" placeholder="Seu melhor e-mail" required>
-                    <button type="submit">Quero receber o e-book</button>
-                </form>
-                <small class="text-muted">Sem spam. Você pode sair quando quiser.</small>
+        <!-- CAPA -->
+        <section class="cover">
+            <div class="cover-top">
+                <h1 class="cover-title">Redescobrindo<br>o Desejo</h1>
+                <div class="cover-subtitle">Um Guia para Casais Reacenderem a Intimidade e a Libido</div>
+                <svg class="cover-wave" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <path fill="#D2691E" d="M0,64L80,69.3C160,75,320,85,480,74.7C640,64,800,32,960,26.7C1120,21,1280,43,1360,53.3L1440,64L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"/>
+                </svg>
             </div>
-            <div class="ebook-mock">
-                <div class="cover-top">
-                    <h1 class="cover-title">Redescobrindo<br>o Desejo</h1>
-                    <div class="cover-subtitle">Guia para casais reacenderem a intimidade e a libido</div>
-                </div>
-                <img class="cover-image" src="img-libido/casal-feliz-se-redescobrindo.jpg" alt="Casal feliz se redescobrindo">
-                <div class="cover-author">Andréia Kindalph</div>
-            </div>
+            <img class="cover-image" src="img-libido/casal-feliz-se-redescobrindo.jpg" alt="Casal feliz se redescobrindo">
+            <div class="cover-author">Andréia Kindalph</div>
         </section>
 
-        <!-- BENEFÍCIOS -->
-        <section class="section">
-            <h3>O que você vai aprender</h3>
-            <div class="grid-3">
-                <div class="card">
-                    <i class="fa-solid fa-fire"></i>
-                    <h4>Reacender a Faísca</h4>
-                    <p>Práticas simples para aumentar o desejo feminino e a conexão no dia a dia.</p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-comments"></i>
-                    <h4>Comunicação que Aproxima</h4>
-                    <p>Roteiros de conversa e exercícios para transformar tensão em parceria.</p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-heart-circle-check"></i>
-                    <h4>Plano Para o Casal</h4>
-                    <p>Passo a passo com tarefas leves para os dois, sem cobranças.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SOBRE O CONTEÚDO -->
-        <section class="section">
-            <h3>Dentro do e-book</h3>
-            <div class="grid-3">
-                <div class="card"><h4>Cap. 1 — Entenda a libido</h4><p>O que é desejo responsivo e por que ele muda.</p></div>
-                <div class="card"><h4>Cap. 2 — Causas reais</h4><p>Biológicas, emocionais e do relacionamento.</p></div>
-                <div class="card"><h4>Cap. 3 — Para ela</h4><p>Autoconhecimento, autocuidado e rotinas que ajudam.</p></div>
-                <div class="card"><h4>Cap. 4 — Para ele</h4><p>Como apoiar sem pressão e criar um ambiente seguro.</p></div>
-                <div class="card"><h4>Cap. 5 — Para o casal</h4><p>Encontros, conexão e novas formas de intimidade.</p></div>
-                <div class="card"><h4>Cap. 6 — Quando buscar ajuda</h4><p>Como identificar sinais e a quem recorrer.</p></div>
-            </div>
-        </section>
-
-        <!-- AUTORA -->
-        <section class="section">
-            <h3>Sobre a autora</h3>
-            <div class="author">
-                <div class="avatar">A</div>
-                <div>
-                    <p><strong>Andréia Kindalph</strong> é apaixonada por relacionamento saudável e comunicação afetiva. Este guia reúne aprendizados práticos para casais que desejam reacender a intimidade com respeito, leveza e parceria.</p>
-                    <div class="guarantee"><i class="fa-solid fa-seal"></i><div><strong>Abordagem acolhedora:</strong> nada de fórmulas mágicas — apenas passos claros e humanos.</div></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA FINAL -->
-        <section class="section">
-            <div class="card" style="text-align:center;">
-                <h3 style="margin:0 0 8px 0;">Receba o e-book gratuitamente</h3>
-                <p class="lead" style="margin:0 0 12px 0;">Envio imediato para o seu e-mail</p>
-                <form class="cta" onsubmit="event.preventDefault(); alert('Perfeito! Enviarei o material ao seu e-mail.');" style="justify-content:center;">
-                    <input type="email" placeholder="Seu melhor e-mail" required style="max-width:420px;">
-                    <button type="submit"><i class="fa-solid fa-download"></i> Baixar agora</button>
-                </form>
-        </div>
-        </section>
+        <div class="page-break"></div>
         
         <div class="intro">
             <p>Querida leitora, querido leitor,</p>
