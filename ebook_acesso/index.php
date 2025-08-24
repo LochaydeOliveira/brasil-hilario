@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         if ($user && (int)$user['ativo'] === 1 && password_verify($senha, $user['senha'])) {
+            // Evitar warnings de header: limpe buffers e regenere sessão
+            if (ob_get_level()) { @ob_end_clean(); }
+            @session_write_close();
+            @session_start();
             session_regenerate_id(true);
             $_SESSION['user_id'] = (int)$user['id'];
             $_SESSION['user_name'] = $user['nome'];

@@ -90,6 +90,3 @@ function is_admin(): bool {
     return is_array($allowed) && in_array(strtolower($_SESSION['user_email']), array_map('strtolower', $allowed), true);
 }
 function require_admin(): void { if (!is_logged_in() || !is_admin()) { header('Location: ../index.php'); exit; } }
-?>
-
-
