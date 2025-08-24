@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = (int)$user['id'];
             $_SESSION['user_name'] = $user['nome'];
             $_SESSION['user_email'] = $user['email'];
-            header('Location: dashboard.php');
+            header('Location: libido-renovado.php');
             exit;
         } else {
             $erro = 'Credenciais inválidas ou usuário suspenso.';
