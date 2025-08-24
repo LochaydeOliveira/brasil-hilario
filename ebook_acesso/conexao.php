@@ -12,6 +12,40 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Logging de erros para diagnosticar problemas em produção
+$logDir = __DIR__ . '/logs';
+if (!is_dir($logDir)) { @mkdir($logDir, 0755, true); }
+$logFile = $logDir . '/app-' . date('Y-m-d') . '.log';
+@ini_set('log_errors', '1');
+@ini_set('error_log', $logFile);
+@ini_set('display_errors', '0');
+@error_reporting(E_ALL);
+
+function app_log($message): void {
+    $user = $_SESSION['user_email'] ?? 'guest';
+    $url = $_SERVER['REQUEST_URI'] ?? '';
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    $line = '[' . date('Y-m-d H:i:s') . "] [$user][$ip] $url - $message";
+    error_log($line);
+}
+
+set_exception_handler(function(Throwable $e){
+    app_log('EXCEPTION: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+});
+
+set_error_handler(function($severity, $message, $file, $line){
+    // Converte todos os erros para log e continua execução quando possível
+    app_log("PHP ERROR [$severity]: $message in $file:$line");
+    return false; // deixa o PHP lidar se necessário
+});
+
+register_shutdown_function(function(){
+    $err = error_get_last();
+    if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        app_log('FATAL: ' . $err['message'] . ' in ' . $err['file'] . ':' . $err['line']);
+    }
+});
+
 // Segue o mesmo padrão de config/database.php (localhost -> IP)
 define('DB_HOST_LOCAL_EBOOK', 'localhost');
 define('DB_HOST_IP_EBOOK', '192.185.222.27');

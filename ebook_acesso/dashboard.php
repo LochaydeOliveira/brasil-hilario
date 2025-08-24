@@ -2,10 +2,16 @@
 require_once __DIR__ . '/conexao.php';
 require_login();
 
+// Debug opcional: acrescente ?debug=1 na URL para ver erros
+if (isset($_GET['debug']) && $_GET['debug'] == '1') {
+    @ini_set('display_errors', '1');
+    @error_reporting(E_ALL);
+}
+
 $ebookPath = __DIR__ . '/libido.txt';
 $rawText = is_file($ebookPath) ? file_get_contents($ebookPath) : "Arquivo 'libido.txt' não encontrado.";
 
-function convertEbookTextToHtml(string $text): array {
+function convertEbookTextToHtml($text) {
     $lines = preg_split("/\r?\n/", $text);
     $title = trim($lines[0] ?? 'E-book');
     $subtitle = trim($lines[1] ?? '');
@@ -62,7 +68,13 @@ function convertEbookTextToHtml(string $text): array {
     return [$title, $subtitle, $html];
 }
 
-[$ebookTitle, $ebookSubtitle, $conteudoHtml] = convertEbookTextToHtml($rawText);
+try {
+    [$ebookTitle, $ebookSubtitle, $conteudoHtml] = convertEbookTextToHtml($rawText);
+} catch (Throwable $e) {
+    $ebookTitle = 'E-book';
+    $ebookSubtitle = '';
+    $conteudoHtml = '<p>Ocorreu um erro ao processar o conteúdo. Exibindo versão simples.</p>' . nl2br(htmlspecialchars($rawText));
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
