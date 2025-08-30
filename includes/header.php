@@ -331,6 +331,12 @@ try {
             .category-navbar .arrow.left { left: -35px; }
             .category-navbar .arrow.right { right: -35px; }
         }
+        .arrow right svg{
+            stroke: #fff;
+        }
+        .arrow left svg {
+            stroke: #fff;
+        }
     </style>
 
     <nav class="category-navbar">
