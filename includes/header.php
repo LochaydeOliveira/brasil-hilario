@@ -324,8 +324,8 @@ try {
         .category-navbar .nav { flex-wrap: nowrap; white-space: nowrap; }
         .category-navbar .nav .nav-item { flex: 0 0 auto; }
         .category-navbar .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #ffffff; color: #1b5e20; border: 1px solid rgba(0,0,0,.1); border-radius: 9999px; padding: 6px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.08); z-index: 2; }
-        .category-navbar .arrow.left { left: 4px; }
-        .category-navbar .arrow.right { right: 4px; }
+        .category-navbar .arrow.left { left: -35px; }
+        .category-navbar .arrow.right { right: -35px; }
     </style>
 
     <nav class="category-navbar">
