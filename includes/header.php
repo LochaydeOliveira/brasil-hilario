@@ -26,52 +26,51 @@ try {
 <head>
 
     <script>
+        function loadGoogleAnalytics() {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
+            document.head.appendChild(script);
+            
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-M6BPB3MLZ2', {
+            'consent_mode': 'default',
+            'analytics_storage': 'denied'
+            });
+            
 
-    function loadGoogleAnalytics() {
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6BPB3MLZ2';
-        document.head.appendChild(script);
-        
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-M6BPB3MLZ2', {
-        'consent_mode': 'default',
-        'analytics_storage': 'denied'
-        });
-        
-
-        const consent = getCookieConsent();
-        if (consent && consent.analytics) {
-        gtag('consent', 'update', {
-            'analytics_storage': 'granted'
-        });
-        }
-    }
-    
-
-    function getCookieConsent() {
-        const nameEQ = 'brasil_hilario_cookie_consent' + "=";
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) {
-            try {
-            return JSON.parse(c.substring(nameEQ.length, c.length));
-            } catch (e) {
-            return null;
+            const consent = getCookieConsent();
+            if (consent && consent.analytics) {
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted'
+            });
             }
         }
+        
+
+        function getCookieConsent() {
+            const nameEQ = 'brasil_hilario_cookie_consent' + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) {
+                try {
+                return JSON.parse(c.substring(nameEQ.length, c.length));
+                } catch (e) {
+                return null;
+                }
+            }
+            }
+            return null;
         }
-        return null;
-    }
-    
-    const existingConsent = getCookieConsent();
-    if (existingConsent && existingConsent.analytics) {
-        loadGoogleAnalytics();
-    }
+        
+        const existingConsent = getCookieConsent();
+        if (existingConsent && existingConsent.analytics) {
+            loadGoogleAnalytics();
+        }
     </script>
 
     <title><?php echo $page_title; ?></title>
@@ -168,34 +167,34 @@ try {
     </script>
     
     <script>
-    // Verificar se FontAwesome foi carregado corretamente
-    document.addEventListener('DOMContentLoaded', function() {
-        // Aguardar um pouco para o FontAwesome carregar
-        setTimeout(function() {
-            // Verificar se os ícones estão sendo exibidos corretamente
-            const testIcon = document.createElement('i');
-            testIcon.className = 'fa-solid fa-calendar';
-            testIcon.style.position = 'absolute';
-            testIcon.style.left = '-9999px';
-            document.body.appendChild(testIcon);
-            
-            // Se o ícone não for exibido corretamente, aplicar fallback
-            if (getComputedStyle(testIcon, ':before').content === 'none' || 
-                getComputedStyle(testIcon, ':before').content === 'normal') {
+        // Verificar se FontAwesome foi carregado corretamente
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar um pouco para o FontAwesome carregar
+            setTimeout(function() {
+                // Verificar se os ícones estão sendo exibidos corretamente
+                const testIcon = document.createElement('i');
+                testIcon.className = 'fa-solid fa-calendar';
+                testIcon.style.position = 'absolute';
+                testIcon.style.left = '-9999px';
+                document.body.appendChild(testIcon);
                 
-                // Carregar FontAwesome via JavaScript como fallback
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://use.fontawesome.com/releases/v6.5.1/css/all.css';
-                link.integrity = 'sha384-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==';
-                link.crossOrigin = 'anonymous';
-                link.referrerPolicy = 'no-referrer';
-                document.head.appendChild(link);
-            }
-            
-            document.body.removeChild(testIcon);
-        }, 1000);
-    });
+                // Se o ícone não for exibido corretamente, aplicar fallback
+                if (getComputedStyle(testIcon, ':before').content === 'none' || 
+                    getComputedStyle(testIcon, ':before').content === 'normal') {
+                    
+                    // Carregar FontAwesome via JavaScript como fallback
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = 'https://use.fontawesome.com/releases/v6.5.1/css/all.css';
+                    link.integrity = 'sha384-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==';
+                    link.crossOrigin = 'anonymous';
+                    link.referrerPolicy = 'no-referrer';
+                    document.head.appendChild(link);
+                }
+                
+                document.body.removeChild(testIcon);
+            }, 1000);
+        });
     </script>
 </head>
 
@@ -317,28 +316,40 @@ try {
         </nav>
     </header>
 
+    <style>
+        .category-navbar { position: relative; }
+        .category-navbar .container { display: flex; align-items: center; gap: 8px; }
+        .category-scroll-container { flex: 1 1 auto; overflow-x: auto; overflow-y: hidden; -ms-overflow-style: none; scrollbar-width: none; }
+        .category-scroll-container::-webkit-scrollbar { display: none; }
+        .category-navbar .nav { flex-wrap: nowrap; white-space: nowrap; }
+        .category-navbar .nav .nav-item { flex: 0 0 auto; }
+        .category-navbar .arrow { background: transparent; border: 0; padding: 6px; cursor: pointer; }
+    </style>
+
     <nav class="category-navbar">
-        <button class="arrow left" aria-label="Categorias anteriores">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="25" height="25" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-            </svg>
-        </button>
-        <div class="category-scroll-container">
-            <ul class="nav">
-                <?php foreach ($categories as $category): ?>
-                    <li class="nav-item">
-                        <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
-                            <?php echo htmlspecialchars($category['nome']); ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+        <div class="container">
+            <button class="arrow left" aria-label="Categorias anteriores">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="25" height="25" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <div class="category-scroll-container">
+                <ul class="nav">
+                    <?php foreach ($categories as $category): ?>
+                        <li class="nav-item">
+                            <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                                <?php echo htmlspecialchars($category['nome']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <button class="arrow right" aria-label="Próximas categorias">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  width="25" height="25" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
         </div>
-        <button class="arrow right" aria-label="Próximas categorias">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  width="25" height="25" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-            </svg>
-        </button>
     </nav>
 
     <main class="container mg-custom">
