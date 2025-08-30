@@ -332,10 +332,10 @@ try {
             .category-navbar .arrow.right { right: -35px; }
         }
         .arrow right svg{
-            stroke: #fff;
+            stroke: #fff!important;
         }
         .arrow left svg {
-            stroke: #fff;
+            stroke: #fff!important;
         }
     </style>
 
