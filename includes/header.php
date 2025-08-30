@@ -319,13 +319,18 @@ try {
     <style>
         .category-navbar { position: relative; }
         .category-navbar .container { position: relative; display: flex; align-items: center; gap: 8px; }
-        .category-scroll-container { flex: 1 1 auto; overflow-x: auto; overflow-y: hidden; -ms-overflow-style: none; scrollbar-width: none; padding: 6px 40px; }
+        .category-scroll-container { flex: 1 1 auto; overflow-x: auto; overflow-y: hidden; -ms-overflow-style: none; scrollbar-width: none; padding: 6px 32px; }
         .category-scroll-container::-webkit-scrollbar { display: none; }
         .category-navbar .nav { flex-wrap: nowrap; white-space: nowrap; }
         .category-navbar .nav .nav-item { flex: 0 0 auto; }
-        .category-navbar .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #ffffff; color: #1b5e20; border: 1px solid rgba(0,0,0,.1); border-radius: 9999px; padding: 6px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.08); z-index: 2; }
-        .category-navbar .arrow.left { left: -35px; }
-        .category-navbar .arrow.right { right: -35px; }
+        .category-navbar .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; color: #1b5e20; border: 0; border-radius: 0; padding: 6px; width: auto; height: auto; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: none; z-index: 2; }
+        .category-navbar .arrow.left { left: 4px; }
+        .category-navbar .arrow.right { right: 4px; }
+        @media (min-width: 992px) {
+            .category-scroll-container { padding: 6px 0; }
+            .category-navbar .arrow.left { left: -35px; }
+            .category-navbar .arrow.right { right: -35px; }
+        }
     </style>
 
     <nav class="category-navbar">
