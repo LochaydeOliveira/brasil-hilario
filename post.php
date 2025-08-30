@@ -174,8 +174,17 @@ function buildPostsSectionHtml($title, $posts, $font_configs = []) {
         }
     }
 
+    // Gerar id único para a seção e CTA
+    static $section_counter = 0;
+    $section_counter++;
+    $section_id = 'related-section-' . $section_counter;
+
     $section_html = $mobile_css; // CSS responsivo primeiro
-    $section_html .= '<section class="related-posts-block my-5">';
+    // CTA acima da seção
+    $section_html .= '<div class="continue-reading my-3 text-center">'
+                  . '<a href="#" class="continue-reading-link fw-semibold text-success" data-section="' . $section_id . '">Continuar Lendo...</a>'
+                  . '</div>';
+    $section_html .= '<section id="' . $section_id . '" class="related-posts-block my-5">';
     $section_html .= '<h4 class="related-posts-title" style="' . $title_style . '">' . htmlspecialchars($title) . '</h4>';
     $section_html .= '<div class="row">';
 
@@ -511,4 +520,33 @@ include 'includes/header.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function findNextParagraph(startEl) {
+        let el = startEl.nextElementSibling;
+        while (el) {
+            if (el.tagName && el.tagName.toLowerCase() === 'p') return el;
+            // Descer um nível se o próximo bloco for um wrapper comum
+            const p = el.querySelector && el.querySelector('p');
+            if (p) return p;
+            el = el.nextElementSibling;
+        }
+        // fallback: rolar um pouco adiante
+        return null;
+    }
+
+    document.querySelectorAll('.continue-reading-link').forEach(function(link){
+        link.addEventListener('click', function(e){
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            const sectionEl = document.getElementById(sectionId);
+            if (!sectionEl) return;
+            const nextP = findNextParagraph(sectionEl);
+            const target = nextP || sectionEl;
+            const y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        });
+    });
+});
+</script>
 <?php ob_end_flush(); ?> 
