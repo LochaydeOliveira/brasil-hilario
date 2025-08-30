@@ -323,7 +323,7 @@ try {
         .category-scroll-container::-webkit-scrollbar { display: none; }
         .category-navbar .nav { flex-wrap: nowrap; white-space: nowrap; }
         .category-navbar .nav .nav-item { flex: 0 0 auto; }
-        .category-navbar .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; color: #fff; border: 0; border-radius: 0; padding: 6px; width: auto; height: auto; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: none; z-index: 2; }
+        .category-navbar .arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #0b8103; color: #fff; border: 0; border-radius: 0; padding: 6px; width: auto; height: auto; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: none; z-index: 2; }
         .category-navbar .arrow.left { left: 4px; }
         .category-navbar .arrow.right { right: 4px; }
         @media (min-width: 992px) {
