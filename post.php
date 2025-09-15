@@ -377,7 +377,7 @@ include 'includes/header.php';
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>">Início</a></li>
                     <?php if (isset($post['categoria_nome'])): ?>
-                        <li class="breadcrumb-item"><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_nome']); ?>">
+                        <li class="breadcrumb-item"><a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>">
                             <?php echo htmlspecialchars($post['categoria_nome']); ?>
                         </a></li>
                     <?php endif; ?>

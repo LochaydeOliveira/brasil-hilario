@@ -73,7 +73,7 @@ try {
                     </button>
                     <ul class="list-unstyled footer-links collapse d-md-block" id="categoriasMenu">
                         <?php foreach ($footer_categorias as $categoria): ?>
-                        <li><a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($categoria['slug']); ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
+                        <li><a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($categoria['slug']); ?>"><?php echo htmlspecialchars($categoria['nome']); ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>

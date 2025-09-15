@@ -107,7 +107,7 @@ include 'includes/header.php';
                                 <small class="text-muted">
                                     <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($post['criado_em'])); ?>
                                     <i class="fas fa-folder ms-2"></i> 
-                                    <a href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
+                                    <a href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($post['categoria_slug']); ?>" class="text-muted">
                                         <?php echo htmlspecialchars($post['categoria_nome']); ?>
                                     </a>
                                 </small>

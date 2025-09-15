@@ -344,7 +344,7 @@ try {
                 <ul class="nav">
                     <?php foreach ($categories as $category): ?>
                         <li class="nav-item">
-                            <a class="category-nav-link" href="<?php echo BLOG_PATH; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
+                            <a class="category-nav-link" href="<?php echo BLOG_URL; ?>/categoria/<?php echo htmlspecialchars($category['slug']); ?>">
                                 <?php echo htmlspecialchars($category['nome']); ?>
                             </a>
                         </li>
