@@ -27,8 +27,7 @@ try {
 
     $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
     $titulo = trim($_POST['titulo']);
-    $slug = strtolower(trim(preg_replace('/[^a-z0-9\-]+/', '-', $_POST['slug'])));
-    $slug = trim($slug, '-');
+    $slug = generateSlug($_POST['slug']);
     $conteudo = trim($_POST['conteudo']);
     $resumo = trim($_POST['resumo']);
     $categoria_id = (int)$_POST['categoria_id'];
@@ -149,9 +148,7 @@ try {
     foreach ($tags as $tag_nome) {
         if (empty($tag_nome)) continue;
 
-        $tag_slug = strtolower(trim(preg_replace('/[^a-z0-9-]/', '-', $tag_nome)));
-        $tag_slug = preg_replace('/-+/', '-', $tag_slug);
-        $tag_slug = trim($tag_slug, '-');
+        $tag_slug = generateSlug($tag_nome);
 
         $stmt = $pdo->prepare("SELECT id FROM tags WHERE slug = ?");
         $stmt->execute([$tag_slug]);
